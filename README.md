@@ -1,14 +1,16 @@
-# Agents' Last Exam — 1,000-Task Delivery Research
+# Agents' Last Exam — Private Benchmark Delivery Research
 
 [![Repository quality](https://github.com/130U/agents-last-exam/actions/workflows/repository-quality.yml/badge.svg)](https://github.com/130U/agents-last-exam/actions/workflows/repository-quality.yml)
 
-本仓库沉淀 UniPat 面试任务中“如何领导生产 1,000 道 ALE 风格任务”的研究、生产治理与最终交付材料。它不是 ALE 官方仓库，也不是 1,000 个任务实例本身；当前交付重点是一套可执行的生产与治理方案。
+这是完整研究仓库：保存 ALE-style 私有 benchmark 的版本审计、产品定义、生产治理、evaluator、执行环境、统计、人类基线、living governance 与最终交付材料。它不是 ALE 官方仓库，也不包含真实的 960/1,490 个任务资产。
+
+面向外部读者时，只应从 `core/00-executive-deliverables/final/` 进入；`supporting-evidence/` 是推导与审计层，不是默认展示层。
 
 ## 从哪里开始
 
-1. [ALE benchmark 短报告](core/00-executive-deliverables/ale-benchmark-short-report-2026-08-08.md)
-2. [最终报告结构](core/00-executive-deliverables/report-architecture/synthesis-and-report-architecture-2026-08-09.md)
-3. [1,000-task 可编辑交付计划](core/00-executive-deliverables/ale-1000-task-delivery-plan-editable.docx)
+1. [外部交付短报告（Markdown）](core/00-executive-deliverables/final/ale-private-benchmark-interview-brief-2026-08-09.md)
+2. [外部交付短报告（Word）](core/00-executive-deliverables/final/ale-private-benchmark-interview-brief-2026-08-09.docx)
+3. [完整技术报告（研究分支）](https://github.com/130U/agents-last-exam/blob/codex/ale-deliverable-draft-v1/core/00-executive-deliverables/drafts/ale-private-clone-960-workflows-1490-instances-delivery-report-draft-v3-2026-08-09.md)
 4. [01–10 生产系统研究](core/02-1000-task-delivery-design/)
 5. [仓库架构与内容边界](docs/REPOSITORY_ARCHITECTURE.md)
 
@@ -18,11 +20,11 @@
 | --- | --- | --- |
 | `core/` | 可直接进入最终报告、答辩或项目设计的核心材料 | 结论清楚、版本口径明确、关键主张可追溯 |
 | `supporting-evidence/` | 研究包、字幕、来源材料、构建脚本与辅助研究 | 保留溯源价值，但不直接代表最终结论 |
-| `docs/` | 仓库治理、内容生命周期、发布清单和架构决策 | 修改仓库规则时同步更新 |
+| `docs/` | 仓库治理、内容生命周期、发布/隐私边界和架构决策 | 修改仓库规则时同步更新 |
 | `scripts/` | 无第三方依赖的仓库质量检查 | 本地与 CI 使用同一入口 |
 | `.github/` | CODEOWNERS、Issue/PR 模板和 Actions | 最小权限、可审计 |
 
-完整的本地来源映射和暂未上传的大体积研究包见 [上传清单](supporting-evidence/UPLOAD_MANIFEST.md)。
+研究包边界和暂未上传的大体积归档见 [上传清单](supporting-evidence/UPLOAD_MANIFEST.md)。
 
 ## 固定研究口径
 
@@ -56,6 +58,6 @@ python scripts/validate_repository.py
 
 本仓库尚未选择统一开源许可证。公开可见不等于获得复用许可，详见 [`LICENSE_POLICY.md`](LICENSE_POLICY.md)。不要提交客户数据、个人信息、凭据、私有 evaluator、隐藏 reference 或未获授权的材料；安全问题按 [`SECURITY.md`](SECURITY.md) 处理。
 
-## Source preservation
+### 隐私红线
 
-原始本地文件未被移动、重命名或改写。当前重命名、分区与压缩包仅发生在 GitHub 交付层。
+私人面试录音、逐字稿、个人简历与岗位决策材料不得进入本公开仓库，哪怕它们曾参与研究问题的形成。公开报告只能保留已经抽象化、可独立辩护的技术问题与结论。完整规则见 [publication and privacy boundary](docs/PUBLICATION_AND_PRIVACY_BOUNDARY.md)。
