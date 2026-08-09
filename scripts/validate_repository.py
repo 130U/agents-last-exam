@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import re
+import subprocess
 import sys
 from pathlib import Path
 from urllib.parse import unquote
@@ -87,10 +88,25 @@ def load_manifest(errors: list[str]) -> dict:
 
 
 def repository_files() -> list[Path]:
+    """Return tracked files so generated local artifacts do not affect validation."""
+    try:
+        completed = subprocess.run(
+            ["git", "ls-files", "-z"],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+        )
+    except (FileNotFoundError, subprocess.CalledProcessError):
+        return sorted(
+            path
+            for path in ROOT.rglob("*")
+            if path.is_file() and ".git" not in path.relative_to(ROOT).parts
+        )
+
     return sorted(
-        path
-        for path in ROOT.rglob("*")
-        if path.is_file() and ".git" not in path.relative_to(ROOT).parts
+        ROOT / item.decode("utf-8", errors="surrogateescape")
+        for item in completed.stdout.split(b"\0")
+        if item
     )
 
 
@@ -169,6 +185,18 @@ def check_markdown_links(files: list[Path], errors: list[str]) -> None:
     ignored_schemes = ("http://", "https://", "mailto:", "tel:", "data:")
     for path in files:
         if path.suffix.lower() != ".md":
+            continue
+        relative = path.relative_to(ROOT)
+        managed = (
+            len(relative.parts) == 1
+            or relative.parts[0] in {".github", "docs"}
+            or relative.as_posix()
+            in {
+                "supporting-evidence/README.md",
+                "supporting-evidence/UPLOAD_MANIFEST.md",
+            }
+        )
+        if not managed:
             continue
         text = read_text(path, errors)
         if text is None:

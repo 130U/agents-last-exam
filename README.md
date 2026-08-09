@@ -42,7 +42,7 @@
 python scripts/validate_repository.py
 ```
 
-校验覆盖必要文件、顶层目录、清单结构、本地 Markdown 链接、零字节文件、文件大小和常见凭据模式。Pull Request 与目标分支推送会运行相同检查。
+校验覆盖必要文件、顶层目录、清单结构、治理文档的本地 Markdown 链接、零字节文件、文件大小和常见凭据模式。核心研究报告中指向未公开完整研究包的历史相对链接不作为 CI gate。Pull Request 与目标分支推送会运行相同检查。
 
 ## 内容维护
 
