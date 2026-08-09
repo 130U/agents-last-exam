@@ -156,18 +156,854 @@ model/provider snapshot
 | Business & Finance | ä¼šè®¡/FP&Aã€ç²¾ç®—ã€é£æ§ã€åˆè§„ã€HR/PMã€è¥é”€ã€é‡åŒ–ã€ä¾›åº”é“¾ä¸“å®¶ | æ•°æ®å£å¾„ã€å®¡è®¡é“¾ã€ç›‘ç®¡åœ°åŸŸå’Œå¤šç§åˆæ³•å†³ç­–æ–¹æ¡ˆ |
 | Health & Medicine | ä¸´åºŠå½±åƒã€è¯Šç–—ã€åŒ»ç–—ä¿¡æ¯åŒ–ã€å…¬å«ã€ä¸´åºŠè¯•éªŒä¸“ä¸šäººå‘˜ | æ‚£è€…éšç§ã€æ‰§ä¸šè¾¹ç•Œã€é«˜é£é™© claims å’Œäººå·¥ä»²è£ |
 | Life Sciences | ç»“æ„ç”Ÿç‰©ã€åŸºå› ç»„ã€æˆåƒã€ç³»ç»Ÿ/å¾®ç”Ÿç‰©ç ”ç©¶äººå‘˜ | æ•°æ®åº“ç‰ˆæœ¬ã€å®éªŒå‡è®¾ã€ç§‘å­¦è½¯ä»¶å’Œ reference provenance |
-| Physical Sciences | ç‰©ç†ã€è®¡ç®—åŒ–å­¦/ææ–™ã€å¤©æ–‡ã€åœ°çƒ/å¤§æ°”ç§‘å­¦ç ”ç©¶è€… | æ•°å€¼æ–×]tæÚ$z{-®éÜj×ã"v÷&¶fÆ÷rKˆâ6öæ7&WFR–ç7Fæ6P ¢¢¤FöÖ–îûÉ¢¢¢'W6–æW72÷W&F–öç2òÖ&¶WF–æræÇ—F–70¢¢¥v÷&¶fÆ÷~ûÉ¢¢¢Zû[›şY®[›>Xû85$Ş8Šê.™ˆRş˜jËîKˆî‹J.XªzîŠêNiKnXZ^‹ù¾ŠÎ‹zk©jZûûÈÎ[»®z¸¾kŠ˜>{ºiXjŠYè¾ûÈÎ[›nYÊ{ªniÙşKˆ¾yIşh‰Kˆ¾KˆiÉşš(Nzé~ikj8 ¢¢¤–ç7Fæ6Rö&¦V7F—f^ûÉ¢¢¢KªNK¹KˆK»ŞXúşZêŠêç†Ç7†Y(ÎKˆš^Xk>zÙbÖVÖşûÈÎKÛş{¹>iéÎXúşK¸â&r–çWG2˜xŞikŠêzé~ûÈÎ[›nkº‹k>š(Nzé~KˆîK‰®Xª{ªniÙş8  ¢222'F–6—çB×f—6–&ÆR–çWG0 ¢ÒE÷7VæBæ77fûÉ¦6†ææVÂö6×–vâöF’ö7W'&Væ7’÷7VæBö6Æ–6·>ûÉ°¢Ò7&Õö÷÷'GVæ—F–W2æ77fûÉ¦ÆVN8÷÷'GVæ—G87Fv^86Æ÷6RFF^86×–vâ¶W—>ûÉ°¢Ò7V'67&—F–öç5öæE÷&VgVæG2æ77fûÉ¦7W7FöÖW.8Æî8–çfö–6^8&VgVæN8VffV7F—fRFFW>ûÉ°¢Ò6×–vå÷F†öæö×’ç†Ç7†ûÉ®kŠ˜>Kˆâ6×–vây¨B6æöæ–6ÂÖ–æ~ûÉ°¢ÒGG&–'WF–öåöæEö'VFvWE÷öÆ–7’çFfûÉ¦GG&–'WF–öâv–æF÷~87W'&Væ7’'VÆ^8kŠ˜>Kˆ®Kˆ¾™™8zhh©^Kˆîh¾š(Nzé~ûÉ°¢ÒF6µö–ç7G'V7F–öç2æÖFûÉ®KªNK¹ZÙ~jë^8‹é>X{®‹zş[èNY(ÎK‰®Xª™zîš)8  ®h˜iÈK‰®Xªi[hÚîKÛşyJ‚7–çF†WF–2öFRÖ–FVçF–f–VB&V6÷&G>ûÈÎ[›nš(NYø¾ZI®ZûZI¢¦ö–î8{Ë®ZKUDŞ8‹zi{nXË®8˜jËîk¹îYî8˜xŞZHÒ”BKˆî[ˆzxŞ‹ëyXÎ8  ¢22ã2Vçf—&öæÖVçB6öçG&7@ ¢Òg&W6‚v–æF÷w2dŞûÉ´Ö–7&÷6ögBW†6VÂh‰n{¸şZê.h‹~h›Xxny¨NzØK»r7&VG6†VWBÆæ^ûÉ°¢ÒXúş˜’—F†öîûÈÎKØnKˆŞ[é~KéŞ‹YnZIn{ÙûÉ°¢ÒY»®Zé¢Æö6Æ^8F–ÖW¦öæ^87W'&Væ7’&÷VæF–æ~86ögGv&R'V–ÆBKˆâföçNûÉ°¢Ò–çWBF—&V7F÷'’Xú®Šû¾ûÈÆ÷WGWBF—&V7F÷'’XúşXiûÉ°¢ÒzhjÚ.ZIn˜:‚v÷&¶&öö²Æ–æ·>8ZèşY(ÎiÊ®h›Xxny¨Ni[hÚîKˆ®KÊûÉ°¢ÒjøşjÊG&–ÂK¸â6ÆVâ6æ6†÷B[ÈZx¾ûÈÎ‹ùŠÎYîhùKªB'F–f7B†6‚Kˆâ6Æ7VÆF–öâ7FF^8  ®ˆº^Zê.h‹~KˆŞhùKé²W†6VÂÆ–6Vç6^ûÈÎXúş[»®z¸²Æ–'&Töff–6RÖ6ö×F–&ÆRÆæ^ûÈÎKØnKˆŞ[é~›¹ŠêNZê>z{KŠNiÚÆæRy¨NŠÎK‹®zØK»~ûÉ¾[ø^š¾X¢7&÷72ÖÆæRVÆ–f–6F–öî8%µĞ ¢22ãB&WV—&VB÷WGWG0 ¦Ö&¶WF–æu÷W&f÷&Öæ6UöæEö'VFvWBç†Ç7†ˆ{>[	XÈ^Y
-¾ûÉ  £â&r–çWB–×÷'G2Kˆâ6÷W&6R†6†W>ûÉ°£"â6æöæ–6Â6×–vâÖ–ærY(ÂW†6WF–öâÆVFvW.ûÉ°£2â&V6öæ6–ÆVBWfVçBö7W7FöÖW"ÆVFvW.ûÉ°£Bâ7VæN8GG&–'WFVB&WfVçV^8&VgVæN8—VÆ–æ^84>8$ô>86öçfW'6–öâKˆâ6ö†÷'BÖWG&–7>ûÉ°£Râi[hÚî‹J˜xşKˆîiÊ®XË˜XŞŠë[Ù^ŠûÉ°£bâ{ªniÙşkº‹k>y¨NKˆ¾KˆiÉò6†ææVÂ'VFvWNûÉ°£râ77V×F–öç2Kˆâ6Vç6—F—f—G’6†VWN8  ¦FV6—6–öåöÖVÖòæÖFh‰bæFö7†ûÉ®ŠûNiˆîK‹¾ŠhXùxë8hêˆÙXˆn˜XŞ8X[>™JîKˆŞzîZé®h
-~Y(Î™ÈŠhK‰®Xª÷væW"Xk>Zé®y¨N™zîš)ûÈÎ[›n[É^yJ‚v÷&¶&öö²KŠŞXúşZHŞjy¨NhÈ~j~8  ¢22ãR†–FFVâ&VfW&Væ6R6° ¥&VfW&Væ6RKˆŞXú®iŠşKˆK»Ş(	Îj~Xxbv÷&¶&öö¾(	ŞûÈÎˆÎiŠşûÉ  ¢Ò6æöæ–6Âæ÷&ÖÆ—¦VBWfVçBÆVFvW.ûÉ°¢ÒjÚ>zâ¦ö–âöÖF6†–ær&VÆF–öç>ûÉ°¢Ò6÷W&6R&V6öæ6–Æ–F–öâF÷FÇ>ûÉ°¢ÒÖWG&–2–çf&–çG>8XÙ^KØŞKˆâFöÆW&æ6^ûÉ°¢Ò'VFvWB6öç7G&–çB6WBKˆîZI®KŠ®Yk9RfV6–&ÆR6öÇWF–öç>ûÉ°¢ÒvöÆN8¶æ÷vâÖ&N8æV"ÖÖ—7>8ÇFW&æFRÖ6÷'&V7B'F–f7G>ûÉ°¢ÒÖVÖòf7GVÂÖ6Æ–Òæ6†÷'>ûÉ°¢ÒWfÇVF÷"fW'6–öî8f—‡GW&W2Kˆâ¶æ÷vâÆ–Ö—FF–öç>8  ¢22ãbWfÇVF÷"FW6–và ®[»®Šêî˜x~yJ‚FWFW&Ö–æ—7F–26÷&R²æ'&÷rWf–FVæ6RÖæ6†÷&VB§VFvÖVçNûÉ¥µ%Ğ £â¢¤'F–f7B–çFVw&—GûÉ¢¢¢ih~K»nXúşh™>[ÈûÈÎŠhk.y¨B6†VWG2öf–VÆG2ZÙYÊûÉ¾izZèş8ZIn™;î8hÙşYØşh‰b†–FFVâ–ÆöN8 £"â¢¥&V6öæ6–Æ–F–öîûÉ¢¢¢7VæN8&WfVçV^8&VgVæBKˆâ6÷W&6RF÷FÇ2YÊiÈKéŞhÚîy¨BFöÆW&æ6RXh^™zŞY8 £2â¢¥G&ç6f÷&ÖF–öâfÆ–F—GûÉ¢¢¢iz^iÉş8i{nXË®8[ˆzxŞ8˜xŞZHŞ8kÈşiir¦ö–âKˆâGG&–'WF–öâv–æF÷rXúşK¸â&r–çWG2˜xŞzé~8 £Bâ¢¤ÖWG&–2fÆ–F—GûÉ¢¢¢4>8$ô>86öçfW'6–öî8&WFVçF–öâzØiÈjÚ>zîXˆnjøŞ8XÙ^KØŞY(ÂÆ–æVv^8 £Râ¢¤'VFvWBfV6–&–Æ—GûÉ¢¢¢h¾š)Ş8kŠ˜>Kˆ®Kˆ¾™™8zhh©^8Z)îXxş[˜^KˆâöÆ–7’6öç7G&–çG2XZ˜:kº‹k>8 £bâ¢¤FV6—6–öâ6öç6—7FVæ7ûÉ¢¢¢ÖVÖò[É^yJy¨Ni[ZÙ~iÚ^ˆz¢v÷&¶&öö¾ûÈÎ[»®ŠêîKˆâ6öç7G&–çB÷6Vç6—F—f—G’KˆŞyù¾y»î8 £râ¢¤WV—fÆVæ6^ûÉ¢¢¢KˆŞŠhk.YJşKˆš(Nzé~Xˆn˜XŞûÉ¾K»¾KÙ^kº‹k>{ªniÙş[›n‹ëîX‹š(NXXZé®K˜Xk>zÙniÚK»ny¨Nikj˜;ŞXúşhê^Xù~8 £‚â¢¤§VFvÖVçB&÷VæF'ûÉ¢¢¢K‰>Zënh‰nz¨B§VFvRXú®Zêiú^KˆŞzîZé®h
-~hª¾™Ë.Kˆî[»®Šêî˜¾‹éûÈÎKˆŞŠêXiKÙÎš8îjÎXk>Zé®K‹¾Šh[é~Xˆn8  ®X[~KÙ26ö×öæVçBvV–v‡G>8FöÆW&æ6RKˆâ72F‡&W6†öÆB[ø^š¾yKFöÖ–âÆVN8Zê.h‹r6öç6WVVæ6RY(Â–Æ÷Bf—‡GW&W2j
-Xxn8%µĞ ¢22ãr&VB×FVÒ66W0 ¢ÒKˆŞYÎ[›>XûX{®xëy»YÂ6×–vâ”NûÉ°¢ÒUD2KˆîiÊÎYËiz^‹ëyXÎZûÎˆ{BGG&–'WF–öâXşz{¾ûÉ°¢ÒKŠNzxŞ[ˆzxŞŠ*¾y»Nhê^y»XªûÉ°¢Ò˜jËî‰ŞYÊYî{ºŞiÈK»ŞûÉ°¢ÒÖ—76–ærUDÒŠ*¾™IŠúşXZ˜:[Ù.XZ^iÈZJ~kŠ˜>ûÉ°¢Ò÷÷'GVæ—G’Kˆâ7V'67&—F–öâZI®ZûZI®ZûÎˆ{B&WfVçVRGWÆ–6F^ûÉ°¢Ò†&BÖ6öFR7VÖÖ'ûÈÎKˆŞKùŞyY’Æ–æVv^ûÉ°¢ÒZHŞX‹b&VfW&Væ6Rv÷&¶&öö²ZInŠx.KØnXh^˜:XZÎ[Èòşi[hÚî™IŠúşûÉ°¢Ò™©‰xşŠÎ8f–ÇFW"h‰njÎ[Èşhêy¹n[È.[‹ûÉ°¢ÒZIn˜:‚v÷&¶&öö²Æ–æ²YÊKÙÎˆ^iË®YšKˆ®iÈiX86ÆVâdÒKŠŞZKiXûÉ°¢Òh¾š(Nzé~jÚ>zîKØn‹ùŞXøŞkŠ˜>Kˆ¾™™h‰nzhh©^{ªniÙşûÉ°¢Òv÷&¶&öö²jÚ>zîKØbÖVÖò[É^yJ™IŠúşûÉ°¢Ò÷WGWB[XÎXZ^Zû’ÄÄÒ§VFvRy¨B&ö×B–æ¦V7F–öîûÉ°¢Ò6÷''WFVB„Å5‚Š*¾[©NyJˆz®XªKúîZHŞYîŠ™Ú.Xúşh™>[ÈûÉ°¢Ò™Ùîj~XxnKØnK‰®XªYyny¨BÇFW&æFRÖ6÷'&V7BÆÆö6F–öâŠ*¾Šúşh¹.8  ¢22ã‚K¸âWF†÷&VBW†×ÆRX‹66WFVB–ç7Fæ6P ®Šú^š)Xú®iÈYÊKº^Kˆ¾ŠøhÚîZèÎh‰Yîh˜ŞXúşŠêXZR&öGV7F–öîûÉ¦FöÖ–âW‡W'BzîŠêBv÷&¶fÆ÷rKˆîŠxNX‰ûÉ·&–v‡G2÷6V7W&—G’h›Xxb7–çF†WF–2FFY(Î‹ÚşK»bÆæ^ûÉ¶–æFWVæFVçB6öÇfW"YÊ‚6ÆVâdÒZèÎh‰ûÉ¶WfÇVF÷"f—‡GW&W2˜	®‹ø~ûÉ¶ÇFW&æFRÖ6÷'&V7BKˆâ6†÷'F7WBŠ*¾š¨ÎŠøûÉ¶Vçf—&öæÖVçB&WÆ’‹ëîX‹–Æ÷BvF^ûÉ¶f–æÂ&÷fW"xºÎz¸¾zÛîZÙ~ûÉ¾ZéîKè¾Š*¾Xˆn˜XŞX‹iˆîzâööÂ[›n˜XŞ{Úâ&Vg&W6‚G&–vvW.8  ¢ÒÒĞ ¢2"âš8î™š86Æ–Ò&÷VæF'’Kˆî[è^zîŠêNK¨¾š ¢22"ãXúşiJşhÈy¨NŠ‹û  ¢Ò(	ÎŠúRvVçB6öæf–wW&F–öâYÊXk¾{¹>y¨BÄR×7G–ÆR&VÆV6RY(Îk:XhÂ&÷Fö6öÂKˆ®Xùn[é~iùš{¹>iéÎ8.(	Ğ¢Ò(	ÎŠú^{¹>iéÎ{¸ş‹ø~x˜iÊÎXÉbVçf—&öæÖVçN8WfÇVF÷"8˜xŞZHŞ‹ùŠÂşXË®™{NY(Âf–ÇW&RGG&–'WF–öî8.(	Ğ¢Ò(	ÎYÊ[{.ŠûNiˆîy¨NK«®{¾j~iÊÎKˆâff÷&Fæ6RiÚK»nKˆ¾ûÈÎŠx.ZùşX‹iùzxŞ[zî[È.8.(	Ğ¢Ò(	ÎiÊÂ÷'FföÆ–òZûZê.h‹~h›Xxny¨B6×Æ–ærg&ÖR‹ëîX‹[{.hª¾™Ë.y¨NŠhny¹n8.(	Ğ ¢22"ã"KˆŞXúşˆz®XªiJşhÈy¨NŠ‹û  ¢Ò(	ÎjŠYè¾‹ëîX‹K«®{¾kN[›>(	ŞûÉ°¢Ò(	ÎjŠYè¾XúşKº^i»şKº>iùKˆˆÎK‰®(	ŞûÉ°¢Ò(	Æ&Væ6†Ö&²iK‹ù¾zØK¨î{¸şkXîK»~XÎh‰nyIşKª~xè~hùXØ~(	ŞûÉ°¢Ò(	Ç&—fFRi[hÚîZèÎXZk*iÈkiù>(	ŞûÉ°¢Ò(	ÆFWFW&Ö–æ—7F–266÷&W"ZèÎXZZê.Šx.(	ŞûÉ°¢Ò(	Îik&VÆV6RXˆni[Kˆîizr&VÆV6RXúşKº^y»Nhê^{«^Y	jùN‹è>(	ŞûÉ°¢Ò(	ÃÃKŠ¢v÷&¶fÆ÷r6¶vW2Šhny¹nXZ˜:yÉşZéî[z^KÙÎ(	Ş8  ¢22"ã2K‹¾Šhš8î™šKˆîhê~X‹` §Âš8î™š’ÂK‹¾Šhhê~X‹bÂjè¾KÙ‹ëyXÂÀ§ÂÒÒ×ÂÒÒ×ÂÒÒ×À§Â6öç7G'V7BKˆîK‰®XªK»~XÎ™IKØÒÂ–çFVæFVB×W6Rg&Ö^8K‰>ZënYË®išş8‡VÖâ7V'6WN86Æ–Òf—&WvÆÂÂK¸Ş™È˜:{Û.Kˆî{¸şkXîYºiéÎŠøhÚâÀ§Â÷'FföÆ–òXş[zâşKÊ®XùKÙ2Â†&BvFW>8–FVçF—G’öFVGW8ZI®yºîj~˜hº8–Æ÷BÂiÊ®yú^h¾KÙ>izk9^ŠøiˆîKº>Šh
-rÀ§ÂWfÇVF÷"6†÷'F7WBşŠúşXŠBÂXøÎY	G&6V&–Æ—G8f—‡GW&RÆ–'&'8&VBFVŞ8&&—G&F–öâÂKˆŞˆ;Şz›~[Şh˜iÈiK¾X{²À§ÂVçf—&öæÖVçBG&–gBÂ–Ö×WF&ÆRÖæ–fW7N8GFW7FF–öî8&WÆ86W&FR§VFvRÂÆ—fR6W'f–6W2K¸ŞXúşˆ;Ş™Ùî[›>z‹2À§ÂÆV¶vRö6öçFÖ–æF–öâÂööÂö66W7>8vF–æ~8Æövv–æ~86Vç6÷.8&÷FF–öî8–æ6–FVçBÂ&—fFRKˆâ6æ'’YØ~™ÙîŠøiˆâÀ§Âhé.YŞKˆŞz‹>Zé¢Â—&VBFW6–vî8&WVG>86ÇW7FW&VB–çFW'fÎ86Vç6—F—f—G’Â{¹şŠêz‹>Zé®KˆŞKúîZHÒfÆ–F—G’&–2À§ÂK‰>Zëb4ô’şj~XxnkÈ.z{²Â&öÆRVÆ–f–6F–öî8&Æ–æB6öÇf^84ô86Æ–'&F–öî8FV&ö&F–ærÂ[şYº.™‰şK¸ŞiÈ’6öÆÇW6–öâö÷fW'&–FRš8î™š’À§Âh‰iÊÂşYiÉşZKhêrÂ–ç7G'VÖVçFVB–Æ÷N8gVææVÎ866—G87&—F–6ÂF8&W66÷RvFRÂzˆ{Ë®‹ÚşK»bşK‰>ZëniÈ™[ş[âÀ ¢22"ãBKˆŞ[é~YÊ‚–Æ÷BX˜ŞZ¾XZ^[‹i[y¨NXù˜xğ ®K«®i[8K‰>ZënkŠxNjŠ8kŠ˜>‹ÚÎXÉnxè~8‹XNjÎ˜	®‹ø~xè~8F‡&÷Vv‡WN87–6ÆRF–Ö^8‹ùN[z^866WFæ6R––VÆN8&Wf–Wr7î8VF—B&F–ş8KªNK¹Yi[8‹Kxè~8XÙ^KØŞh‰iÊÎ8h¾š(Nzé~8FöÖ–âÆÆö6F–öî8eöW‡G&8–ç7Fæ6R×VÇF—Æ–6—G8ööÂjùNKè¾8&WVG>86VVBi[84’†Æb×v–GF8ÔD^8÷vW.8xêşZ(24Ä8Æ–6Vç6R[ŠŞKØŞ8d"ôe%.8‡VÖâ6×ÆRöGG&—F–öâöw&VVÖVçN8kiù>xè~8VW'’Æ–Ö—N8&Vg&W6‚6FVæ6^8˜[Ûxè~Y(Â&W6W'fR'W&â&F^8  ¢22"ãRKˆ¾Kˆ‹Úî™ÈŠhzîŠêNy¨N™zîš)€ £â¢®[{.[Ú.h‰›¹ŠêNzÙNj8[è^Kšn™Ú.zîŠêNûÉ¢¢¢rÒÃ66WFVBv÷&¶fÆ÷r6¶vW6ûÉ¾jøşKŠ¢6¶vRˆ{>[	KˆKŠ¢6æöæ–6Â'Vææ&ÆR–ç7Fæ6^ûÉ¶W‡G&f&–çG>8'Vç2÷6W'f–6RKˆâ&W—"ö6†ævRXˆn‹Jnš¨ÎiKnY(Îhª^K»~8 £"â–çFVæFVBW6RKˆîXXŠëy¨B6Æ–×>ûÉ°£2âKÉXX‚FöÖ–î8ŠúŞŠˆ8YËXË®8‹ÚşK»nY(Îš8î™š{¾XŠ¾ûÉ°£BâG&–æ–æ~8FWfVÆ÷ÖVçBKˆâ&—fFRf–æÂy¨NiØ>XŠ™©Nzk¾ûÉ°£Râi[hÚî8Æ–6Vç6^87&VFVçF–Î8æWGv÷&²Kˆâ&WFVçF–öâ{ªniÙşûÉ°£bâiŠşY
-n™ÈŠhÖF6†VBÖ‡VÖî8Y:®K©¾ˆÎK‰¢şK«®{êN8KÙ^zxÒff÷&Fæ6^ûÉ°£râXXŠëy¨N‹ùŠÎš(Nzé~8{»NhªNiÉş8&Vg&W6‚ö–æ6–FVçB4ÄûÉ°£‚â‹h¸^K»²&Væ6†Ö&²÷væW.8&–v‡G2õ6V7W&—G’÷væW"Kˆâf–æÂ&÷fW.ûÉ°£’â–Æ÷By¨BFV6—6–öâÆ÷7>87F÷6öæF—F–öâKˆî˜x~‹JŞ™™X‹nûÉ°£âKªNK¹iŠşY
-nXÈ^Y
-²&Væ6†Ö&²6W'f–6^8k©z8xêşZ(>™YÎX8ş8zxiÈ‹XNKª~h™zêKˆîhÈ{ºŞ‹ù‰
-^8  ¢ÒÒĞ ¢2{¹>Šë  ¤ÄRy¨NyÉşjÚ>Y
-şXùKˆŞiŠş(	ÎZh.KÙ^X{®i»N™«îy¨Nš)(	ŞûÈÎˆÎiŠşZh.KÙ^h¨®K‰>K‰®[z^KÙÎ‹ÚÎXÉnK‹®Xúş‹ùŠÎ8Xúşš¨ÎŠø8Xúş™©‰xş8Xúş‹ÚîhÚ.Y(ÎXúşZêŠêy¨BÖV7W&VÖVçB76WN8.yIşKªrÃKŠ¢F—7F–æ7Bv÷&¶fÆ÷r6¶vW>ûÈÎj[ø>™«îx+KˆŞYÊ‚&ö×BXiKÙÎûÈÎˆÎYÊ‚÷'FföÆ–ş8K‰>Zënk+¾yn8xêşZ(>8WfÇVF÷.8{¹şŠêXØşŠêîKˆî™[şiÉş‹ù‰
-^K˜¾™{Ny¨N{;¾{¹ş™zŞxêş8  ®iÊÎikj[»®ŠêîXXhê^Xù~KˆKŠ®kˆ^i›KØnXúşKúîŠê.y¨Bv÷&¶–ær66÷^ûÉ¢¢£Ã66WFVBF—7F–æ7Bv÷&¶fÆ÷r6¶vW>ûÉ¾jøşKŠ®ˆ{>[	KˆKŠ¢6æöæ–6Â'Vææ&ÆR–ç7Fæ6^ûÉ¶W‡G&f&–çG2xºÎz¸¾Šêi[8"¢¢™¨şYîyJ‹zš8î™š’7G&Fy¨B–ç7G'VÖVçFVB–Æ÷BkX¾˜xşh˜iÈ[ÛY8ŞKª~ˆ;ŞKˆîiÈiXh
-~y¨NXù˜xşûÈÎXú®Zû˜	®‹ørGfæ6RvFRy¨N˜:XˆnhšKª~8.‹ùj~XúşKº^h¨®i[˜xş8‹J˜xşKˆîYXnK‰®KªNK¹iKîYÊYÎKˆKŠ®XúşZêŠêjniënKŠŞûÉ§v÷&¶fÆ÷ryÉşZéîK‰NKˆŞ˜xŞZHŞ8–ç7Fæ6RX®[é~X{®iÚ^8Xˆni[XúşKú8ZK‹J^Xúş[Ù.Yº8x˜iÊÎXúş{»NhªNûÈÎh˜Şzé~yÉşjÚ>ZèÎh‰8  ¢ÒÒĞ ¢2™˜N[ÙRûÉ®X[>™Jîi[hÚîZû‹ ¦–ÖÀ¦76WEö–FVçF—G“ ¢v÷&¶fÆ÷uö–C¢veòââà¢v÷&¶fÆ÷u÷fW'6–öã¢veòââäbââà¢6æöæ–6Åö–ç7Fæ6Uö–C¢–ç7Eòââà¢6æöæ–6Åö–ç7Fæ6U÷fW'6–öã¢–ç7Eòââäbââà¢F†öæö×•÷fW'6–öã¢ââà¢Æ–fV7–6ÆS¢&÷÷6VGÆ–×ÆVÖVçFVGÇfÆ–FFVGÆ66WFVGÇV&çF–æVGÇ&W—&VGÇ&WF—&V@ §v÷&¶fÆ÷uö–FVçF—G“ ¢&öfW76–öæÅövöÃ¢ââà¢F&vWEö6&–Æ—G“¢ââà¢&ö6W75ö&÷VæF'“¢ââà¢÷WGWEö6öçG&7C¢ââà¢WfÇVF÷%ö6öçG&7C¢ââà¢GWÆ–6FUö6ÇW7FW%ö–G3¢µĞ¢–FVçF—G•öF—7÷6—F–öã¢F—7F–æ7GÆÖW&vVGÇ&V¦V7FV@¢–FVçF—G•ö&÷fW#¢ââà §F6µö6öçG&7C ¢–çFVæFVEö6öç7G'V7C¢ââà¢f—6–&ÆUö–ç7G'V7F–öã¢ââà¢–çWEöÖæ–fW7C¢ââà¢÷WGWEö6öçG&7C¢ââà¢ÆÆ÷vVE÷&W6÷W&6W3¢ââà ¦W†V7WF–öåö6öçG&7C ¢Vçf—&öæÖVçEöÖæ–fW7Eö†6ƒ¢6†#Sc¢ââà¢ö'6W'fVEöÆVæ6…öGFW7FF–öã¢ââà¢†&æW75öæE÷&ö×Eö†6ƒ¢ââà¢æWGv÷&µ÷&öf–ÆS¢öffÆ–æWÆÆÆ÷vÆ—7GÇ6–×VÆFVEö÷%öÖ—'&÷&VGÆ6öçG&öÆÆVEö÷Và¢'VFvWEöæE÷&WG'•÷öÆ–7“¢ââà ¦WfÇVF–öåö6öçG&7C ¢&VfW&Væ6U÷fW'6–öã¢ââà¢WfÇVF÷%÷fW'6–öã¢ââà¢66÷&U÷6VÖçF–73¢ââà¢f—‡GW&U÷6µ÷fW'6–öã¢ââà¢f–ÇW&UöæEö&&—G&F–öå÷öÆ–7“¢ââà ¦v÷fW&ææ6S ¢W'÷6S¢FWfVÆ÷ÖVçEöFVÖ÷Ç&W7G&–7FVE÷fÆ–FF–öçÇ&—fFUöf–æÇÇ&÷FF–öå÷&W6W'fWÇG&–æ–æp¢66W75ö6Æ73¢V&Æ–7Æ–FVçF—G•övFVGÇ&—fFU÷6W'f–6WÆVF—EööæÇ¢÷væW%÷&Wf–WvW%ö&÷fW#¢ââà¢&–v‡G5öæEö6ö“¢ââà¢Æ–æVvUöæEö–æ6–FVçG3¢ââà ¦66WFæ6UöæE÷–ÖVçC ¢FöÖ–åövFS¢77Æf–À¢'Vææ&ÆUövFS¢77Æf–À¢WfÇVF÷%övFS¢77Æf–À¢&W&öGV6–&–Æ—G•övFS¢77Æf–À¢&–v‡G5÷6V7W&—G•övFS¢77Æf–À¢–æFWVæFVçE÷6öÇfUövFS¢77Æf–À¢f–æÅö&÷fÅövFS¢77Æf–À¢&–6Uö&æC¢ââà¢–ÖVçEöVÆ–v–&ÆS¢G'VWÆfÇ6P¦  ¢2™˜N[ÙR.ûÉ¥–Æ÷BÖV7W&VÖVçB6†VW@ ®jøşiÚŠë[Ù^ˆ{>[	XÈ^Y
-¾ûÉ  ¦FW‡@§7G&GVÒöFöÖ–â÷v÷&¶fÆ÷r÷6ögGv&RöWfÇVF÷"÷&—6°¦6æF–FFR(i"7V2(i"Væv–æVW&VB(i"fÆ–FFVB(i"66WFVBgVææVÀ§&öÆR6W'f–6RÖ†÷W'2Âv—BÖ†÷W'2Â7–6ÆRF–ÖRæB&Wv÷&²7–6ÆW0§&ö÷BÖ6W6RæBFVfV7B6WfW&—G¦Vçf—&öæÖVçB'V–ÆB÷7F'B÷&W6WB÷&WÆ’æB–æg&Ö–çfÆ–@¤d"ôe%"ö×WFF–öâöÖWFÖ÷'†–2ö§VFvRö&&—G&F–öà§G&–Âf&–æ6RæB6öæf–wW&F–öâ–çFW&7F–öà¦‡VÖâ&V7'V—FÖVçBö6ö×ÆWF–öâ÷VÆ—G’÷F–ÖRö6÷7Böw&VVÖVç@§&–v‡G2öÆ–6Vç6R÷6V7W&—G’g&–7F–öà¦Ö–çFVææ6R÷&Vg&W6‚ö–æ6–FVçB'W&FVà¦Gfæ6WÇ&W—'Ç&W66÷WÇ7F÷FV6—6–öâæB&F–öæÆP¦  ¢2™˜N[ÙR>ûÉ®Xh^˜:ŠøhÚî{J.[ÉP ¢Òµ66÷RKˆîKª~Y8Zé®K˜•Ò‚ââòââó"Ó×F6²ÖFVÆ—fW'’ÖFW6–vâó×66÷RÖæB×&öGV7BÖFVf–æ—F–öâöFV6—6–öâ×&W÷'BÓ##bÓ‚Ó‚æÖB¢Ò´ÄRh¨iÊş‰9ŞY»îKˆîx˜iÊÎZêŠêÒ‚ââòââó"Ó×F6²ÖFVÆ—fW'’ÖFW6–vâó"ÖÆRÖ&ÇVW&–çBÖæB×fW'6–öâÖVF—B÷FV6†æ–6ÂÖ&ÇVW&–çBÓ##bÓ‚Ó‚æÖB¢Ò¾XZÎ[ÈF6²6÷'W2KˆâWfÇVF÷"ZêŠêÒ‚ââòââó"Ó×F6²ÖFVÆ—fW'’ÖFW6–vâó2×V&Æ–2×F6²Ö6÷'W2ÖVF—B÷V&Æ–2Ö6÷'W2ÖVF—B×&W÷'BæÖB¢Ò¾˜+¾‹ù&Væ6†Ö&²ÆæG66UÒ‚ââòââó"Ó×F6²ÖFVÆ—fW'’ÖFW6–vâóBÖF¦6VçBÖ&Væ6†Ö&²ÖÆæG66RöÆæG66R×&W÷'BÓ##bÓ‚Ó‚æÖB¢Òµ÷'FföÆ–òKˆâ6×Æ–ær7G&FVw•Ò‚ââòââó"Ó×F6²ÖFVÆ—fW'’ÖFW6–vâóR×÷'FföÆ–òÖæB×6×Æ–ær×7G&FVw’÷÷'FföÆ–òÖæB×6×Æ–ær×7G&FVw’×&W÷'BæÖB¢Ò¾K‰>ZënyIşKª~8j
-XxnKˆîk+¾yeÒ‚ââòââó"Ó×F6²ÖFVÆ—fW'’ÖFW6–vâóbÖW‡W'B×&öGV7F–öâÖv÷fW&ææ6RöW‡W'B×&öGV7F–öâÖv÷fW&ææ6R×&W÷'BÓ##bÓ‚Ó’æÖB¢Ò´WfÇVF÷"fÆ–F—G’Kˆâ66÷&–ær–çFVw&—G•Ò‚ââòââó"Ó×F6²ÖFVÆ—fW'’ÖFW6–vâórÖWfÇVF÷"×fÆ–F—G’ÖæBÖ–çFVw&—G’öWfÇVF÷"×fÆ–F—G’ÖæB×66÷&–ærÖ–çFVw&—G’×&W÷'BÓ##bÓ‚Ó’æÖB¢Ò´Vçf—&öæÖVçBbW†V7WF–öâ&VfW&Væ6R&6†—FV7GW&UÒ‚ââòââó"Ó×F6²ÖFVÆ—fW'’ÖFW6–vâó‚ÖVçf—&öæÖVçBÖW†V7WF–öâ×&VfW&Væ6RÖ&6†—FV7GW&RöVçf—&öæÖVçBÖW†V7WF–öâ×&VfW&Væ6RÖ&6†—FV7GW&R×&W÷'BÓ##bÓ‚Ó’æÖB¢Ò´Æ—f–ær&Væ6†Ö&²v÷fW&ææ6UÒ‚ââòââó"Ó×F6²ÖFVÆ—fW'’ÖFW6–vâó’ÖÆ—f–ærÖ&Væ6†Ö&²Öv÷fW&ææ6RöÆ—f–ærÖ&Væ6†Ö&²Öv÷fW&ææ6R×&W÷'BÓ##bÓ‚Ó’æÖB¢Ò¾{¹şŠêŠøNKËKˆâÖF6†VBÖ‡VÖâ&÷Fö6öÅÒ‚ââòââó"Ó×F6²ÖFVÆ—fW'’ÖFW6–vâó×7FF—7F–6ÂÖæBÖÖF6†VBÖ‡VÖâ×&÷Fö6öÂ÷7FF—7F–6ÂÖæBÖÖF6†VBÖ‡VÖâ×&÷Fö6öÂÓ##bÓ‚Ó’æÖB¢Ò¾X‰Şz‹òcŠ^XX^z	Nz›nKˆîXøŞikZêiúUÒ‚ââòââòââ÷7W÷'F–ærÖWf–FVæ6RöG&gB×c×&W6V&6‚×&Vg&W6‚ò¢Ò¾X‰Şz‹òc"Šêi[8F†öæö×’Kˆâ†öö²Z)î˜xşz	Nz›eÒ‚ââòââòââ÷7W÷'F–ærÖWf–FVæ6RöG&gB×c"Ö6÷VçB×F†öæö×’Ö†öö²×&W6V&6‚ò ¢2™˜N[ÙRNûÉ®{+î˜ZIn˜:iÚ^k©  £â7VâWBÂâÂ²¤vVçG>(	’Æ7BW†Ò¢Â%†—c£#cbãSCWc%Ò†‡GG3¢òö'†—bæ÷&rö‡FÖÂó#cbãSCWc"’à£"â&W&¶VÆW’$D’Â´ÄRöff–6–Â&W÷6—F÷'’Bg&÷¦Vâ6öÖÖ—EÒ†‡GG3¢òöv—F‡V"æ6öÒ÷&F’Ö&W&¶VÆW’övVçG2ÖÆ7BÖW†Ò÷G&VRóScVSCSfFSv6VcSssccƒc66#ƒVS63vf3sb’à£2â‡Vvv–ærf6RÂ´ÄRW"vUÒ†‡GG3¢òö‡Vvv–ævf6Ræ6ò÷W'2ó#cbãSCR’âŠú^š^™Ú.K‹®XúşXù‚7W&f6^ûÈÎKˆŞyJK¨îi»şKº>Xk¾{¹>Šë®ih~i[ZÙ~8 £Bâä•5B4•4’Â²¥&7F–6W2f÷"WFöÖFVB&Væ6†Ö&²WfÇVF–öç2öbÆæwVvRÖöFVÇ2¢Â–æ—F–ÂV&Æ–2G&gEÒ†‡GG3¢ò÷wwrææ—7Bæv÷böæWw2ÖWfVçG2öæWw2ó##bó÷F÷v&G2Ö&W7B×&7F–6W2ÖWFöÖFVBÖ&Væ6†Ö&²ÖWfÇVF–öç2’à£Râä•5BÂ²¤W‡æF–ærF†R’WfÇVF–öâFööÆ&÷‚v—F‚7FF—7F–6ÂÖöFVÇ2¥Ò†‡GG3¢ò÷wwrææ—7Bæv÷böæWw2ÖWfVçG2öæWw2ó##bó"öæWr×&W÷'BÖW‡æF–ærÖ’ÖWfÇVF–öâ×FööÆ&÷‚×7FF—7F–6ÂÖÖöFVÇ2’à£bâä•5BÂ´’&—6²ÖævVÖVçBg&ÖWv÷&²ãÒ†‡GG3¢ò÷wwrææ—7Bæv÷b÷V&Æ–6F–öç2ö'F–f–6–ÂÖ–çFVÆÆ–vVæ6R×&—6²ÖÖævVÖVçBÖg&ÖWv÷&²Ö’×&ÖbÓ’à£râæ–6²†V–æW"Â²¥v†Vâv–ÆÂF†R&Væ6†Ö‡†–ærÆwVRVæCò¥Ò†‡GG3¢ò÷wwrç–÷WGV&Ræ6öÒ÷vF6ƒ÷cÒÖç“e†¤Ó„5’Â’Væv–æVW"v÷&ÆN(	—2f—"##bà ®i»NZèÎi[Ny¨N˜	iÚ^k©ŠøhÚî8yúŞ[É^8ŠøNXˆnKˆâ&Vg&W6‚F&vWG2Šx7W÷'F–ærÖWf–FVæ6RöG&gB×c×&W6V&6‚×&Vg&W6‚öKˆâ7W÷'F–ærÖWf–FVæ6RöG&gB×c"Ö6÷VçB×F†öæö×’Ö†öö²×&W6V&6‚ö8.iÊÎX‰Şz‹ş[nYÎKˆÄRšyºîy¨BW"ö6öFRô„b7W&f6W2ŠxnK‹®x˜iÊÎK©.Š^ŠøhÚîûÈÎˆÎKˆŞiŠşKˆKŠ®xºÎz¸¾iË®ièNy¨NKˆŠy.š¨ÎŠø8 
+| Physical Sciences | ç‰©ç†ã€è®¡ç®—åŒ–å­¦/ææ–™ã€å¤©æ–‡ã€åœ°çƒ/å¤§æ°”ç§‘å­¦ç ”ç©¶è€… | æ•°å€¼æ–¹æ³•ã€å•ä½ã€æ”¶æ•›æ€§ã€è§‚æµ‹/æ¨¡æ‹Ÿæ•°æ®ç‰ˆæœ¬ |
+| Transportation & Safety | èˆªç©ºç©ºåŸŸã€æ¸¯èˆªã€æ¶ˆé˜²ä¸å…¬å…±å®‰å…¨äººå‘˜ | å®‰å…¨å…³é”®è§„åˆ™ã€åŒºåŸŸæ³•è§„ã€ä»¿çœŸä¸æ“ä½œçŠ¶æ€è¯æ® |
+| Education & Information | æ•™è‚²æŠ€æœ¯ã€å›¾æƒ…ã€ç¿»è¯‘ä¸æœ¬åœ°åŒ–ä¸“å®¶ | è¯­è¨€/åœ°åŒºã€å†…å®¹æˆæƒã€æ£€ç´¢ provenance ä¸è¯­ä¹‰è¯„ä»· |
+| Psychology & Neuroscience | è®¡ç®—ç¥ç»ã€å®éªŒå¿ƒç†ã€ç¥ç»å½±åƒç ”ç©¶äººå‘˜ | äººä½“æ•°æ®ä¼¦ç†ã€ç»Ÿè®¡ protocolã€åˆ†æå·¥å…·é“¾ä¸ç»“æœè§£é‡Š |
+| Social Sciences | ç»æµä¸å®šé‡ç¤¾ä¼šç ”ç©¶äººå‘˜ | samplingã€å› æœ/ç›¸å…³è¾¹ç•Œã€æ•æ„Ÿæ•°æ®å’Œæ”¿ç­–è¯­å¢ƒ |
+| Agriculture & Environment | æ°´èµ„æº/ç¯å¢ƒå»ºæ¨¡ã€ç²¾å‡†å†œä¸šã€å†œè‰ºä¸“å®¶ | åœ°åŸŸä¸å­£èŠ‚ã€åœ°ç†æ•°æ®ã€ä¼ æ„Ÿå™¨/æ¨¡å‹ã€ç¯å¢ƒè®¸å¯ |
+| Legal | è¯‰è®¼æ”¯æŒ/e-discoveryã€æ³• doctrinal research ä¸“å®¶ | æ³•åŸŸã€æœ‰æ•ˆæ—¥æœŸã€ä¿å¯†ç‰¹æƒã€citation ä¸ä¸å¯æ‰§ä¸šå£°æ˜ |
+
+è¿™ä¸ªè¡¨å®šä¹‰çš„æ˜¯ sourcing lanesï¼Œä¸æ˜¯å›ºå®š headcountã€‚æœ€ç»ˆ rosterã€æ¯ä¸ª subdomain çš„ author/reviewer æ•°é‡å’Œè½¯ä»¶è¦†ç›–ç”± pilot ä¸­çš„ candidate supplyã€åˆ†æ­§ã€è¿”å·¥å’Œå·¥ç¨‹é•¿å°¾å†³å®šã€‚[P]
+
+## 2.6 ALE çš„è´¡çŒ®ä¸è¾¹ç•Œ
+
+**[I] æ›´å‡†ç¡®çš„è´¡çŒ®å®šä½ï¼š** ALE å¹¶éé¦–åˆ› GUI taskã€ä¸“å®¶å‡ºé¢˜ã€private test æˆ–è‡ªåŠ¨ graderï¼›å®ƒçš„å·®å¼‚åœ¨ç»„åˆå±‚â€”â€”è·¨ 13 ä¸ªè¡Œä¸šé›†ç¾¤çš„ä¸“ä¸š workflowã€Windows/Linux å®é™…è½¯ä»¶ç¯å¢ƒã€task-specific executable evaluatorã€ä¸“å®¶ç”Ÿäº§é“¾ï¼Œä»¥åŠ public/private/pending/rolling çš„é•¿æœŸè¿è¥è®¾æƒ³ã€‚
+
+**[I] ä»æœªè‡ªåŠ¨è§£å†³ï¼š**
+
+- deterministic scorer ä»å¯èƒ½æ¼æ£€è¦æ±‚ã€è¯¯æ‹’åˆæ³•å¤šè§£æˆ–å¥–åŠ± shortcutï¼›
+- hidden reference çš„ post-run staging æ˜¯æ—¶åºæ§åˆ¶ï¼Œä¸ä¸€å®šæ„æˆç‹¬ç«‹ä¿¡ä»»è¾¹ç•Œï¼›
+- private å¹¶ä¸èƒ½æ’é™¤ pretraining exposureã€search-time contamination æˆ–å†…éƒ¨æ³„æ¼ï¼›
+- fixed benchmark aggregate ä¸ä»£è¡¨ç›®æ ‡èŒä¸šæ€»ä½“ï¼›
+- agent system åœ¨ benchmark ä¸ŠæˆåŠŸä¸ç­‰äºç»„ç»‡éƒ¨ç½²ä¸­åˆ›é€ åŒç­‰ç»æµä»·å€¼ã€‚
+
+å› æ­¤ï¼Œæœ¬æ–¹æ¡ˆç»§æ‰¿ ALE çš„å·¥ç¨‹éª¨æ¶ï¼Œä½†æŠŠ validityã€integrityã€ç»Ÿè®¡ä¸ç¡®å®šæ€§ã€äººç±»åŸºçº¿ä¸ç”Ÿå‘½å‘¨æœŸæ²»ç†æå‡ä¸ºç‹¬ç«‹å·¥ä½œæµã€‚
+
+---
+
+# 3. æˆ‘ä»¬ç©¶ç«Ÿäº¤ä»˜ä»€ä¹ˆ
+
+## 3.1 ä¸ƒä¸ªç‹¬ç«‹è®¡æ•°å™¨
+
+```text
+S = expert submissions / candidate ideas entering review
+C = commissioned source packages or projects
+W = final-accepted distinct workflow packages
+I_base = one canonical runnable instance per accepted workflow
+V_extra = separately accepted variants with marginal measurement value
+I_total = I_base + V_extra
+R = agent runs used for dry-run, validation, calibration or evaluation
+```
+
+é»˜è®¤åˆåŒä¸ºï¼š
+
+```text
+W = 1,000
+I_base = Î£_(w=1)^1,000 1 = 1,000
+I_total = 1,000 + V_extra
+R = Î£_(configuration Ã— accepted instance Ã— planned trials)
+```
+
+è¿™äº›è®¡æ•°å™¨ä¸å¯äº’æ¢ã€‚åŒä¸€ canonical instance çš„ repeated trialã€retryã€best-of-kã€regrade å’Œ repaired execution å‡ä¸å¢åŠ  `W` æˆ– `I_total`ã€‚é¢å¤– variant ä¸å¢åŠ  `W`ï¼›å…¶æ•°é‡ã€åˆ†å¸ƒå’Œä»·æ ¼ç”± intended use ä¸ pilot å†³å®šï¼Œä¸ä» ALE çš„ `1,490 / 960` å†å²æ¯”ä¾‹å€’æ¨ã€‚
+
+## 3.2 Workflow package contract
+
+æ¯ä¸ªè®¡å…¥ 1,000 çš„ workflow package è‡³å°‘åŒ…å«ï¼š
+
+1. **Workflow identityï¼š** å”¯ä¸€ `workflow_id`ã€professional goalã€target capabilityã€process boundaryã€output contractã€evaluator contractã€å»é‡ä¸ identity adjudicationã€‚
+2. **Task specï¼š** ç›®æ ‡èƒ½åŠ›ã€participant-visible instructionã€constraintsã€allowed resourcesã€output contract å’Œç»“æŸæ¡ä»¶ã€‚
+3. **Input packï¼š** å›ºå®š bytes/hashã€schemaã€provenanceã€æˆæƒã€å¼‚å¸¸çº¦å®šå’Œå¯è§æ€§ã€‚
+4. **Environment packï¼š** OS/imageã€è½¯ä»¶åŠæ’ä»¶ã€licenseã€locale/timezoneã€networkã€accountsã€start/reset å’Œ health checksã€‚
+5. **Reference packï¼š** hidden referenceã€åˆæ³•ç­‰ä»·ç©ºé—´ã€rubric/invariantsã€provenanceã€review ä¸ custodyã€‚
+6. **Evaluator packï¼š** executable scorerã€score semanticsã€ç‰ˆæœ¬ã€component evidenceã€å¤±è´¥è¯­ä¹‰ä¸ regression testsã€‚
+7. **Protocol manifestï¼š** harnessã€prompt/contextã€toolsã€budgetã€attempt/retryã€seed/trial policy å’Œ telemetryã€‚
+8. **QA packï¼š** author demoã€blind solveã€engineering dry-runã€evaluator red teamã€domain reviewã€rights/security clearance ä¸ final approvalã€‚
+9. **Governance packï¼š** pool/accessã€incidentã€repairã€regradeã€rotationã€retirement å’Œ lineageã€‚
+10. **Run evidenceï¼š** immutable artifactsã€logsã€trajectoryã€environment attestationã€raw score ä¸ failure labelã€‚
+
+## 3.3 Definition of Done
+
+ä¸€ä¸ª workflow package åªæœ‰åŒæ—¶æ»¡è¶³ä»¥ä¸‹æ¡ä»¶æ‰è®¡å…¥ 1,000ï¼š
+
+- è‡³å°‘ä¸€ä¸ª canonical runnable instance åœ¨ clean environment ä¸­å¯é‡å»ºï¼Œstart/reset/health contract å¯é‡å¤æ‰§è¡Œï¼›
+- participant-visible packet è¶³ä»¥è®©æœªè§ reference çš„ solver å®Œæˆä»»åŠ¡ï¼›
+- hidden reference ä¸ execution plane éš”ç¦»ï¼Œinput/reference/evaluator å‡æœ‰ hash å’Œç‰ˆæœ¬ï¼›
+- evaluator æ¥å— gold ä¸åˆæ³• alternate-correctï¼Œæ‹’ç»é’ˆå¯¹æ€§ known-badã€near-missã€mutation ä¸ shortcutï¼›
+- domainã€engineeringã€rights/security ä¸ final approval å‡å®Œæˆï¼Œä¸”ä¸å­˜åœ¨ç¡¬æ€§è§’è‰²å†²çªï¼›
+- releaseã€accessã€refreshã€incident å’Œ retirement owner å·²ç™»è®°ï¼›
+- æ‰€æœ‰ mandatory defect å·²å…³é—­ï¼Œä»»ä½• residual risk å‡æœ‰ä¹¦é¢ä¾‹å¤–ä¸è¡¥å¿æ§åˆ¶ã€‚
+
+## 3.4 ä¸è®¡å…¥ 1,000 çš„å¯¹è±¡
+
+- task ideaã€promptã€task cardã€metadata rowã€åªæœ‰ specification è€Œæ²¡æœ‰ canonical runnable instance çš„ workflowï¼Œæˆ–æœªç»å®ç°çš„ submissionï¼›
+- pending-QCã€rights blockedã€æ— æ³•é‡å»ºæˆ– evaluator æœªéªŒè¯çš„æ¡ç›®ï¼›
+- åªæ›¿æ¢åå­—ã€æ–‡ä»¶åã€seed æˆ–è¡¨é¢æ•°å€¼çš„ pseudo-variantï¼›ä»»ä½• extra variant å‡ä¸å¢åŠ  workflow countï¼›
+- åŒä¸€ instance çš„ trialã€retryã€resumeã€regrade æˆ– best-of-kï¼›
+- å›  reference leakageã€grader defect æˆ–ç¯å¢ƒæ¼‚ç§»è€Œè¢« quarantined çš„æ—§ç‰ˆæœ¬ï¼›
+- åªåœ¨ä½œè€…æœºå™¨æˆ–æ±¡æŸ“çŠ¶æ€ä¸‹é€šè¿‡ã€æ— æ³•åœ¨ clean holdout é‡ç°çš„ç»“æœã€‚
+
+## 3.5 Pool architecture
+
+æœ¬æ–¹æ¡ˆä½¿ç”¨å››ä¸ª evaluation poolsï¼Œå¦æŠŠ training purpose ä¸ retired archive åˆ†å¼€æ²»ç†ï¼š
+
+| ç”¨é€” | ä¸»è¦ç›®çš„ | å…è®¸åé¦ˆ | å…³é”®è¾¹ç•Œ |
+|---|---|---|---|
+| Development / Demo | ç¤ºä¾‹ã€å·¥å…·æ¥å…¥ã€å…¬å¼€å®¡è®¡ã€è°ƒè¯• | é«˜ | åˆ†æ•°ä¸ä»£è¡¨ unseen final |
+| Restricted Validation | è¿­ä»£ã€æ ¡å‡†ã€å†…éƒ¨æ¯”è¾ƒ | å—æ§ | æ˜ç¡®å±äº adaptive evaluation |
+| Private Final | å†»ç»“é…ç½®çš„æœ€ç»ˆ unseen æµ‹é‡ | æä½ | ä¸ä½œä¸º debug oracle |
+| Rotation Reserve | æ›¿æ¢ã€freshnessã€äº‹æ•…æ¢å¤ | é»˜è®¤æ—  | æœ‰ burn/disposition rule |
+| Training purpose | è®­ç»ƒæˆ–æ•°æ®é”€å”® | ç”±åˆåŒå®šä¹‰ | ä¸ private final concrete instances éš”ç¦» |
+| Retired archive | å†å²å®¡è®¡ã€å›æ”¾ã€bounded regrade | åªè¯» | ä¸é™é»˜æ¢å¤ä¸º unseen |
+
+å…·ä½“æ¯”ä¾‹å¿…é¡»ç”± intended useã€æš´éœ²é£é™©ã€ç»´æŠ¤èƒ½åŠ›å’Œ pilot æ•°æ®å†³å®šã€‚[P]
+
+---
+
+# 4. æ€æ ·å†³å®šç”Ÿäº§å“ª 1,000 ä¸ª
+
+## 4.1 å…ˆå®šä¹‰ sampling frameï¼Œå†è°ˆæ¯”ä¾‹
+
+**[R]** O*NET/SOC ä¸ ALE taxonomy ç”¨äº coverage discoveryï¼Œè€Œä¸æ˜¯è‡ªåŠ¨åˆ†é… quotaã€‚å®¢æˆ·éœ€è¦å…ˆè¯´æ˜ç›®æ ‡æ€»ä½“ï¼šä¸šåŠ¡æµç¨‹ã€è¡Œä¸šã€è½¯ä»¶ã€è¯­è¨€/åœ°åŒºã€é£é™©ã€ä½¿ç”¨é¢‘ç‡ã€ç»æµä»·å€¼ã€æ¨¡å‹èƒ½åŠ›ç¼ºå£æˆ–æœªæ¥è®­ç»ƒä»·å€¼ã€‚è‹¥ç›®æ ‡æ€»ä½“æœªçŸ¥ï¼ŒæŠ¥å‘Šåªèƒ½æè¿° frozen releaseï¼Œä¸èƒ½å£°ç§°èŒä¸šä»£è¡¨æ€§ã€‚
+
+## 4.2 Admission hard gates
+
+å€™é€‰ workflow/instance å…ˆé€šè¿‡ä¸å¯è¡¥å¿çš„ç¡¬é—¨æ§›ï¼š
+
+1. **Runnableï¼š** èƒ½åœ¨å¯æ”¯æŒçš„ substrate ä¸­é‡å»ºå’Œæ‰§è¡Œã€‚
+2. **Legally usableï¼š** inputã€referenceã€è½¯ä»¶å’Œè¾“å‡ºæœ‰å¯è®°å½•çš„ä½¿ç”¨æƒã€‚
+3. **Minimally verifiableï¼š** æˆåŠŸæ ‡å‡†å¯ä»¥è½¬æˆ artifact/state evidenceã€‚
+4. **Safe and privacy compliantï¼š** ä¸éœ€è¦ä¸å¯æ¥å—çš„ä¸ªäººã€å®¢æˆ·æˆ–é«˜å±æ•°æ®æš´éœ²ã€‚
+5. **Identity-resolvedï¼š** èƒ½åˆ¤æ–­å®ƒæ˜¯æ–° workflowã€åˆæ³• variant è¿˜æ˜¯é‡å¤/ä¼ªå˜ä½“ã€‚
+
+ä»»ä¸€ç¡¬é—¨æ§›å¤±è´¥ï¼Œå€™é€‰ä¸å¾—ç”¨é«˜å•†ä¸šä»·å€¼æˆ–ä½æˆæœ¬â€œè¡¥åˆ†â€ã€‚
+
+## 4.3 å¤šç›®æ ‡ portfolio é€‰æ‹©
+
+é€šè¿‡ç¡¬é—¨æ§›åï¼Œå†å¯¹ä»¥ä¸‹ç›®æ ‡åšå¤šç›®æ ‡ä¼˜åŒ–ï¼š
+
+- customer relevance ä¸ä¸šåŠ¡é£é™©ï¼›
+- capability coverage ä¸ domain coverageï¼›
+- economic/strategic valueï¼›
+- frontier discrimination ä¸ä¿¡æ¯å¢é‡ï¼›
+- evaluator feasibility ä¸åˆæ³•å¤šè§£å¯ç®¡ç†æ€§ï¼›
+- software/environment feasibilityï¼›
+- ä¸“å®¶ä¾›ç»™ã€æƒåˆ©ã€æˆæœ¬ä¸ç»´æŠ¤è´Ÿæ‹…ï¼›
+- future training value ä¸ commercial sellabilityï¼›
+- ä¸å·²é€‰èµ„äº§çš„ redundancy å’Œ correlated failureã€‚
+
+è¿™äº›ç»´åº¦ä¸åº”åœ¨ pilot å‰è¢«å‹æˆä¸€ä¸ªçœ‹ä¼¼ç²¾ç¡®çš„æ€»åˆ†ã€‚å»ºè®®å…ˆä¿ç•™ Pareto setï¼Œå†ç”¨å®¢æˆ·ä¼˜å…ˆçº§ã€hard caps ä¸ sensitivity analysis åšé€‰æ‹©ã€‚[R]
+
+## 4.4 Workflow identity ä¸åˆæ³• variant
+
+**åˆæ³• variant å¿…é¡»æ”¹å˜è‡³å°‘ä¸€ç§æœ‰æµ‹é‡æ„ä¹‰çš„ç»“æ„ï¼š** é‡è¦çŠ¶æ€ã€ä¿¡æ¯å¯å¾—æ€§ã€å¤±è´¥æ¨¡å¼ã€çº¦æŸç»„åˆã€artifact ç»“æ„ã€å†³ç­–è¾¹ç•Œæˆ–éš¾åº¦æœºåˆ¶ï¼›å¹¶ä¸”å…±äº« evaluator ä»èƒ½è¯æ˜ validityã€‚
+
+è¯†åˆ«æµç¨‹åº”æŠŠ task/input/reference/evaluator/environment hashesã€exact/fuzzy/multimodal near-duplicate æ£€æµ‹ã€semantic/graph workflow comparisonã€external benchmark overlapã€candidate systems çš„ response vectorï¼Œä»¥åŠ blind expert identity adjudication ç»„åˆèµ·æ¥ï¼›ä»»ä½•å•ä¸€ä¿¡å·éƒ½ä¸èƒ½ç‹¬è‡ªè¯æ˜ workflow identityã€‚
+
+åªæ”¹å§“åã€æ—¥æœŸã€éšæœºç§å­ã€æ–‡ä»¶åæˆ–æ— å®è´¨æ„ä¹‰çš„æ•°å­—ï¼Œä¸å¾—ä½œä¸ºæ–° instance è®¡æ•°ã€‚
+
+## 4.5 Allocation ä½•æ—¶å†»ç»“
+
+Domainã€difficultyã€evaluator familyã€software familyã€risk class å’Œ public/private allocation éƒ½æ˜¯ pilot è¾“å‡ºã€‚å†»ç»“å‰è‡³å°‘éœ€è¦è§‚å¯Ÿï¼šå€™é€‰ä¾›ç»™ã€acceptance yieldã€å·¥ç¨‹é•¿å°¾ã€evaluator validityã€run varianceã€rights frictionã€ç»´æŠ¤æˆæœ¬å’Œè¾¹é™…ä¿¡æ¯å¢é‡ã€‚ç°æœ‰ portfolio ç ”ç©¶ä¸­çš„æƒé‡ã€é˜ˆå€¼ä¸ç¤ºä¾‹é…é¢åªèƒ½ä½œä¸º scenario inputï¼Œä¸è¿›å…¥æœ¬åˆç¨¿çš„æ‰§è¡Œæ‰¿è¯ºã€‚
+
+---
+
+# 5. ä»ä¸“å®¶ workflow åˆ° accepted asset
+
+## 5.1 å¯¹ Micro1 ç»éªŒçš„ç»§æ‰¿ä¸å¢å¼º
+
+æˆ‘åœ¨ Micro1 å‚ä¸è¿‡ä¸€æ¡ç›¸ä¼¼çš„æ•°æ®ç”Ÿäº§é“¾ï¼šgroup lead å…ˆé˜…è¯»ä¸šåŠ¡ææ–™ã€å…¬å¼€ç ”ç©¶ä¸çœŸå® raw dataï¼Œæç‚¼ capabilityã€å…³é”®å˜é‡å’Œè¯¯åˆ¤åœºæ™¯ï¼›å†æŠŠ Golden case æ‹†æˆ scenario matrixã€rubricã€rankingã€checklist ä¸ç­”ç–‘ææ–™ï¼›æ ‡å‡†ç¨³å®šåæ‰è¿›è¡Œä¸“å®¶ç­›é€‰å’Œäººå‘˜é…ç½®ï¼›å°‘é‡æœ€åŒ¹é…ä¸“å®¶è¿›å…¥ batch zeroï¼Œåˆ†æ­§ååˆ¤æ–­æ˜¯ guidelineã€ä¸“å®¶ç†è§£è¿˜æ˜¯ case æœ¬èº«çš„é—®é¢˜ï¼›è¡¨ç°æœ€å¥½çš„ä¸“å®¶å¯ä»¥è¿›å…¥ reviewer pipelineï¼Œæ—¥å¸¸é—®é¢˜äº¤ç»™è¿è¥ï¼Œä¾‹å¤–å‡çº§ç»™ leadã€‚
+
+**[I] è¿™å¥—ç»éªŒçš„é¡ºåºé€»è¾‘ä¸ ALE çš„ expert sourcing â†’ first-pass review â†’ engineering dry-run â†’ expert final QC ç›¸å®¹ï¼Œä½†å…¬å¼€æ¥æºä¸èƒ½è¯æ˜ Micro1 çš„äººæ•°ã€äº§èƒ½æˆ–é˜ˆå€¼é€‚ç”¨äºæœ¬é¡¹ç›®ã€‚**
+
+æœ¬æ–¹æ¡ˆä¿ç•™ä¸Šè¿°æ–¹æ³•ï¼Œå¹¶å¢åŠ å…­ä¸ªæ§åˆ¶ï¼š
+
+1. owner mandate ä¸ claim boundaryï¼›
+2. rights/security/COI åœ¨ä»»åŠ¡å®ç°å‰ç½®ï¼›
+3. authorã€blind solverã€reviewerã€reference custodian ä¸ final approver åˆ†ç¦»ï¼›
+4. Golden ä»â€œä¸€ä¸ªæ ‡å‡†ç­”æ¡ˆâ€å‡çº§ä¸º executable evidence packï¼›
+5. æ‰€æœ‰ç­”ç–‘ä¸ tolerance è¿›å…¥ versioned change controlï¼›
+6. ä¸Šçº¿åæŒç»­æŠ½å®¡ã€incidentã€repairã€rotation å’Œ retirementã€‚
+
+## 5.2 G0â€“G8 production gates
+
+| Gate | æ ¸å¿ƒå·¥ä½œ | æ”¾è¡Œè¯æ® | ä¸»è¦è´Ÿè´£è§’è‰² |
+|---|---|---|---|
+| G0 Owner mandate | intended useã€constructã€unitã€claimã€risk appetite | scope memoã€unit ledgerã€open decisions | Benchmark Owner |
+| G1 Rights/security envelope | dataã€licenseã€PIIã€COIã€custody | rights mapã€access matrixã€incident route | Rights/Security |
+| G2 Lead calibration | scenario matrixã€Goldenã€guidelineã€FAQ | demo + blind evidenceï¼›ambiguity ledger | Group Lead |
+| G3 Qualification & assignment | èº«ä»½/claimã€ç»“æ„åŒ–é¢è¯•ã€blind work sample | role-specific qualification packet | Group Lead / Ops |
+| G4 Authoring & engineering | specã€inputã€referenceã€environmentã€evaluator | versioned runnable package | Task / Env / Eval Engineers |
+| G5 Batch zero | crossed blind runs ä¸å…­ç±»æ ¹å› è¯Šæ–­ | artifactã€traceã€disagreement ä¸ä¿®å¤è¯æ® | Group Lead |
+| G6 Release assurance | domainã€technicalã€rights/security é›†æˆå¤æ ¸ | release memoã€limitationsã€ç‹¬ç«‹ç­¾å­— | Final Approver |
+| G7 Controlled production | æ³¢æ¬¡ç”Ÿäº§ã€æŠ½å®¡ã€funnel ä¸ drift monitoring | æ‰¹æ¬¡ ledgerã€quality/integrity dashboard | Benchmark Owner / Ops |
+| G8 Refresh/incident | quarantineã€repairã€invalidateã€rotateã€retire | impact analysisã€new versionã€closure | Owner + Rights/Security |
+
+## 5.3 ä¸“å®¶èµ„æ ¼ä¸æ˜¯â€œçœ‹ç®€å†â€
+
+è§’è‰²èµ„æ ¼ä½¿ç”¨è¯æ®é“¾ï¼Œè€Œä¸æ˜¯å•ä¸€ seniorityï¼š
+
+```text
+identity and critical-claim verification
+â†’ structured interview
+â†’ blind role-relevant work sample
+â†’ role-specific Golden task
+â†’ shadow production and calibration
+â†’ time-bounded authority with requalification
+```
+
+- **Domain expertï¼š** å½“å‰ä¸“ä¸šåˆ¤æ–­ã€æ³•è§„/å˜é‡/åä¾‹ä¸åˆç†å¤šè§£ã€‚
+- **Practitioner authorï¼š** åœ¨ç›®æ ‡è½¯ä»¶ä¸­å®ŒæˆçœŸå® workflowï¼Œå¹¶èƒ½æ‹†æˆ spec/reference/evaluationã€‚
+- **Group leadï¼š** å»º guidelineã€è¯Šæ–­æ­§ä¹‰ã€ç»´æŠ¤å˜æ›´ä¸ escalationã€‚
+- **Independent solverï¼š** æœªè§ referenceï¼Œä»…å‡­ participant-visible packet åœ¨ clean environment æ‰§è¡Œã€‚
+- **Domain reviewerï¼š** åˆ¤æ–­é¢†åŸŸæ­£ç¡®æ€§ã€alternate-correct å’Œå®è´¨é”™è¯¯ï¼Œå¹¶ç»™å‡ºå¯å®¡è®¡ç†ç”±ã€‚
+
+ç®€å†ã€å­¦å†ã€è¯ä¹¦å’Œä½œå“å¯ä»¥è¯æ˜ identityã€scope ä¸å†å² claimï¼Œä½†ä¸èƒ½å•ç‹¬è¯æ˜å½“å‰é¡¹ç›®èƒ½åŠ›ã€‚[I]
+
+## 5.4 Batch zero æ˜¯ fault-isolation experiment
+
+Batch zero ä¸è¿½æ±‚æ•°é‡ï¼Œè€Œæ˜¯å®šä½å…­ç±»æ ¹å› ï¼š
+
+```text
+guideline/spec
+expert/solver understanding
+case/input
+environment
+reference
+evaluator
+```
+
+é€šè¿‡ blind solveã€component swapã€clean resetã€artifact/trajectory ä¿ç•™ä¸ç‹¬ç«‹ä»²è£åˆ¤æ–­ primary cause ä¸ contributing causesã€‚Agreement æ˜¯ç—‡çŠ¶æŒ‡æ ‡ï¼Œä¸æ˜¯ validity æœ¬èº«ã€‚åªæœ‰å®Œæˆä¿®å¤ã€å›å½’å¹¶å½¢æˆç¨³å®š decision rules çš„ strata æ‰è¿›å…¥ controlled productionã€‚
+
+## 5.5 RACI ä¸ç¡¬æ€§è§’è‰²å†²çª
+
+å®Œæ•´ RACI éœ€è¦åœ¨ pilot å‰å¡«å…¥å…·ä½“äººå‘˜ã€‚åˆç¨¿çš„æœ€å°è´£ä»»ç»“æ„å¦‚ä¸‹ï¼š
+
+| Activity | Accountable | Responsible | å¿…é¡»å’¨è¯¢/ç‹¬ç«‹å¤æ ¸ |
+|---|---|---|---|
+| Constructã€scopeã€acceptance policy | Benchmark Owner | Owner / Research Lead | Domainã€Engineeringã€Rightsã€Final Approver |
+| Guideline ä¸ Golden | Group Lead | Lead + Author | Solverã€Reviewerã€Evaluator Engineer |
+| Runnable package | Task Engineer | Task / Environment Engineers | Authorã€Evaluatorã€Rights |
+| Evaluator validity | Evaluator Engineer | Evaluator Engineer | Domain Reviewerã€independent technical accepter |
+| Blind solve | Group Lead | Independent Solver | Opsï¼›ä¸å¾—è§ reference |
+| Domain disposition | Domain Reviewer | Domain Reviewer | Author å¯ç­”ç–‘ä½†ä¸è¡¨å†³ |
+| Rights/security clearance | Rights/Security Owner | Rights/Security | Opsã€Reference Custodian |
+| Release readiness | Final Approver | Final Approver | å„å·¥ä½œæµ ownerï¼›ç‹¬ç«‹ç­¾å­— |
+| Incident/repair/retire | Benchmark Owner | Root-cause owners + Ops | Rights/Securityã€Final Approver |
+
+ç¡¬æ€§ä¸å…¼å®¹è‡³å°‘åŒ…æ‹¬ï¼š`Author â‰  Blind Solver`ï¼›author ä¸å¾—æ˜¯ sole domain reviewerï¼›task/environment/evaluator builder ä¸å¾— final-approve è‡ªå·±çš„èµ„äº§ï¼›solver ä¸å®¡è‡ªå·±çš„ runï¼›reference custodian ä¸å‚ä¸ blind solveï¼›incident subject ä¸æ‹…ä»»ç‹¬ç«‹ investigator æˆ– closure approverã€‚å°å›¢é˜Ÿæ— æ³•å®Œå…¨åˆ†ç¦»æ—¶ï¼Œå¿…é¡»è®°å½• compensating controlã€èŒƒå›´ã€æœ‰æ•ˆæœŸä¸ independent countersignatureã€‚
+
+---
+
+# 6. æ€æ ·è¯æ˜åˆ†æ•°å¯ä¿¡
+
+## 6.1 Evaluator mode ä¸ç­‰äº validity
+
+`deterministic / hybrid / LLM-judge` åªè¯´æ˜ scorer æ€æ ·æ‰§è¡Œã€‚Validity è¦å›ç­”ï¼šè¿™ä¸ªå†»ç»“çš„ task/reference/evaluator/protocol äº§ç”Ÿçš„åˆ†æ•°ï¼Œæ˜¯å¦æ”¯æŒè®¡åˆ’ä¸­çš„èƒ½åŠ›è§£é‡Šå’Œä¸šåŠ¡ç”¨é€”ã€‚
+
+æ¯ä¸ª atomic requirement å»ºç«‹åŒå‘é“¾ï¼š
+
+```text
+prompt clause
+â†’ intended construct
+â†’ reference element / legitimate equivalence
+â†’ executable check
+â†’ retained evidence
+â†’ positive and negative fixtures
+```
+
+Forward coverage é˜²æ­¢é¢˜é¢è¦æ±‚æœªè¯„åˆ†ï¼›backward coverage é˜²æ­¢ scorer å¥–åŠ±é¢˜é¢æ²¡æœ‰æˆæƒçš„æ·å¾„ã€‚åªæœ‰æ—¢æ¥å—åˆæ³•ç­”æ¡ˆã€åˆæ‹’ç»é’ˆå¯¹æ€§é”™è¯¯çš„ check æ‰ç®—æœ‰ discrimination evidenceã€‚
+
+## 6.2 Minimum evaluator test library
+
+æ¯ä¸ª evaluator è‡³å°‘è¦†ç›–ä»¥ä¸‹ failure mechanismsï¼Œæ•°é‡ç”±é£é™©å’Œ pilot å†³å®šï¼š[R/P]
+
+- goldï¼›
+- known-badï¼›
+- alternate-correctï¼›
+- near-miss ä¸ boundaryï¼›
+- corrupt / missing artifactï¼›
+- mutation ä¸ metamorphic relationï¼›
+- surface-compliant-but-wrongï¼›
+- shortcut / reward gamingï¼›
+- grader tampering ä¸ prompt injectionï¼›
+- environment / dependency failureï¼›
+- cross-version replayï¼›
+- minimized counterexample ä¸ targeted regressionã€‚
+
+Exact/hash åªé€‚ç”¨äº identity æœ¬èº«å°±æ˜¯è¦æ±‚çš„å¯¹è±¡ï¼›schema è¯æ˜ç»“æ„ï¼Œä¸èƒ½æ›¿ä»£è¯­ä¹‰ï¼›visual similarity ä¸èƒ½è¯æ˜å¯ç¼–è¾‘ã€åŠŸèƒ½æ­£ç¡®æˆ–ä¸šåŠ¡æœ‰æ•ˆï¼›å¼€æ”¾ç­‰ä»·ç©ºé—´åº”ç»„åˆ invariantsã€functional/property/metamorphic testsã€multiple goldsã€ä¸“å®¶ rubric ä¸ä»²è£ã€‚
+
+## 6.3 å…³é”®è¯Šæ–­é‡
+
+```text
+C_forward  = covered applicable requirements / all applicable requirements
+C_backward = authorized checks / all checks
+FAR        = targeted invalid fixtures accepted / all targeted invalid fixtures
+FRR        = targeted valid fixtures rejected / all targeted valid fixtures
+```
+
+è¿™äº›æŒ‡æ ‡æ²¡æœ‰è·¨ä»»åŠ¡é€šç”¨é˜ˆå€¼ã€‚è´¢åŠ¡ã€åŒ»ç–—ã€æ³•å¾‹ã€é«˜å®‰å…¨é£é™©ä»»åŠ¡çš„é”™è¯¯ä»£ä»·ä¸åˆ›æ„/æ¢ç´¢ä»»åŠ¡ä¸åŒï¼›æ”¾è¡Œé˜ˆå€¼å¿…é¡»ç”± intended use ä¸ pilot å†»ç»“ã€‚[P]
+
+## 6.4 Integrityã€failure attribution ä¸ arbitration
+
+Integrity ä¸ task score åˆ†å¼€è®°å½•ã€‚æœ€ä½æ§åˆ¶é“¾ä¸ºï¼ševaluator lockingã€execution/judge/audit trust zonesã€post-run reference stagingã€content-addressed handoffã€file/network/process access logã€patch lineageã€full trajectory ä¸ independent recomputationã€‚
+
+å¯¹å¤–è‡³å°‘åŒºåˆ†ï¼š
+
+- `FAIL_AGENT`ï¼›
+- `INVALID_EVALUATOR`ï¼›
+- `INVALID_ENV`ã€‚
+
+å†…éƒ¨å¦ä¿ç•™ task-specã€referenceã€harnessã€integrity ä¸ indeterminateã€‚Evaluator/environment fault ä¸å¾—é™é»˜è®° agent 0ã€‚
+
+ä»¥ä¸‹æƒ…å†µè§¦å‘ blind human arbitrationï¼šalternate-correct è¢«æ‹’ã€mode å†²çªã€judge instability/injectionã€environment ambiguityã€near-boundary é«˜å½±å“ç»“æœã€integrity suspicionã€å¯å¤ç° appeal æˆ– scorer repairã€‚ä¸¤åç‹¬ç«‹ reviewer åˆ†åˆ«åˆ¤æ–­ correctnessã€integrityã€environment å’Œ root causeï¼›å¿…è¦æ—¶ç”± senior tie-breaker è£å†³ï¼Œä¹Ÿå…è®¸ `UNRESOLVED`ã€‚
+
+Scorer repair åˆ›å»ºæ–°ç‰ˆæœ¬ï¼Œå¹¶ç”¨ executable affected-run selector å¯¹æ‰€æœ‰å—å½±å“ frozen artifacts é‡è¯„ï¼›ä¸åªé‡è¯„æŠ•è¯‰è€…ï¼Œä¹Ÿä¸è¦†ç›– original score viewã€‚
+
+---
+
+# 7. æ€æ ·å¯é è¿è¡Œ
+
+## 7.1 Reference architecture
+
+é‡‡ç”¨äº”ä¸ª planeï¼š[R]
+
+```text
+control plane   â€” scheduling, identity, policy, provisioning
+execution plane â€” agent-visible task environment
+evidence plane  â€” immutable artifacts, logs, hashes, trajectory
+judge plane     â€” hidden reference and scoring
+external plane  â€” licensed/live services under scoped access
+```
+
+é»˜è®¤ä¿¡ä»»è¾¹ç•Œï¼šhidden reference å’Œ evaluator secret ä¸è¿›å…¥ execution planeï¼›agent worker ä¸è¯»å– scoring materialï¼Œscoring worker ä¸æŒæœ‰ agent tool credentials æˆ–ä¿®æ”¹ handoff artifact çš„æƒé™ã€‚
+
+## 7.2 Hybrid substrate routing
+
+- Linux CLI/build ç±»ä»»åŠ¡ä¼˜å…ˆä½œä¸ºå—é™ container candidateï¼›
+- Windows GUIã€é©±åŠ¨æ•æ„Ÿã€GPU graphics å’Œ licensed professional software é»˜è®¤è¿›å…¥ full VM æˆ–èµ„æ ¼éªŒè¯çš„ remote workstation VMï¼›
+- nested virtualization é€å®¿ä¸»éªŒè¯ï¼›
+- existing/static sandbox é»˜è®¤ä»…ç”¨äº debugï¼Œä¸ä½œä¸º production identityã€‚
+
+ä¸€ç§ä¸‡èƒ½ sandbox ä¼šåœ¨ realismã€éš”ç¦»ã€licenseã€GPU/GUI ä¸æˆæœ¬ä¹‹é—´åˆ¶é€ ä¸å¯è§å¦¥åã€‚
+
+## 7.3 ä¸€æ¬¡ run çš„å¯å¤ç°èº«ä»½
+
+ä¸æ˜¯ä¸€ä¸ª image tagï¼Œè€Œæ˜¯ï¼š
+
+```text
+release manifest
++ resolved launch attestation
++ task/harness/evaluator bundle
+```
+
+Manifest åŒæ—¶ä¿å­˜ declared ä¸ observed çŠ¶æ€åŠç»“æ„åŒ– diffã€‚Image digestã€signatureã€provenanceã€SBOMã€scan å’Œ acceptance test åˆ†åˆ«å›ç­”ä¸åŒé—®é¢˜ï¼Œä¸èƒ½äº’ç›¸æ›¿ä»£ã€‚`latest`/image family åªèƒ½æ˜¯ promotion channelï¼Œä¸èƒ½ä½œä¸º run identityï¼›ä»»ä½• patch æˆ– rollback éƒ½éœ€è¦ rebuild/requalify æˆ–é‡æ–°éªŒè¯ã€‚
+
+## 7.4 Credentialsã€license ä¸ network
+
+- cloud provisioner credential ç•™åœ¨ control planeï¼›
+- agent model key å°½é‡ç•™åœ¨ host gatewayï¼›
+- guest åªè·å¾— run/audience/action-scoped capabilityï¼›
+- task accountã€license sessionã€storage capability ä¸ evaluator secret åˆ† principalï¼›
+- manifest åªå­˜ opaque binding ä¸å®¡è®¡å¼•ç”¨ï¼Œä¸å­˜ secret valueã€‚
+
+æ¯ä¸ª instance é€‰æ‹©ä¸€ç§ versioned network profileï¼š`offline`ã€`allowlist`ã€`simulated_or_mirrored` æˆ– `controlled_open`ã€‚Controlled-open åªæœ‰åœ¨ live/current web å±äº construct æ—¶æ‰å¯ç”¨ï¼Œå¹¶é˜»æ–­ control/judge/reference/metadata/ç›¸é‚» runã€‚Allowlist ä¸èƒ½å®Œå…¨æ¶ˆé™¤ indirect prompt injection æˆ– search-time contaminationã€‚
+
+## 7.5 Retry ä¸ reproducibility SLA
+
+åªæœ‰ç‹¬ç«‹ telemetry è¯æ˜ä¸ºå¤–éƒ¨åŸºç¡€è®¾æ–½æ•…éšœï¼Œä¸” agent æœªè·å¾—æ–° observationã€ç¬¬äºŒæ¬¡ç­–ç•¥æœºä¼šï¼Œstate ä¸å‰©ä½™é¢„ç®—å¯éªŒè¯ç­‰ä»·æ—¶ï¼Œæ‰å…è®¸åŒä¸€ trial çš„ infrastructure continuationã€‚Agent å·²è¡ŒåŠ¨åä»å¤´é‡å¯æ˜¯æ–° trialï¼›judge failure åªè§¦å‘ regradeï¼Œä¸å¢åŠ  agent trialã€‚
+
+Start-state integrityã€software launchã€input integrityã€judge repeatabilityã€artifact completenessã€cleanupã€revocationã€incident recovery å’Œ cross-provider equivalence çš„ SLA åªèƒ½ç”±åˆ†å±‚ pilot ä¸å®¢æˆ· measurement error budgetå†³å®šã€‚[P]
+
+---
+
+# 8. æ€æ ·æŠ¥å‘Šç»“æœä¸äººç±»åŸºçº¿
+
+## 8.1 å…ˆå†™ estimandï¼Œå†å†™ estimator
+
+å¿…é¡»åŒºåˆ†ï¼š
+
+- å• instance ä¸€æ¬¡ fresh trial çš„ full-success probabilityï¼›
+- instance mean partial qualityï¼›
+- workflow/domain aggregateï¼›
+- frozen release çš„ Full Pass Rate ä¸ Mean Scoreï¼›
+- ç»™å®š cost/time budget çš„ç«¯åˆ°ç«¯ reliabilityï¼›
+- ä¸ç‰¹å®šäººç±»äººç¾¤ã€ç‰¹å®š affordance çš„æ¯”è¾ƒã€‚
+
+æœ‰é™ 1,000-workflow release çš„ aggregate å¯ä»¥æè¿°è¿™äº› accepted workflow packages åŠå…¶å®é™…è¿è¡Œ instancesï¼Œä½†è‹¥è¦å¤–æ¨åˆ°æœªæ¥åŒç±»å·¥ä½œï¼Œå¿…é¡»æœ‰ç›®æ ‡ sampling frameã€æƒé‡ä¸ between-workflow uncertaintyã€‚
+
+## 8.2 Runã€trialã€attemptã€retryã€regrade
+
+- **Runï¼š** ç¼–æ’å®¹å™¨ï¼Œä¸æ˜¯ç»Ÿè®¡é‡å¤å•ä½ã€‚
+- **Trialï¼š** `(instance, frozen configuration, planned trial slot)` çš„ fresh stochastic realizationã€‚
+- **Attemptï¼š** trial å†… agent å¯è§çš„è¡ŒåŠ¨é“¾ï¼Œç´¯è®¡æ¶ˆè€—åŒä¸€ budgetã€‚
+- **Agent retryï¼š** å±äº configuration/policyï¼Œä¸å¢åŠ  trial åˆ†æ¯ä½†ä¸å¾—è·å¾—å…è´¹é¢„ç®—ã€‚
+- **Infrastructure continuationï¼š** åªæœ‰æ»¡è¶³å¤–å› ã€æ— æ–°ä¿¡æ¯ã€state/budget ç­‰ä»·ç­‰æ¡ä»¶æ—¶ä¿æŒ trial IDã€‚
+- **Evaluator rerun/regradeï¼š** å¯¹ immutable artifact å†è¯„åˆ†ï¼Œä¸å¢åŠ  agent trialã€‚
+
+## 8.3 Repeatsã€åŒºé—´ä¸ MDE
+
+åŒä¸€ instance çš„ repeats ä¸»è¦è¯†åˆ« trial stochasticityï¼›æ–°å¢ workflows/instances ä¸»è¦è¯†åˆ« task heterogeneityã€‚å¢åŠ  repeats ä¸èƒ½ä¿®å¤ sampling frame ä¸ä»£è¡¨ç›®æ ‡æ€»ä½“ï¼Œitem bootstrap ä¹Ÿä¸èƒ½è¡¥å›æ²¡æœ‰ repeats çš„ run-to-run uncertaintyã€‚
+
+è®¾è®¡ç­›é€‰å…¬å¼å¯å†™ä¸ºï¼š
+
+```text
+SE(p_hat) â‰ˆ sqrt[p(1-p)/R]
+R â‰ˆ zÂ² p(1-p) / hÂ²
+
+D = Y_A - Y_B
+N â‰ˆ (z_(1-Î±/2)+z_(1-Î²))Â² Var(D) / Î´*Â²
+
+Design effect â‰ˆ 1 + (m-1)Ï
+N_effective â‰ˆ N / Design effect
+```
+
+`pã€hã€Î±ã€Î²ã€Î´*ã€Ï` éƒ½å¿…é¡»æ¥è‡ªå®¢æˆ· decision lossã€variance pilot æˆ–é¢„æ³¨å†Œé€‰æ‹©ï¼›å…¬å¼ä¸æä¾›æœ¬é¡¹ç›®ç°æˆæ ·æœ¬é‡ã€‚[P]
+
+## 8.4 ä¸»ç»“æœåŒ…
+
+æ¯ä¸ªå…³é”® configuration åŒæ—¶æŠ¥å‘Šï¼š
+
+1. frozen release çš„ single-trial Full Pass Rate ä¸ Mean Scoreï¼Œé™„ workflow-clustered intervalï¼›
+2. ç›¸åŒ tasksã€provider/time blocks çš„ paired difference ä¸åŒºé—´ï¼›
+3. cost-constrained reliabilityã€wall time/cost distributionï¼›
+4. agent/infra/evaluator/integrity failure ledgerï¼›
+5. leave-domain/workflow-outã€seedã€providerã€harnessã€prompt/toolsã€budget/retryã€evaluator sensitivityï¼›
+6. pairwise sign-reversal probabilityã€top-k recoveryã€rank interval ä¸ decision-relevant rank flipsã€‚
+
+å•ä¸€ leaderboard é¡ºåºä¸èƒ½æ›¿ä»£ä¸Šè¿°ç»“æœã€‚
+
+## 8.5 Matched-human baseline
+
+ä¸»è‡‚åº”æ‹›å‹Ÿä¸ç›®æ ‡ workflow åŒ¹é…ã€è¿‘æœŸä»åœ¨å®è·µã€ä¸”æœªå‚ä¸è¯¥ task åˆ›ä½œçš„ practicing expertsã€‚Generalistã€task author ä¸ human+AI æ˜¯ä¸åŒ armsï¼Œåˆ†åˆ«æŠ¥å‘Šï¼›task author é€‚åˆè¯Šæ–­ rubric/scorerï¼Œä¸æ˜¯é»˜è®¤ human upper boundã€‚
+
+åŒ¹é…çš„æ˜¯å¯æ“ä½œ affordancesï¼šinstructionã€input/stateã€softwareã€internet/docsã€timeã€attemptsã€hardware/resourcesã€feedback ä¸ output contractï¼Œè€Œä¸æ˜¯å£°ç§°äººå’Œ agent çš„è®¤çŸ¥æˆ–ç•Œé¢è´Ÿæ‹…å®Œå…¨ç›¸åŒã€‚
+
+ä¸»åˆ†æä½¿ç”¨ all-assigned successã€score-at-budget å’Œ censor-aware time-to-successï¼›åªåˆ†ææˆåŠŸè€…ä¼šäº§ç”Ÿé€‰æ‹©åå·®ã€‚äººç±»æ•°æ®åŒæ—¶è®°å½• expertise/familiarityã€å†²çªã€è´¨é‡ã€æ—¶é—´ã€æŠ¥é…¬/æˆæœ¬ã€é€€å‡ºåŸå› ä¸ reviewer agreementã€‚
+
+å³ä½¿ matched-human subset ä¸Š agent æ¥è¿‘ä¸“å®¶ï¼Œä¹Ÿä¸èƒ½æ¨å‡ºæ€»ä½“ human-levelã€å²—ä½æ›¿ä»£æˆ–ç”Ÿäº§ç‡ã€‚[I]
+
+---
+
+# 9. æ€æ ·é•¿æœŸç»´æŠ¤
+
+## 9.1 Private ä¸ç­‰äº clean
+
+å¨èƒæ¨¡å‹è‡³å°‘è¦†ç›–ï¼š
+
+1. pretraining exposureï¼›
+2. post-training/task-specific optimizationï¼›
+3. public solution ä¸ near-duplicateï¼›
+4. search-time contaminationï¼›
+5. reference/evaluator leakageï¼›
+6. internal/vendor leakageï¼›
+7. repeated-query hill climbingï¼›
+8. grader tamperingã€shortcut å’Œ feedback exploitationã€‚
+
+Privateã€gated evaluation æˆ– evaluation-as-a-service åªèƒ½ç¼©å°éƒ¨åˆ†æš´éœ²é¢ï¼ŒåŒæ—¶å¼•å…¥ operator trustã€é›†ä¸­å¼æœåŠ¡ã€æ—¥å¿—ä¸å†…éƒ¨æƒé™é£é™©ã€‚Canary/watermark æ˜¯ä¼ æ„Ÿå™¨ï¼›æœªè§¦å‘ä¸èƒ½è¯æ˜æ— æ±¡æŸ“ã€‚
+
+## 9.2 Lifecycle ä¸äº‹ä»¶è´¦æœ¬
+
+åŸå­ lifecycleï¼š
+
+```text
+proposed â†’ implemented â†’ validated â†’ accepted
+                                 â†˜ quarantined
+quarantined â†’ repaired(new version) â†’ revalidated â†’ accepted
+quarantined â†’ retired
+```
+
+Public/private/rotation/training æ˜¯ purpose/access/release ç»´åº¦ï¼Œä¸è¦å¡è¿›ä¸€ä¸ªå¤åˆ status å­—æ®µã€‚Quarantine æ˜¯ä¿å…¨è¯æ®çš„æš‚åœçŠ¶æ€ï¼›repair åˆ›å»ºæ–° versionï¼›æ—§ identityã€æ—§ score å’Œæ—§ exposure é‡‡ç”¨ append-only è®°å½•ï¼Œç¦æ­¢é™é»˜è¦†å†™ã€‚
+
+## 9.3 Refreshã€repair ä¸å¯æ¯”æ€§
+
+Refresh triggers åŒ…æ‹¬ saturationã€discrimination driftã€contaminationã€environment/software driftã€license changeã€grader defectã€å®¢æˆ·ç›®æ ‡å˜åŒ–ã€å®‰å…¨äº‹ä»¶å’Œ reserve depletionã€‚
+
+è·¨ç‰ˆæœ¬åªå…è®¸ä¸‰ç§ç»“æœï¼š
+
+- native release scoreï¼›
+- å¸¦å‡è®¾ä¸ä¸ç¡®å®šæ€§çš„ bridge-linked estimateï¼›
+- `not comparable`ã€‚
+
+æ¯ä¸ª release è¿è¡Œ common-agent paired bridgeï¼›historical snapshotã€current live ä¸ bridge analysis åˆ†å¼€å±•ç¤ºã€‚Scorer repair å¯ä»¥æ–°å¢ corrected score viewï¼Œä½†ä¸èƒ½æ¢å¤æ³„æ¼ä»»åŠ¡çš„ unseen validityã€‚
+
+## 9.4 Incident response
+
+å‘ç° reference/grader leakã€æ±¡æŸ“æˆ–é«˜ä¸¥é‡åº¦ defect åï¼šæš‚åœå—å½±å“ submission/score useï¼›ä¿å­˜è¯æ®ï¼›ç¡®å®š asset/version/config/run å½±å“é¢ï¼›quarantineï¼›æ ¹æ®åŸå› é€‰æ‹© repairã€replacement æˆ– retirementï¼›å¯¹æ‰€æœ‰å—å½±å“ frozen artifacts åšä¸€è‡´å¤„ç†ï¼›å‘å¸ƒä¸æ³„æ¼ hidden material çš„ broken-task disclosureï¼›å¤æ ¸ accessã€rotation ä¸ reserveã€‚
+
+---
+
+# 10. ä» pilot æ‰©å±•åˆ° 1,000
+
+## 10.1 Pilot çš„ç›®çš„
+
+Pilot ä¸æ˜¯å±•ç¤ºå‡ ä¸ªæ¼‚äº® demoï¼Œè€Œæ˜¯ä¼°è®¡ç”Ÿäº§å’Œæµ‹é‡ç³»ç»Ÿä¸­çš„å…³é”®éšæœºå˜é‡ã€‚Strata è‡³å°‘è¦†ç›–ï¼šdomain/workflow typeã€artifactã€software/substrateã€evaluator modeã€equivalence opennessã€risk/rights ä¸ expert scarcityã€‚
+
+## 10.2 å¿…æµ‹å˜é‡
+
+**ç”Ÿäº§ï¼š** candidate supplyã€qualification yieldã€service hoursã€cycle timeã€queue/waitã€rework cyclesã€acceptance yieldã€defect escapeã€‚
+**Evaluatorï¼š** forward/backward coverageã€FAR/FRRã€mutation/metamorphic detectionã€judge varianceã€arbitration rateã€‚
+**Environmentï¼š** build/launch/reset æˆåŠŸã€cross-run driftã€infra-invalidã€cleanup/revokeã€license/network frictionã€‚
+**Statisticsï¼š** trial varianceã€workflow heterogeneityã€configuration interactionã€paired discordanceã€ranking stabilityã€‚
+**Governanceï¼š** exposureã€appealã€incident responseã€reserve burnã€repair/retirement burdenã€‚
+**Humanï¼š** recruitmentã€completionã€qualityã€time/costã€attritionã€agreement ä¸ affordance mismatchã€‚
+
+## 10.3 ç”Ÿäº§æ¼æ–—
+
+```text
+N_idea
+â†’ N_spec_ready
+â†’ N_engineered
+â†’ N_evaluator_validated
+â†’ N_independent_solve
+â†’ N_domain_accept
+â†’ N_rights_security_clear
+â†’ N_release
+```
+
+æ¯ä¸ª stage çš„ conditional yieldï¼š
+
+```text
+p_s = N_s / N_(s-1)
+```
+
+æŒ‰ domainã€softwareã€evaluator family ä¸ expert role åˆ†å±‚ï¼Œå¹¶è®°å½• numeratorã€denominatorã€missing reason å’Œ uncertaintyã€‚ç”¨äº scenario planning çš„å€™é€‰éœ€æ±‚é‡ä¸ºï¼š
+
+```text
+N_workflow_ideas_required â‰ˆ (1,000 + N_workflow_reserve_target) / Î _s p_s
+```
+
+Pilot å‰ä¸å¾—å‡å®š `p_s`ã€‚
+
+## 10.4 å·¥æ—¶ã€æˆæœ¬ã€è¿è¡Œé‡ä¸å…³é”®è·¯å¾„
+
+```text
+H_total = Î£_(role, stage, asset) service_hours
+
+C_total = C_platform
+        + Î£_workflow(C_scope + C_eval + C_env + C_QA)
+        + Î£_instance(C_input + C_reference + C_instance_QA)
+        + C_runs + C_license + C_legal + C_security
+        + C_maintenance + C_rotation + C_contingency
+
+N_runs = Î£_(configuration, instance, planned trial) 1
+       + separately reported infrastructure continuations
+
+T_release = T_pilot
+          + max(T_sourcing, T_evaluator, T_environment_and_legal)
+          + T_integration_QA + T_rework + T_freeze
+
+Capacity_stage = available_role_hours / service_hours_per_accepted_unit
+```
+
+æ’æœŸç”±æœ€å°æœ‰æ•ˆ capacity ä¸ä¸²è¡Œå…³é”®è·¯å¾„å…±åŒå†³å®šï¼Œä¸èƒ½ç”¨â€œ1,000 Ã— å¹³å‡å·¥æ—¶ Ã· æ€»äººæ•°â€ä»£æ›¿ã€‚
+
+## 10.5 ä»˜æ¬¾ä¸éªŒæ”¶ manifests
+
+é‡‡è´­åˆåŒå¿…é¡»æŠŠ workflowã€variantã€run/service å’Œ change/repair åˆ†æˆå››å¼ è´¦ï¼›å¦åˆ™ä¾›åº”æ–¹å¯èƒ½ç”¨é‡å¤ variantsã€é‡è·‘æˆ–ç¼ºé™·ä¿®å¤å¢åŠ â€œäº¤ä»˜é‡â€ã€‚[R]
+
+| Manifest | è®¡è´¹/éªŒæ”¶å¯¹è±¡ | å¿…å¤‡å­—æ®µ | ä¸å¾—æ··å…¥ |
+|---|---|---|---|
+| Base Workflow Acceptance | 1,000 ä¸ª distinct workflow packages | `workflow_id/version`ã€identity statementã€canonical instanceã€component hashesã€å…¨éƒ¨ gatesã€pool/accessã€limitationsã€Final Approver | ideaã€submissionã€spec-onlyã€pending QCã€cosmetic variant |
+| Extra Variant | `V_extra` ä¸­æ¯ä¸ª accepted variant | parent workflowã€variation dimensionã€marginal measurement valueã€instance hashesã€å®Œæ•´ runnable/QC çŠ¶æ€ã€pool purpose | åªæ¢åå­—/seed/æ•°å­—ã€é‡å¤ run |
+| Run & Service | QAã€repeatsã€æ­£å¼è¯„ä»·ã€æ‰˜ç®¡å’Œç®—åŠ›æœåŠ¡ | configurationã€instanceã€trialã€budgetã€infra statusã€artifactsã€raw score | workflow æˆ– variant æ•°é‡ |
+| Change / Repair / Retirement | version bumpã€defect repairã€replacementã€regrade/rerun | old/new versionã€change authorityã€affected scoresã€warranty/change-orderã€lineage | æŠŠä¾›åº”å•†ç¼ºé™·ä¿®å¤å½“æ–° workflow |
+
+Base workflow çš„ä»˜æ¬¾èµ„æ ¼ä¸ºï¼š
+
+```text
+payment_eligible(w)
+  iff identity_disposition(w) = distinct
+  and canonical_instance(w) = final_QC_accepted
+  and every_mandatory_gate(w) = pass
+  and unresolved_blocker_count(w) = 0
+```
+
+é¢å¤– variant åªæœ‰è¯æ˜å¸¦æ¥ coverageã€failure-modeã€difficulty æˆ– information deltaï¼Œå¹¶å®Œæˆä¸ canonical instance ç›¸åŒå¼ºåº¦çš„ runnable/QC éªŒæ”¶åï¼Œæ‰å¯å•ç‹¬ä»˜è´¹ã€‚ä»·æ ¼å¯ä»¥æŒ‰ä¸“ä¸šã€environmentã€evaluator ä¸ reference å¤æ‚åº¦åˆ’åˆ† price bandï¼Œä½†å…·ä½“å¸¦å®½ä¸è´¹ç‡åªèƒ½ç”± pilot å’Œå•†ä¸šè°ˆåˆ¤å†»ç»“ã€‚[P]
+
+```text
+Payment = Î£_(accepted workflow) BasePriceBand_w
+        + Î£_(accepted extra variant) VariantPriceBand_v
+        + C_runs_and_service
+        + C_licensed_environment
+        + C_maintenance_and_approved_change_orders
+```
+
+åŒä¸€ `workflow_id` çš„ defect repairã€version bump æˆ– replacement é»˜è®¤ä¸å¢åŠ  workflow countã€‚å®¢æˆ·æ”¹å˜ constructã€è½¯ä»¶ã€æ³•åŸŸæˆ– output/evaluator contract æ—¶ï¼Œæ˜¯å¦å½¢æˆ change order ç”±é¢„å…ˆå†™æ˜çš„ identity/change policy å†³å®šï¼Œä¸èƒ½ç”±ä¾›åº”æ–¹å•æ–¹é¢é‡å‘½åã€‚
+
+## 10.6 Advance / Repair / Rescope / Stop
+
+**Advanceï¼š** æ‰€æœ‰ hard gates é€šè¿‡ï¼›mandatory defects ä¸ºé›¶ï¼›pilot çš„ç²¾åº¦ã€ç¨³å®šæ€§ã€äº§èƒ½å’Œæˆæœ¬è¿›å…¥é¢„å…ˆå†»ç»“çš„æ¥å—åŒºåŸŸï¼›æ— æœªè§£å†³çš„é«˜ä¸¥é‡åº¦ rights/security/integrity é—®é¢˜ã€‚
+
+**Repairï¼š** construct ä¸ asset identity ä»æˆç«‹ï¼Œé—®é¢˜å¯ä»¥é™å®šåˆ° environmentã€referenceã€evaluatorã€guideline æˆ–å±€éƒ¨å®ç°ï¼›ä¿®å¤å version bumpã€å…¨å¥— regression ä¸ç‹¬ç«‹å¤éªŒã€‚
+
+**Rescopeï¼š** åŸç›®æ ‡åœ¨å€™é€‰ä¾›ç»™ã€æƒåˆ©ã€è½¯ä»¶ã€å¯éªŒè¯æ€§ã€æˆæœ¬æˆ–æ—¶é—´ä¸Šç³»ç»Ÿæ€§ä¸å¯è¡Œï¼Œä½†ç¼©å° domainã€claim æˆ– environment scope åä»èƒ½å½¢æˆæœ‰æ•ˆäº§å“ï¼›ä¸å¾—ç”¨ä½è´¨ä»»åŠ¡å¡«æ»¡æ•°é‡ã€‚
+
+**Stopï¼š** construct æ— æ³•å¯é æ“ä½œåŒ–ï¼›åˆæ³•æƒåˆ©æ— æ³•å–å¾—ï¼›evaluator æ— æ³•åŒºåˆ†åˆæ³•å¤šè§£ä¸é”™è¯¯ï¼›ç¯å¢ƒä¸å¯å¤åˆ¶ï¼›æ³„æ¼/å®‰å…¨ä¸å¯æ§ï¼›æˆ–åˆç† pilot scenarios ä¸‹ä¸å­˜åœ¨æ»¡è¶³è´¨é‡ä¸é¢„ç®—çš„å¯è¡Œè®¾è®¡ã€‚
+
+---
+
+# 11. åŸåˆ› Worked Taskï¼šB2B SaaS è¥é”€ç»©æ•ˆä¸é¢„ç®—é‡åˆ†é…
+
+## 11.1 ä¸ºä»€ä¹ˆé€‰æ‹©è¿™ä¸ªä»»åŠ¡
+
+è¯¥ä¾‹ä¸æˆ‘è¿‡å»æ¶ˆè´¹/marketing æ•°æ®é¡¹ç›®çš„ç»éªŒç›¸è¿ï¼ŒåŒæ—¶èƒ½å±•ç¤º spreadsheetã€æ•°æ®æ¸…æ´—ã€ä¸“ä¸šåˆ¤æ–­ã€memoã€åˆæ³•å¤šè§£ä¸ evaluator å·¥ç¨‹ã€‚å®ƒä¸æ˜¯ ALE ç°æœ‰å…¬å¼€ task çš„å¤åˆ¶ï¼Œè€Œæ˜¯ç”¨äºè¯´æ˜æœ¬æ–¹æ¡ˆå¦‚ä½•æŠŠçœŸå®ä¸šåŠ¡ workflow è½¬æˆ runnable assetã€‚[R]
+
+## 11.2 Workflow ä¸ concrete instance
+
+**Domainï¼š** Business Operations / Marketing Analytics
+**Workflowï¼š** å¯¹å¹¿å‘Šå¹³å°ã€CRMã€è®¢é˜…/é€€æ¬¾ä¸è´¢åŠ¡ç¡®è®¤æ”¶å…¥è¿›è¡Œè·¨æºæ ¸å¯¹ï¼Œå»ºç«‹æ¸ é“ç»©æ•ˆæ¨¡å‹ï¼Œå¹¶åœ¨çº¦æŸä¸‹ç”Ÿæˆä¸‹ä¸€æœŸé¢„ç®—æ–¹æ¡ˆã€‚
+**Instance objectiveï¼š** äº¤ä»˜ä¸€ä»½å¯å®¡è®¡ `.xlsx` å’Œä¸€é¡µå†³ç­– memoï¼Œä½¿ç»“æœå¯ä» raw inputs é‡æ–°è®¡ç®—ï¼Œå¹¶æ»¡è¶³é¢„ç®—ä¸ä¸šåŠ¡çº¦æŸã€‚
+
+### Participant-visible inputs
+
+- `ad_spend.csv`ï¼šchannel/campaign/day/currency/spend/clicksï¼›
+- `crm_opportunities.csv`ï¼šleadã€opportunityã€stageã€close dateã€campaign keysï¼›
+- `subscriptions_and_refunds.csv`ï¼šcustomerã€planã€invoiceã€refundã€effective datesï¼›
+- `campaign_taxonomy.xlsx`ï¼šæ¸ é“ä¸ campaign çš„ canonical mappingï¼›
+- `attribution_and_budget_policy.pdf`ï¼šattribution windowã€currency ruleã€æ¸ é“ä¸Šä¸‹é™ã€ç¦æŠ•ä¸æ€»é¢„ç®—ï¼›
+- `task_instructions.md`ï¼šäº¤ä»˜å­—æ®µã€è¾“å‡ºè·¯å¾„å’Œä¸šåŠ¡é—®é¢˜ã€‚
+
+æ‰€æœ‰ä¸šåŠ¡æ•°æ®ä½¿ç”¨ synthetic/de-identified recordsï¼Œå¹¶é¢„åŸ‹å¤šå¯¹å¤š joinã€ç¼ºå¤± UTMã€è·¨æ—¶åŒºã€é€€æ¬¾æ»åã€é‡å¤ ID ä¸å¸ç§è¾¹ç•Œã€‚
+
+## 11.3 Environment contract
+
+- Fresh Windows VMï¼›Microsoft Excel æˆ–ç»å®¢æˆ·æ‰¹å‡†çš„ç­‰ä»· spreadsheet laneï¼›
+- å¯é€‰ Pythonï¼Œä½†ä¸å¾—ä¾èµ–å¤–ç½‘ï¼›
+- å›ºå®š localeã€timezoneã€currency roundingã€software build ä¸ fontï¼›
+- input directory åªè¯»ï¼Œoutput directory å¯å†™ï¼›
+- ç¦æ­¢å¤–éƒ¨ workbook linksã€å®å’Œæœªæ‰¹å‡†çš„æ•°æ®ä¸Šä¼ ï¼›
+- æ¯æ¬¡ trial ä» clean snapshot å¼€å§‹ï¼Œè¿è¡Œåæäº¤ artifact hash ä¸ calculation stateã€‚
+
+è‹¥å®¢æˆ·ä¸æä¾› Excel licenseï¼Œå¯å»ºç«‹ LibreOffice-compatible laneï¼Œä½†ä¸å¾—é»˜è®¤å®£ç§°ä¸¤æ¡ lane çš„è¡Œä¸ºç­‰ä»·ï¼›å¿…é¡»åš cross-lane qualificationã€‚[P]
+
+## 11.4 Required outputs
+
+`marketing_performance_and_budget.xlsx` è‡³å°‘åŒ…å«ï¼š
+
+1. Raw input imports ä¸ source hashesï¼›
+2. Canonical campaign mapping å’Œ exception ledgerï¼›
+3. Reconciled event/customer ledgerï¼›
+4. Spendã€attributed revenueã€refundã€pipelineã€CACã€ROASã€conversion ä¸ cohort metricsï¼›
+5. æ•°æ®è´¨é‡ä¸æœªåŒ¹é…è®°å½•è¡¨ï¼›
+6. çº¦æŸæ»¡è¶³çš„ä¸‹ä¸€æœŸ channel budgetï¼›
+7. Assumptions ä¸ sensitivity sheetã€‚
+
+`decision_memo.md` æˆ– `.docx`ï¼šè¯´æ˜ä¸»è¦å‘ç°ã€æ¨èåˆ†é…ã€å…³é”®ä¸ç¡®å®šæ€§å’Œéœ€è¦ä¸šåŠ¡ owner å†³å®šçš„é—®é¢˜ï¼Œå¹¶å¼•ç”¨ workbook ä¸­å¯å¤æ ¸çš„æŒ‡æ ‡ã€‚
+
+## 11.5 Hidden reference pack
+
+Reference ä¸åªæ˜¯ä¸€ä»½â€œæ ‡å‡† workbookâ€ï¼Œè€Œæ˜¯ï¼š
+
+- canonical normalized event ledgerï¼›
+- æ­£ç¡® join/matching relationsï¼›
+- source reconciliation totalsï¼›
+- metric invariantsã€å•ä½ä¸ toleranceï¼›
+- budget constraint set ä¸å¤šä¸ªåˆæ³• feasible solutionsï¼›
+- goldã€known-badã€near-missã€alternate-correct artifactsï¼›
+- memo factual-claim anchorsï¼›
+- evaluator versionã€fixtures ä¸ known limitationsã€‚
+
+## 11.6 Evaluator design
+
+å»ºè®®é‡‡ç”¨ deterministic core + narrow evidence-anchored judgmentï¼š[R]
+
+1. **Artifact integrityï¼š** æ–‡ä»¶å¯æ‰“å¼€ï¼Œè¦æ±‚çš„ sheets/fields å­˜åœ¨ï¼›æ— å®ã€å¤–é“¾ã€æŸåæˆ– hidden payloadã€‚
+2. **Reconciliationï¼š** spendã€revenueã€refund ä¸ source totals åœ¨æœ‰ä¾æ®çš„ tolerance å†…é—­åˆã€‚
+3. **Transformation validityï¼š** æ—¥æœŸã€æ—¶åŒºã€å¸ç§ã€é‡å¤ã€æ¼æ–— join ä¸ attribution window å¯ä» raw inputs é‡ç®—ã€‚
+4. **Metric validityï¼š** CACã€ROASã€conversionã€retention ç­‰æœ‰æ­£ç¡®åˆ†æ¯ã€å•ä½å’Œ lineageã€‚
+5. **Budget feasibilityï¼š** æ€»é¢ã€æ¸ é“ä¸Šä¸‹é™ã€ç¦æŠ•ã€å¢å‡å¹…ä¸ policy constraints å…¨éƒ¨æ»¡è¶³ã€‚
+6. **Decision consistencyï¼š** memo å¼•ç”¨çš„æ•°å­—æ¥è‡ª workbookï¼Œå»ºè®®ä¸ constraint/sensitivity ä¸çŸ›ç›¾ã€‚
+7. **Equivalenceï¼š** ä¸è¦æ±‚å”¯ä¸€é¢„ç®—åˆ†é…ï¼›ä»»ä½•æ»¡è¶³çº¦æŸå¹¶è¾¾åˆ°é¢„å…ˆå®šä¹‰å†³ç­–æ¡ä»¶çš„æ–¹æ¡ˆéƒ½å¯æ¥å—ã€‚
+8. **Judgment boundaryï¼š** ä¸“å®¶æˆ–çª„ judge åªå®¡æŸ¥ä¸ç¡®å®šæ€§æŠ«éœ²ä¸å»ºè®®é€»è¾‘ï¼Œä¸è®©å†™ä½œé£æ ¼å†³å®šä¸»è¦å¾—åˆ†ã€‚
+
+å…·ä½“ component weightsã€tolerance ä¸ pass threshold å¿…é¡»ç”± domain leadã€å®¢æˆ· consequence å’Œ pilot fixtures æ ¡å‡†ã€‚[P]
+
+## 11.7 Red-team cases
+
+- ä¸åŒå¹³å°å‡ºç°ç›¸åŒ campaign IDï¼›
+- UTC ä¸æœ¬åœ°æ—¥è¾¹ç•Œå¯¼è‡´ attribution åç§»ï¼›
+- ä¸¤ç§å¸ç§è¢«ç›´æ¥ç›¸åŠ ï¼›
+- é€€æ¬¾è½åœ¨åç»­æœˆä»½ï¼›
+- missing UTM è¢«é”™è¯¯å…¨éƒ¨å½’å…¥æœ€å¤§æ¸ é“ï¼›
+- opportunity ä¸ subscription å¤šå¯¹å¤šå¯¼è‡´ revenue duplicateï¼›
+- hard-code summaryï¼Œä¸ä¿ç•™ lineageï¼›
+- å¤åˆ¶ reference workbook å¤–è§‚ä½†å†…éƒ¨å…¬å¼/æ•°æ®é”™è¯¯ï¼›
+- éšè—è¡Œã€filter æˆ–æ ¼å¼æ©ç›–å¼‚å¸¸ï¼›
+- å¤–éƒ¨ workbook link åœ¨ä½œè€…æœºå™¨ä¸Šæœ‰æ•ˆã€clean VM ä¸­å¤±æ•ˆï¼›
+- æ€»é¢„ç®—æ­£ç¡®ä½†è¿åæ¸ é“ä¸‹é™æˆ–ç¦æŠ•çº¦æŸï¼›
+- workbook æ­£ç¡®ä½† memo å¼•ç”¨é”™è¯¯ï¼›
+- output åµŒå…¥å¯¹ LLM judge çš„ prompt injectionï¼›
+- corrupted XLSX è¢«åº”ç”¨è‡ªåŠ¨ä¿®å¤åè¡¨é¢å¯æ‰“å¼€ï¼›
+- éæ ‡å‡†ä½†ä¸šåŠ¡åˆç†çš„ alternate-correct allocation è¢«è¯¯æ‹’ã€‚
+
+## 11.8 ä» authored example åˆ° accepted instance
+
+è¯¥é¢˜åªæœ‰åœ¨ä»¥ä¸‹è¯æ®å®Œæˆåæ‰å¯è®¡å…¥ productionï¼šdomain expert ç¡®è®¤ workflow ä¸è§„åˆ™ï¼›rights/security æ‰¹å‡† synthetic data å’Œè½¯ä»¶ laneï¼›independent solver åœ¨ clean VM å®Œæˆï¼›evaluator fixtures é€šè¿‡ï¼›alternate-correct ä¸ shortcut è¢«éªŒè¯ï¼›environment replay è¾¾åˆ° pilot gateï¼›final approver ç‹¬ç«‹ç­¾å­—ï¼›å®ä¾‹è¢«åˆ†é…åˆ°æ˜ç¡® pool å¹¶é…ç½® refresh triggerã€‚
+
+---
+
+# 12. é£é™©ã€Claim Boundary ä¸å¾…ç¡®è®¤äº‹é¡¹
+
+## 12.1 å¯æ”¯æŒçš„è¡¨è¿°
+
+- â€œè¯¥ agent configuration åœ¨å†»ç»“çš„ ALE-style release å’Œæ³¨å†Œ protocol ä¸Šå–å¾—æŸé¡¹ç»“æœã€‚â€
+- â€œè¯¥ç»“æœç»è¿‡ç‰ˆæœ¬åŒ– environmentã€evaluator QAã€é‡å¤è¿è¡Œ/åŒºé—´å’Œ failure attributionã€‚â€
+- â€œåœ¨å·²è¯´æ˜çš„äººç±»æ ·æœ¬ä¸ affordance æ¡ä»¶ä¸‹ï¼Œè§‚å¯Ÿåˆ°æŸç§å·®å¼‚ã€‚â€
+- â€œæœ¬ portfolio å¯¹å®¢æˆ·æ‰¹å‡†çš„ sampling frame è¾¾åˆ°å·²æŠ«éœ²çš„è¦†ç›–ã€‚â€
+
+## 12.2 ä¸å¯è‡ªåŠ¨æ”¯æŒçš„è¡¨è¿°
+
+- â€œæ¨¡å‹è¾¾åˆ°äººç±»æ°´å¹³â€ï¼›
+- â€œæ¨¡å‹å¯ä»¥æ›¿ä»£æŸä¸€èŒä¸šâ€ï¼›
+- â€œbenchmark æ”¹è¿›ç­‰äºç»æµä»·å€¼æˆ–ç”Ÿäº§ç‡æå‡â€ï¼›
+- â€œprivate æ•°æ®å®Œå…¨æ²¡æœ‰æ±¡æŸ“â€ï¼›
+- â€œdeterministic scorer å®Œå…¨å®¢è§‚â€ï¼›
+- â€œæ–° release åˆ†æ•°ä¸æ—§ release å¯ä»¥ç›´æ¥çºµå‘æ¯”è¾ƒâ€ï¼›
+- â€œ1,000 ä¸ª workflow packages è¦†ç›–å…¨éƒ¨çœŸå®å·¥ä½œâ€ã€‚
+
+## 12.3 ä¸»è¦é£é™©ä¸æ§åˆ¶
+
+| é£é™© | ä¸»è¦æ§åˆ¶ | æ®‹ä½™è¾¹ç•Œ |
+|---|---|---|
+| Construct ä¸ä¸šåŠ¡ä»·å€¼é”™ä½ | intended-use frameã€ä¸“å®¶åœºæ™¯ã€human subsetã€claim firewall | ä»éœ€éƒ¨ç½²ä¸ç»æµå› æœè¯æ® |
+| Portfolio åå·®/ä¼ªå˜ä½“ | hard gatesã€identity/dedupã€å¤šç›®æ ‡é€‰æ‹©ã€pilot | æœªçŸ¥æ€»ä½“æ— æ³•è¯æ˜ä»£è¡¨æ€§ |
+| Evaluator shortcut/è¯¯åˆ¤ | åŒå‘ traceabilityã€fixture libraryã€red teamã€arbitration | ä¸èƒ½ç©·å°½æ‰€æœ‰æ”»å‡» |
+| Environment drift | immutable manifestã€attestationã€replayã€separate judge | live services ä»å¯èƒ½éå¹³ç¨³ |
+| Leakage/contamination | pool/accessã€gatingã€loggingã€sensorã€rotationã€incident | private ä¸ canary å‡éè¯æ˜ |
+| æ’åä¸ç¨³å®š | paired designã€repeatsã€clustered intervalã€sensitivity | ç»Ÿè®¡ç¨³å®šä¸ä¿®å¤ validity bias |
+| ä¸“å®¶ COI/æ ‡å‡†æ¼‚ç§» | role qualificationã€blind solveã€COIã€calibrationã€deboarding | å°å›¢é˜Ÿä»æœ‰ collusion/override é£é™© |
+| æˆæœ¬/å‘¨æœŸå¤±æ§ | instrumented pilotã€funnelã€capacityã€critical pathã€rescope gate | ç¨€ç¼ºè½¯ä»¶/ä¸“å®¶æœ‰é•¿å°¾ |
+
+## 12.4 ä¸å¾—åœ¨ pilot å‰å¡«å…¥å¸¸æ•°çš„å˜é‡
+
+äººæ•°ã€ä¸“å®¶æ± è§„æ¨¡ã€æ¸ é“è½¬åŒ–ç‡ã€èµ„æ ¼é€šè¿‡ç‡ã€throughputã€cycle timeã€è¿”å·¥ã€acceptance yieldã€review spanã€audit ratioã€äº¤ä»˜å‘¨æ•°ã€è´¹ç‡ã€å•ä½æˆæœ¬ã€æ€»é¢„ç®—ã€domain allocationã€`V_extra`ã€instance multiplicityã€pool æ¯”ä¾‹ã€repeatsã€seed æ•°ã€CI half-widthã€MDEã€powerã€ç¯å¢ƒ SLAã€license å¸­ä½ã€FAR/FRRã€human sample/attrition/agreementã€æ±¡æŸ“ç‡ã€query limitã€refresh cadenceã€é€€å½¹ç‡å’Œ reserve burn rateã€‚
+
+## 12.5 ä¸‹ä¸€è½®éœ€è¦ç¡®è®¤çš„é—®é¢˜
+
+1. **å·²å½¢æˆé»˜è®¤ç­”æ¡ˆã€å¾…ä¹¦é¢ç¡®è®¤ï¼š** `W = 1,000 accepted workflow packages`ï¼›æ¯ä¸ª package è‡³å°‘ä¸€ä¸ª canonical runnable instanceï¼›extra variantsã€runs/service ä¸ repair/change åˆ†è´¦éªŒæ”¶å’ŒæŠ¥ä»·ã€‚
+2. intended use ä¸å…è®¸çš„ claimsï¼›
+3. ä¼˜å…ˆ domainã€è¯­è¨€ã€åœ°åŒºã€è½¯ä»¶å’Œé£é™©ç±»åˆ«ï¼›
+4. trainingã€development ä¸ private final çš„æƒåˆ©éš”ç¦»ï¼›
+5. æ•°æ®ã€licenseã€credentialã€network ä¸ retention çº¦æŸï¼›
+6. æ˜¯å¦éœ€è¦ matched-humanã€å“ªäº›èŒä¸š/äººç¾¤ã€ä½•ç§ affordanceï¼›
+7. å…è®¸çš„è¿è¡Œé¢„ç®—ã€ç»´æŠ¤æœŸã€refresh/incident SLAï¼›
+8. è°æ‹…ä»» Benchmark Ownerã€Rights/Security Owner ä¸ Final Approverï¼›
+9. pilot çš„ decision lossã€stop condition ä¸é‡‡è´­é™åˆ¶ï¼›
+10. äº¤ä»˜æ˜¯å¦åŒ…å« benchmark serviceã€æºç ã€ç¯å¢ƒé•œåƒã€ç§æœ‰èµ„äº§æ‰˜ç®¡ä¸æŒç»­è¿è¥ã€‚
+
+---
+
+# ç»“è®º
+
+ALE çš„çœŸæ­£å¯å‘ä¸æ˜¯â€œå¦‚ä½•å‡ºæ›´éš¾çš„é¢˜â€ï¼Œè€Œæ˜¯å¦‚ä½•æŠŠä¸“ä¸šå·¥ä½œè½¬åŒ–ä¸ºå¯è¿è¡Œã€å¯éªŒè¯ã€å¯éšè—ã€å¯è½®æ¢å’Œå¯å®¡è®¡çš„ measurement assetã€‚ç”Ÿäº§ 1,000 ä¸ª distinct workflow packagesï¼Œæ ¸å¿ƒéš¾ç‚¹ä¸åœ¨ prompt å†™ä½œï¼Œè€Œåœ¨ portfolioã€ä¸“å®¶æ²»ç†ã€ç¯å¢ƒã€evaluatorã€ç»Ÿè®¡åè®®ä¸é•¿æœŸè¿è¥ä¹‹é—´çš„ç³»ç»Ÿé—­ç¯ã€‚
+
+æœ¬æ–¹æ¡ˆå»ºè®®å…ˆæ¥å—ä¸€ä¸ªæ¸…æ™°ä½†å¯ä¿®è®¢çš„ working scopeï¼š**1,000 accepted distinct workflow packagesï¼›æ¯ä¸ªè‡³å°‘ä¸€ä¸ª canonical runnable instanceï¼›extra variants ç‹¬ç«‹è®¡æ•°ã€‚** éšåç”¨è·¨é£é™© strata çš„ instrumented pilot æµ‹é‡æ‰€æœ‰å½±å“äº§èƒ½ä¸æœ‰æ•ˆæ€§çš„å˜é‡ï¼Œåªå¯¹é€šè¿‡ advance gate çš„éƒ¨åˆ†æ‰©äº§ã€‚è¿™æ ·å¯ä»¥æŠŠæ•°é‡ã€è´¨é‡ä¸å•†ä¸šäº¤ä»˜æ”¾åœ¨åŒä¸€ä¸ªå¯å®¡è®¡æ¡†æ¶ä¸­ï¼šworkflow çœŸå®ä¸”ä¸é‡å¤ã€instance åšå¾—å‡ºæ¥ã€åˆ†æ•°å¯ä¿¡ã€å¤±è´¥å¯å½’å› ã€ç‰ˆæœ¬å¯ç»´æŠ¤ï¼Œæ‰ç®—çœŸæ­£å®Œæˆã€‚
+
+---
+
+# é™„å½• Aï¼šå…³é”®æ•°æ®å¯¹è±¡
+
+```yaml
+asset_identity:
+  workflow_id: wf_...
+  workflow_version: wf_...@v...
+  canonical_instance_id: inst_...
+  canonical_instance_version: inst_...@v...
+  taxonomy_version: ...
+  lifecycle: proposed|implemented|validated|accepted|quarantined|repaired|retired
+
+workflow_identity:
+  professional_goal: ...
+  target_capability: ...
+  process_boundary: ...
+  output_contract: ...
+  evaluator_contract: ...
+  duplicate_cluster_ids: []
+  identity_disposition: distinct|merged|rejected
+  identity_approver: ...
+
+task_contract:
+  intended_construct: ...
+  visible_instruction: ...
+  input_manifest: ...
+  output_contract: ...
+  allowed_resources: ...
+
+execution_contract:
+  environment_manifest_hash: sha256:...
+  observed_launch_attestation: ...
+  harness_and_prompt_hash: ...
+  network_profile: offline|allowlist|simulated_or_mirrored|controlled_open
+  budget_and_retry_policy: ...
+
+evaluation_contract:
+  reference_version: ...
+  evaluator_version: ...
+  score_semantics: ...
+  fixture_pack_version: ...
+  failure_and_arbitration_policy: ...
+
+governance:
+  purpose: development_demo|restricted_validation|private_final|rotation_reserve|training
+  access_class: public|identity_gated|private_service|audit_only
+  owner_reviewer_approver: ...
+  rights_and_coi: ...
+  lineage_and_incidents: ...
+
+acceptance_and_payment:
+  domain_gate: pass|fail
+  runnable_gate: pass|fail
+  evaluator_gate: pass|fail
+  reproducibility_gate: pass|fail
+  rights_security_gate: pass|fail
+  independent_solve_gate: pass|fail
+  final_approval_gate: pass|fail
+  price_band: ...
+  payment_eligible: true|false
+```
+
+# é™„å½• Bï¼šPilot measurement sheet
+
+æ¯æ¡è®°å½•è‡³å°‘åŒ…å«ï¼š
+
+```text
+stratum/domain/workflow/software/evaluator/risk
+candidate â†’ spec â†’ engineered â†’ validated â†’ accepted funnel
+role service-hours, wait-hours, cycle time and rework cycles
+root-cause and defect severity
+environment build/start/reset/replay and infra-invalid
+FAR/FRR/mutation/metamorphic/judge/arbitration
+trial variance and configuration interaction
+human recruitment/completion/quality/time/cost/agreement
+rights/license/security friction
+maintenance/refresh/incident burden
+advance|repair|rescope|stop decision and rationale
+```
+
+# é™„å½• Cï¼šå†…éƒ¨è¯æ®ç´¢å¼•
+
+- [Scope ä¸äº§å“å®šä¹‰](../../02-1000-task-delivery-design/01-scope-and-product-definition/decision-report-2026-08-08.md)
+- [ALE æŠ€æœ¯è“å›¾ä¸ç‰ˆæœ¬å®¡è®¡](../../02-1000-task-delivery-design/02-ale-blueprint-and-version-audit/technical-blueprint-2026-08-08.md)
+- [å…¬å¼€ task corpus ä¸ evaluator å®¡è®¡](../../02-1000-task-delivery-design/03-public-task-corpus-audit/public-corpus-audit-report.md)
+- [é‚»è¿‘ benchmark landscape](../../02-1000-task-delivery-design/04-adjacent-benchmark-landscape/landscape-report-2026-08-08.md)
+- [Portfolio ä¸ sampling strategy](../../02-1000-task-delivery-design/05-portfolio-and-sampling-strategy/portfolio-and-sampling-strategy-report.md)
+- [ä¸“å®¶ç”Ÿäº§ã€æ ¡å‡†ä¸æ²»ç†](../../02-1000-task-delivery-design/06-expert-production-governance/expert-production-governance-report-2026-08-09.md)
+- [Evaluator validity ä¸ scoring integrity](../../02-1000-task-delivery-design/07-evaluator-validity-and-integrity/evaluator-validity-and-scoring-integrity-report-2026-08-09.md)
+- [Environment & execution reference architecture](../../02-1000-task-delivery-design/08-environment-execution-reference-architecture/environment-execution-reference-architecture-report-2026-08-09.md)
+- [Living benchmark governance](../../02-1000-task-delivery-design/09-living-benchmark-governance/living-benchmark-governance-report-2026-08-09.md)
+- [ç»Ÿè®¡è¯„ä¼°ä¸ matched-human protocol](../../02-1000-task-delivery-design/10-statistical-and-matched-human-protocol/statistical-and-matched-human-protocol-2026-08-09.md)
+- [åˆç¨¿ v1 è¡¥å……ç ”ç©¶ä¸åæ–¹å®¡æŸ¥](../../../supporting-evidence/draft-v1-research-refresh/)
+- [åˆç¨¿ v2 è®¡æ•°ã€taxonomy ä¸ hook å¢é‡ç ”ç©¶](../../../supporting-evidence/draft-v2-count-taxonomy-hook-research/)
+
+# é™„å½• Dï¼šç²¾é€‰å¤–éƒ¨æ¥æº
+
+1. Sun et al., [*Agentsâ€™ Last Exam*, arXiv:2606.05405v2](https://arxiv.org/html/2606.05405v2).
+2. Berkeley RDI, [ALE official repository at frozen commit](https://github.com/rdi-berkeley/agents-last-exam/tree/1e615e456de7cef57706680613cb80ee13c7fc76).
+3. Hugging Face, [ALE paper page](https://huggingface.co/papers/2606.05405). è¯¥é¡µé¢ä¸ºå¯å˜ surfaceï¼Œä¸ç”¨äºæ›¿ä»£å†»ç»“è®ºæ–‡æ•°å­—ã€‚
+4. NIST CAISI, [*Practices for Automated Benchmark Evaluations of Language Models*, Initial Public Draft](https://www.nist.gov/news-events/news/2026/01/towards-best-practices-automated-benchmark-evaluations).
+5. NIST, [*Expanding the AI Evaluation Toolbox with Statistical Models*](https://www.nist.gov/news-events/news/2026/02/new-report-expanding-ai-evaluation-toolbox-statistical-models).
+6. NIST, [AI Risk Management Framework 1.0](https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-ai-rmf-10).
+7. Nick Heiner, [*When Will The Benchmaxxing Plague End?*](https://www.youtube.com/watch?v=-npY6XjM8CQ), AI Engineer Worldâ€™s Fair 2026.
+
+æ›´å®Œæ•´çš„é€æ¥æºè¯æ®ã€çŸ­å¼•ã€è¯„åˆ†ä¸ refresh targets è§ `supporting-evidence/draft-v1-research-refresh/` ä¸ `supporting-evidence/draft-v2-count-taxonomy-hook-research/`ã€‚æœ¬åˆç¨¿å°†åŒä¸€ ALE é¡¹ç›®çš„ paper/code/HF surfaces è§†ä¸ºç‰ˆæœ¬äº’è¡¥è¯æ®ï¼Œè€Œä¸æ˜¯ä¸‰ä¸ªç‹¬ç«‹æœºæ„çš„ä¸‰è§’éªŒè¯ã€‚
