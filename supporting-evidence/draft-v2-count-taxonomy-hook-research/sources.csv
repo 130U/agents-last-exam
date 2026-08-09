@@ -1,0 +1,7 @@
+id,title,type,revision_or_date,credibility,recency,bias_or_limitation,evidence_role
+S01,Agents' Last Exam arXiv v2,primary paper,2606.05405v2 2026-06-11,high,current frozen snapshot,author self-description and internal count tensions,workflow instance release-state and Figure 2 facts
+S02,ALE Industry Taxonomy,first-party live page,accessed 2026-08-09,high,current mutable surface,living page may change without a paper revision,current 13x55x100 hierarchy
+S03,ALE Hugging Face paper and metadata,first-party index and dataset,a8c1fd174a1f6cfa76526572a2e3ebece1276be2 plus access 2026-08-09,high,current but surface-specific,metadata rows are not runnable assets,13-cluster headline and 14-code metadata artifact
+S04,ALE fixed GitHub implementation,first-party executable code,1e615e456de7cef57706680613cb80ee13c7fc76,very high,frozen implementation,code existence does not prove construct validity,shared evaluator and instance mechanics
+S05,When Will The Benchmaxxing Plague End transcript,industry talk and auto captions,AI Engineer World’s Fair 2026,medium,current,interested industry viewpoint and ASR limitations,hook and benchmark anti-pattern framing
+S06,NIST CAISI evaluation cheating,government practice note,2025-12-02 update,high,recent,preliminary practice not certification,independent contamination and grader-gaming threat support
