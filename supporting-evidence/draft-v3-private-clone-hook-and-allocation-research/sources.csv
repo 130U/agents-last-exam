@@ -1,0 +1,7 @@
+id,title,type,url,accessed,role
+01,AI Engineer World's Fair 2026 schedule,official event schedule,https://www.ai.engineer/worldsfair/schedule?view=list,2026-08-09,event and session timing
+02,AI Engineer World's Fair 2026 archive,official event archive,https://www.ai.engineer/worldsfair/2026,2026-08-09,event dates and location
+03,When Will The Benchmaxxing Plague End?,official conference video,https://www.youtube.com/watch?v=-npY6XjM8CQ,2026-08-09,talk content and publication date
+04,Agents' Last Exam arXiv v2,primary research paper,https://arxiv.org/html/2606.05405v2,2026-08-09,workflow instance taxonomy and release counts
+05,ALE official repository pinned commit,primary code,https://github.com/rdi-berkeley/agents-last-exam/tree/1e615e456de7cef57706680613cb80ee13c7fc76,2026-08-09,public implementation surface
+06,ALE Hugging Face pinned revision,primary dataset metadata,https://huggingface.co/datasets/agents-last-exam/agents-last-exam/tree/a8c1fd174a1f6cfa76526572a2e3ebece1276be2,2026-08-09,public metadata surface
