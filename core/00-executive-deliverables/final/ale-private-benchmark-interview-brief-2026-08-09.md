@@ -20,7 +20,7 @@
 
 # 开场：从公开榜单失真，到客户为什么需要私有 benchmark
 
-本方案从 **2026 年 8 月 2 日发布的[官方录像](https://www.youtube.com/watch?v=-npY6XjM8CQ)** 开始。录像记录了 Surge AI 的 Nick Heiner 在 2026 年 6 月 30 日 AI Engineer World’s Fair 上的演讲 *When Will The Benchmaxxing Plague End?*。它提出的核心问题不是“模型是否还能涨分”，而是：当公开题、脆弱 verifier 和排行榜激励共同成为优化目标时，分数可以继续上升，但人真正关心的工作价值未必同步上升。本文把演讲内容归纳为六个控制点：领域专家定义任务、真实工作输入、工具真实可用、题面与 verifier 双向覆盖、端到端 QC、私有 holdout 与主观任务的专业盲评。它们是问题框架，不是 ALE 有效性的独立证明。
+本方案从 **2026 年 8 月 2 日发布的[官方录像](https://www.youtube.com/watch?v=-npY6XjM8CQ)** 开始。录像记录了 Surge AI 的 Nick Heiner 在 2026 年 6 月 30 日 AI Engineer World’s Fair 上的演讲 *When Will The Benchmaxxing Plague End?*。它提出的核心问题不是“模型是否还能涨分”，而是：当公开题、脆弱 verifier 和排行榜激励共同成为优化目标时，分数可以继续上升，但人真正关心的工作价值未必同步上升。本文把演讲内容归纳为六个控制点：领域专家定义任务、真实工作输入、工具可用且题面与 verifier 双向覆盖、端到端 QC、私有 holdout、主观任务的专业盲评。它们是问题框架，不是 ALE 有效性的独立证明。
 
 **ALE 能够解决公开题长期暴露后，分数越来越难代表“未见任务能力”的问题。** 客户购买的不是另一份公开题库，而是一座只服务于自身决策的私有 benchmark warehouse：题面、输入、reference、evaluator 和正式运行记录均受控；development、validation、sealed final 与 rotation reserve 只是客户内部用途分区，外部公开比例为零。它不能证明绝对无污染，但能显著减少围绕固定公开题反复调参与查询的空间。
 
