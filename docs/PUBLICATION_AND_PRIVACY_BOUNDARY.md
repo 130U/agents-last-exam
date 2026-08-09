@@ -1,6 +1,3 @@
-Exit code: 0
-Wall time: 1.1 seconds
-Output:
 # Publication and privacy boundary
 
 ## Two-repository model
@@ -29,4 +26,3 @@ The external Word report contains decisions and conclusions only. Detailed reaso
 ## Git-history warning
 
 Deleting a path from the latest branch tip does not erase old Git objects, pull-request refs, forks or caches. If sensitive material has already been published, active branches should be sanitized immediately; complete purge requires a coordinated history rewrite and, where needed, GitHub Support cache and pull-request-ref cleanup.
-
