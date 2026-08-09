@@ -1,6 +1,3 @@
-Exit code: 0
-Wall time: 0.9 seconds
-Output:
 # Changelog
 
 All notable repository-level changes are documented here. Research claim revisions should also be explained in the affected report.
@@ -32,4 +29,3 @@ All notable repository-level changes are documented here. Research claim revisio
 
 - Initial GitHub organization into `core/` and `supporting-evidence/`.
 - Source mapping and large-package status in `supporting-evidence/UPLOAD_MANIFEST.md`.
-

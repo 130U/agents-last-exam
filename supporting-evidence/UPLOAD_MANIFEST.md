@@ -1,6 +1,3 @@
-Exit code: 0
-Wall time: 0.8 seconds
-Output:
 # Upload manifest and public-repository boundary
 
 更新日期：2026-08-09  
@@ -61,4 +58,3 @@ Output:
 ## 5. 完整性说明
 
 “核心结论和主要可编辑交付物”已经远程化；“所有原始复现包”尚未全部远程化。私人访谈和个人材料不是待上传项，后续也不得补传。
-
