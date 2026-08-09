@@ -1,0 +1,55 @@
+name: Research or evidence update
+description: Propose a source refresh, corrected claim, or new research artifact.
+title: "[research] "
+labels:
+  - research
+body:
+  - type: dropdown
+    id: zone
+    attributes:
+      label: Intended content zone
+      options:
+        - supporting-evidence
+        - core
+        - repository governance
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Canonical source
+      description: Provide the primary URL, paper identifier, repository, or dataset.
+      placeholder: arXiv ID, repository@commit, dataset@revision, or URL
+    validations:
+      required: true
+  - type: input
+    id: revision
+    attributes:
+      label: Version or revision
+      description: Pin mutable sources whenever possible.
+      placeholder: v2, commit SHA, dataset revision, or publication date
+    validations:
+      required: true
+  - type: textarea
+    id: change
+    attributes:
+      label: Proposed change
+      description: State the current claim, new evidence, and expected impact.
+    validations:
+      required: true
+  - type: textarea
+    id: rights
+    attributes:
+      label: Rights and confidentiality check
+      description: Explain why the material may be stored in this public repository.
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Submission checks
+      options:
+        - label: I separated verified facts from inference and recommendation.
+          required: true
+        - label: I did not include credentials, personal data, hidden references, or client-confidential material.
+          required: true

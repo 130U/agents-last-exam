@@ -1,0 +1,186 @@
+{
+  "claim_or_question": {
+    "proposition": "The interviewer’s request to explain how to build 1,000 ALE-style tasks is best interpreted as a request to design a scalable production system for a new ALE-like evaluation pool, potentially including a contamination-controlled private pool, rather than to reproduce the already published tasks.",
+    "subclaims_to_test": [
+      "The requested scale is intentionally close to ALE v2’s 960 workflows and 1,490 runnable task instances.",
+      "A customer could need new tasks because public benchmark tasks can be exposed, trained on, or repeatedly optimized against.",
+      "The phrase '1,000 tasks' may safely leave workflow and runnable-instance counts interchangeable."
+    ],
+    "bottom_line": "The first subclaim is a strong inference, the second is a plausible and technically well-supported product rationale, and the third is incorrect for a project plan: workflow and instance must be defined separately because they have different production economics and statistical meaning."
+  },
+  "primary_evidence": [
+    {
+      "fact": "ALE v2 defines a task workflow as one end-to-end professional procedure and a task instance as one concrete runnable input-output case that shares an evaluator with other instances of the workflow.",
+      "support": "The paper states that the rare unqualified use of 'task' refers to the runnable-instance level."
+    },
+    {
+      "fact": "The ALE v2 release reports 960 task workflows and 1,490 task instances, or approximately 1.55 instances per workflow.",
+      "support": "A scale-matched planning baseline for 1,000 accepted instances would therefore be approximately 640-700 distinct workflows, but that is a design analogue rather than an official required ratio."
+    },
+    {
+      "fact": "ALE explicitly describes benchmark contamination from pretraining overlap or task-specific optimization as a central threat.",
+      "support": "ALE v2 reports 150 public instances, 1,017 private instances, and 323 instances pending verification, and proposes rotating private instances into the public set while retiring old public tasks."
+    },
+    {
+      "fact": "The paper does not say that frontier agents have seen, trained on, or repeatedly rehearsed all 1,490 instances.",
+      "support": "Most instances in the cited snapshot were private or pending QC. Therefore, actual exposure of any particular model to the full pool cannot be inferred from the paper."
+    },
+    {
+      "fact": "ALE’s construction system has five gates: expert sourcing; submission and editing; first-pass review; engineering implementation; and final QC and acceptance.",
+      "support": "Submissions are expected to contain a natural-language description, input files, target software, expected deliverable, and evaluation specification; implementation adds runnable assets, environment provisioning, evaluation code, and engineer dry-runs."
+    },
+    {
+      "fact": "ALE uses authenticity, complexity, and verifiability as task-admission principles.",
+      "support": "Tasks are sourced from professional workflows, should be end-to-end rather than a few isolated actions, and must support deterministic checking or an evidence-anchored rubric tied to observable artifacts."
+    },
+    {
+      "fact": "ALE’s private-reference design separates the agent workspace from hidden ground-truth artifacts.",
+      "support": "The agent receives the description and metadata and works in the sandbox, while the reference directory is hidden and used only by the evaluator."
+    },
+    {
+      "fact": "Independent benchmark research supports private or continuously refreshed evaluation when public-test exposure is a concern.",
+      "support": "TRUCE proposes private benchmarking; LiveBench refreshes questions over time; these sources support the general contamination rationale but do not establish what the UniPat interviewer personally intended."
+    }
+  ],
+  "source_version_date": {
+    "ale_paper": "arXiv:2606.05405v2, dated 2026-06-11. All counts of 960 workflows, 1,490 instances, 150 public, 1,017 private, and 323 pending QC are tied to this version.",
+    "ale_framework_docs": "Accessed 2026-08-05. The live documentation currently describes around 150 public tasks and a growing 1,000+ corpus, so live counts may drift after the paper snapshot.",
+    "ale_hugging_face_dataset": "Accessed 2026-08-05. The public task metadata and input-data repositories are open, while the reference-data repository is gated.",
+    "independent_contamination_sources": "TRUCE arXiv:2403.00393 (2024); LiveBench arXiv:2406.19314 (2024, later published at ICLR 2025)."
+  },
+  "evidence_status": {
+    "fact": [
+      "ALE v2 contains 960 workflows and 1,490 runnable instances.",
+      "ALE distinguishes workflows from instances and ordinarily uses 'task' at the instance level.",
+      "ALE treats contamination and task-specific optimization as threats and keeps most of the cited snapshot private.",
+      "ALE is a living benchmark with a rolling-release strategy.",
+      "ALE uses a staged expert-production and QC pipeline."
+    ],
+    "strong_inference": [
+      "[uncertain] Given the scale match and the interview transcript’s emphasis on expert sourcing, implementation, automated QC, review, and project delivery, the interviewer is probably testing whether the candidate can operationalize an ALE-style production pipeline at scale."
+    ],
+    "plausible_hypothesis": [
+      "[uncertain] A model vendor customer may commission a fresh private pool to obtain a less-contaminated, harder-to-game evaluation surface.",
+      "[uncertain] The number 1,000 may have been chosen because it approximates the scale of the ALE corpus rather than because the client has a fixed requirement for exactly 1,000 distinct workflows."
+    ],
+    "unsupported_or_overstated": [
+      "It is not supported to say that current agents have learned or repeatedly rehearsed all 1,000+ ALE tasks.",
+      "It is not supported to say that contamination is the interviewer’s sole or primary motive.",
+      "It is not acceptable to treat 1,000 workflows and 1,000 instances as equivalent without stating the unit."
+    ]
+  },
+  "counterevidence_alternative": [
+    {
+      "alternative": "[uncertain] The interviewer may primarily be testing project ownership rather than contamination strategy.",
+      "why_it_fits": "The transcript explicitly describes delivery work as determining how to produce requested data, what experts are needed, and how automated QC or review should work."
+    },
+    {
+      "alternative": "[uncertain] The interviewer may want evidence that the candidate understands ALE, not a literal commercial plan to recreate its entire corpus.",
+      "why_it_fits": "The assignment asks for the candidate’s understanding and how the candidate would lead construction, which can function as a structured case interview."
+    },
+    {
+      "alternative": "[uncertain] The intended output may be a vertical or customer-weighted ALE-style suite rather than a full-spectrum copy.",
+      "why_it_fits": "Real customers often have their own workload distribution, but no client industry or use-case distribution was supplied in the interview."
+    },
+    {
+      "alternative": "[uncertain] The interviewer may use '1,000 questions' colloquially and may not expect the paper’s formal workflow-instance distinction.",
+      "why_it_fits": "The spoken assignment does not define the counting unit; nevertheless, a project owner should define it in the PPT."
+    },
+    {
+      "evidence_limit": "The interview transcript contains no explicit statement that model contamination, private holdouts, or rolling refresh is the business objective. Contamination should therefore be presented as one design requirement and business rationale, not as a claim about the interviewer’s hidden intent."
+    }
+  ],
+  "contamination_boundary": {
+    "prompt_exposure": "The exact agent-facing prompt becomes public or is supplied repeatedly to the evaluated team. Mitigation: sealed prompts for the scored pool, a small development pool, access logs, and no task-level feedback from the sealed pool.",
+    "pretraining_leakage": "Task text, source files, or reference artifacts appear in a foundation model’s pretraining corpus. Mitigation: use recent or non-public expert projects with provenance records and run web/semantic overlap checks. Absolute absence from opaque model training data cannot be proven, so use 'contamination-controlled' rather than 'guaranteed uncontaminated.'",
+    "post_training_use": "Public tasks or their solutions are used in supervised fine-tuning, reinforcement learning, synthetic trajectory generation, or distillation. Mitigation: keep scored tasks private, contractually restrict downstream training use, and rotate compromised tasks out.",
+    "developer_overfitting": "A harness team repeatedly runs on the same hidden pool and tunes prompts, tools, timeouts, or policies using task-level results. Mitigation: rate-limit submissions, disclose only aggregate or coarse diagnostic feedback, use one-shot milestones, and reserve an untouched audit set.",
+    "repeated_benchmark_tuning": "Models or harnesses are optimized to the public benchmark distribution without memorizing exact prompts. This can still reduce external validity. Mitigation: maintain workflow diversity, refresh workflow families rather than only inputs, and report performance on time-separated private cohorts.",
+    "hidden_reference_leakage": "The agent, model vendor, expert, or implementation team gains access to reference outputs or evaluator secrets. Mitigation: role-based access, separate reference storage, fresh sandbox states, secret scanning, immutable manifests, audit logs, and evaluator-only mounts.",
+    "near_duplicate_leakage": "A nominally new instance is only a superficial data swap or paraphrase of a public workflow. Mitigation: semantic duplicate checks at prompt, input-schema, action-graph, deliverable, and evaluator levels; cap variants per workflow; and require genuinely new workflow families in the sealed pool.",
+    "evaluation_api_exposure": "Submitting sealed tasks to a third-party API may expose task content to that provider under its data-use policy. Mitigation: confirm zero-retention or no-training terms, minimize uploaded secrets, and use approved enterprise or locally hosted evaluation paths where required."
+  },
+  "implication_for_interview": {
+    "preferred_framing": "[uncertain] Present the assignment as designing a new ALE-style production and evaluation program, not as copying public ALE questions. Define the unit as 1,000 accepted runnable task instances and separately manage workflow diversity.",
+    "planning_baseline": "Use approximately 650 distinct workflows for 1,000 instances as a scale analogue to ALE v2’s 960-to-1,490 ratio, clearly labeled as a provisional planning assumption to be recalibrated after a pilot.",
+    "owner_signal": "The strongest project-owner signal is not guessing the interviewer’s motive. It is converting ambiguity into an explicit delivery contract: unit of count, coverage frame, public/private policy, acceptance gates, expert and engineering roles, pilot yield, throughput model, versioning, and risk register.",
+    "commercial_insight": "Fresh, private, rotating tasks are a defensible customer value proposition because they measure capability on an evaluation surface that is harder to memorize or tune against. However, novelty alone is insufficient; tasks must also match the customer’s real workflow distribution and produce reliable, reproducible scores.",
+    "scope_boundary": "Do not assume a finance-only benchmark unless the hypothetical customer or use case is finance. Use ALE’s 13-domain and 55-subdomain taxonomy as the default full-spectrum sampling frame, then show how a customer distribution would reweight it."
+  },
+  "recommended_action": {
+    "delivery_contract": {
+      "headline_output": "1,000 accepted, independently runnable and scorable task instances that pass final QC.",
+      "workflow_diversity_target": "A provisional target of approximately 640-700 distinct workflows, with a default maximum number of variants per workflow and explicit exceptions for workflows where multiple inputs genuinely test robustness.",
+      "score_aggregation": "Average instances into workflow scores before aggregating to subdomain and domain scores so workflows with many variants do not dominate the benchmark.",
+      "release_partition_example": "Use 100 development/integration instances, 800 sealed scored instances, and 100 sealed reserve/rotation instances. Treat this as a proposed governance design, not an ALE requirement, and adjust to customer budget and disclosure needs.",
+      "scope": "Default to the 13-domain, 55-subdomain ALE taxonomy for broad coverage; apply customer-specific weighting only after the target agent and workload distribution are defined."
+    },
+    "production_workflow": [
+      "Gate 0 - Scope contract: define the evaluated agent configuration, allowed tools, operating systems, software licenses, task-count unit, taxonomy quotas, privacy policy, budget, and score use.",
+      "Gate 1 - Workflow landscape: domain advisory leads map authentic software-mediated workflow families, identify gaps, and set quotas before individual task collection.",
+      "Gate 2 - Expert sourcing and intake: recruit practicing experts against the quota map and collect completed-project provenance, inputs, target software, expected deliverables, references, and an initial evaluation specification.",
+      "Gate 3 - First-pass review: reject action-level, synthetic-looking, under-specified, unverifiable, unsafe, unlicensed, or near-duplicate submissions; return revisions to experts.",
+      "Gate 4 - Engineering implementation: package task assets, create deterministic sandbox startup, implement evaluators, isolate references, and generate each approved runnable variant.",
+      "Gate 5 - Technical red-team: run positive, empty-output, malformed-output, shortcut, adversarial near-miss, repeated-run, and environment-reset tests; scan for leakage and duplicate workflows.",
+      "Gate 6 - Expert peer QC: an independent domain reviewer validates the reference, completeness of context, evaluator bounds, professional realism, and acceptable alternative outputs.",
+      "Gate 7 - Pilot calibration and tiering: run a frozen set of representative agent configurations to estimate difficulty, variance, cost, timeouts, and discriminative value; assign difficulty tiers without tuning individual tasks to make one particular model fail.",
+      "Gate 8 - Sealed release and rotation: hash and version the manifest, freeze agent/environment/evaluator configurations, control access, report aggregate results, monitor compromise signals, and replace exposed tasks with reserve cohorts."
+    ],
+    "acceptance_criteria_per_instance": [
+      "Authentic professional provenance and documented rights to use sanitized inputs and references.",
+      "Complete task bundle: instruction, inputs, target environment/software, required deliverable, hidden reference, and executable evaluator.",
+      "End-to-end workflow complexity rather than a small isolated action.",
+      "Fresh-sandbox reproducibility with pinned dependencies and a deterministic starting state.",
+      "Reference output passes; empty, malformed, and irrelevant outputs fail; realistic near-misses receive appropriately lower scores.",
+      "No agent access to hidden references or evaluator-only secrets.",
+      "Independent expert approval of correctness, sufficient context, valid alternatives, and scoring bounds.",
+      "No unacceptable semantic duplicate of a public or previously accepted task at the workflow, deliverable, and evaluator levels.",
+      "Versioned task card, evaluator, environment image, source provenance, QC record, and content hash."
+    ],
+    "dataset_level_acceptance_criteria": [
+      "All in-scope subdomains meet their minimum coverage floor; any omission is documented.",
+      "Workflow-level diversity and variant concentration remain within agreed caps.",
+      "Difficulty, tool, operating-system, deliverable-type, expert, and source-organization concentration are measured and reported.",
+      "The sealed scored set and reserve set remain access-controlled, with no task-level feedback to model developers.",
+      "The public/development subset is tested for directional representativeness but is never assumed to be identical to the private score distribution.",
+      "All reported results pin the task manifest, evaluator version, environment image, agent harness, model version, and run date."
+    ],
+    "ppt_structure": [
+      "Slide 1 - Executive answer: what '1,000 tasks' means and the proposed delivery contract.",
+      "Slide 2 - Evidence-based reading of ALE: 960 workflows, 1,490 instances, public/private split, and the workflow-instance distinction.",
+      "Slide 3 - Customer problem and competing objectives: capability coverage, private evaluation, contamination control, and workload relevance.",
+      "Slide 4 - Coverage architecture: 13 domains, 55 subdomains, quota logic, workflow families, instances, and score aggregation.",
+      "Slide 5 - Task anatomy and one fully specified sample: prompt, files, environment, output, reference, evaluator, and QC evidence.",
+      "Slide 6 - Expert-plus-engineering production line: gates, owners, feedback loops, and throughput dashboard.",
+      "Slide 7 - Acceptance and automated QC: per-instance tests, peer review, near-duplicate detection, and difficulty calibration.",
+      "Slide 8 - Contamination and release governance: dev, sealed, and reserve pools; access, feedback, rotation, and versioning.",
+      "Slide 9 - Pilot-to-scale plan: first build a 30-50-instance pilot across multiple workflow families, measure acceptance yield and engineering hours, then set staffing, schedule, and cost for the remaining waves.",
+      "Slide 10 - Risks, assumptions, and decisions requested from the client or interviewer."
+    ]
+  },
+  "safe_wording": {
+    "interview_ready": "My reading is that the 1,000-task question is less about inventing another scoring framework and more about whether I can turn ALE’s methodology into a scalable production system for a new task pool. ALE v2 reports 960 workflows and 1,490 runnable instances, so I would define the deliverable as 1,000 QC-passed runnable instances and separately target roughly 650 distinct workflows to protect diversity. One important customer value could be a private, rotating evaluation surface that is harder to train or repeatedly tune against. I would present that as a design rationale, not claim that existing models have seen every ALE task: only about 150 instances were public in the v2 snapshot, while most were private or pending QC.",
+    "short_version": "The evidence supports 'scale the ALE production system,' but not 'all models have memorized all ALE tasks.' I would promise 1,000 accepted runnable instances, manage workflow diversity separately, and design a sealed rotating pool for contamination control.",
+    "wording_to_avoid": [
+      "Current agents have already trained on all 1,000 ALE tasks.",
+      "These tasks are guaranteed uncontaminated.",
+      "It does not matter whether 1,000 means workflows or instances.",
+      "The interviewer definitely wants a private anti-contamination benchmark."
+    ]
+  },
+  "source_urls": [
+    "https://arxiv.org/html/2606.05405",
+    "https://agents-last-exam.org/docs/ale/index.html",
+    "https://agents-last-exam.org/taxonomy",
+    "https://github.com/rdi-berkeley/agents-last-exam",
+    "https://huggingface.co/papers/2606.05405",
+    "https://huggingface.co/datasets/agents-last-exam/agents-last-exam-data/blob/main/README.md",
+    "https://arxiv.org/abs/2403.00393",
+    "https://arxiv.org/abs/2406.19314"
+  ],
+  "uncertain": [
+    "evidence_status",
+    "counterevidence_alternative",
+    "implication_for_interview"
+  ]
+}
