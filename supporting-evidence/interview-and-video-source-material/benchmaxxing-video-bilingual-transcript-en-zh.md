@@ -125,325 +125,95 @@
 
 **English:** totally fine with that another challenge is operational ability. Making a big benchmark requires a lot of QC work and plenty of organizations just don't make that investment. Apex is a rag benchmark where the agent is given files and then asked questions about them. And in some instances, what's in the file and then what's expected in the rubric don't line up. So an agent that does the thing that it's
 
-**Chinese:** 完全可以接受这一点，那么另一个挑战就是操作能力。 制定一项重要的基准需要大量的质量控制工…7396 tokens truncated…0
+**Chinese:** 完全可以接受这一点，那么另一个挑战就是操作能力。 制定一项重要的基准需要大量的质量控制工作，而很多组织根本不会进行这方面的投资。Apex 是一个粗略的基准测试，测试人员会收到文件，然后被问及有关文件的问题。 在某些情况下，文件中的内容与评分标准中的要求并不一致。 因此，如果一个代理执行了它
 
-for name, size, color, before, after in (
-    ("Heading 1", 16, BLUE, 16, 8),
-    ("Heading 2", 13, BLUE, 12, 6),
-    ("Heading 3", 12, DARK_BLUE, 8, 4),
-):
-    style = doc.styles[name]
-    set_style_font(style, size=size, color=color, bold=True)
-    style.paragraph_format.space_before = Pt(before)
-    style.paragraph_format.space_after = Pt(after)
-    style.paragraph_format.keep_with_next = True
+## 10:00
 
-for list_name in ("List Bullet", "List Bullet 2", "List Number"):
-    st = doc.styles[list_name]
-    set_style_font(st, size=11)
-    st.paragraph_format.space_after = Pt(8)
-    st.paragraph_format.line_spacing = 1.167
-doc.styles["List Bullet"].paragraph_format.left_indent = Inches(0.5)
-doc.styles["List Bullet"].paragraph_format.first_line_indent = Inches(-0.25)
-doc.styles["List Bullet 2"].paragraph_format.left_indent = Inches(0.75)
-doc.styles["List Bullet 2"].paragraph_format.first_line_indent = Inches(-0.25)
-doc.styles["List Number"].paragraph_format.left_indent = Inches(0.5)
-doc.styles["List Number"].paragraph_format.first_line_indent = Inches(-0.25)
+**English:** seeing in the ground truth is going to get a negative score. And a lot of the data in Apex is seemingly synthetically generated because it's full of obvious placeholder values or dates or places that don't exist. And so as a result, the model is more likely to develop eval awareness where it realizes that it's being tested which undermines the entire exercise. It also just takes you out of distribution from actual real world data to something that
 
-# Running header/footer.
-header = section.header
-hp = header.paragraphs[0]
-hp.alignment = WD_ALIGN_PARAGRAPH.LEFT
-hr = hp.add_run("ALE-STYLE BENCHMARK DELIVERY PLAN  |  EDITABLE WORKING DRAFT")
-set_run_font(hr, size=8.5, bold=True, color=MID_GRAY)
+**Chinese:** 在真实情境中看到的行为，那么它将得到负分。Apex 中的很多数据似乎都是人工生成的，因为它充满了明显的占位符值、日期或地点，而这些值、日期或地点根本不存在。因此，该模型更有可能发展出评估意识，意识到自己正在接受测试，从而破坏整个测试过程。 这也会让你脱离真实世界数据的范畴，转而接触一些
 
-footer = section.footer
-fp = footer.paragraphs[0]
-fp.alignment = WD_ALIGN_PARAGRAPH.RIGHT
-fr = fp.add_run("Page ")
-set_run_font(fr, size=9, color=MID_GRAY)
-add_field(fp, "PAGE", "1")
-fr2 = fp.add_run(" of ")
-set_run_font(fr2, size=9, color=MID_GRAY)
-add_field(fp, "NUMPAGES", "1")
+## 10:30
 
-# Memo masthead.
-p = doc.add_paragraph()
-p.paragraph_format.space_before = Pt(10)
-p.paragraph_format.space_after = Pt(4)
-r = p.add_run("DELIVERY DESIGN MEMO")
-set_run_font(r, size=23, bold=True, color=BLACK)
+**English:** is obviously fake. So that's an overview of some of the key antiatterns that happen during benchmark creation. But benchmaxing is a two-way process and there are all sorts of fun things that labs can do to benchmax and that's what we're going to talk about next. So the the core value that we're all trying to get towards as human eval right AI exists to serve humans and so just having humans look at the responses
 
-p = doc.add_paragraph()
-p.paragraph_format.space_after = Pt(14)
-r = p.add_run("1,000 ALE-style Tasks: Scope Definition and Executable Production Plan")
-set_run_font(r, size=14, color="373737")
+**Chinese:** 明显是虚假的数据。以上概述了基准测试创建过程中出现的一些关键反模式。但基准测试是一个双向过程，实验室可以做各种各样有趣的事情来达到基准测试的目标，接下来我们就要讨论这一点。所以，我们作为人类评估者所追求的核心价值是，人工智能的存在是为了服务于人类，因此，
 
-for label, value in (
-    ("Purpose", "Interview take-home / client delivery design"),
-    ("Version", "v0.2 - editable working draft"),
-    ("Date", "2026-08-08"),
-    ("Reference", "Agents' Last Exam, arXiv:2606.05405v2"),
-):
-    p = doc.add_paragraph()
-    p.paragraph_format.space_after = Pt(2)
-    r1 = p.add_run(f"{label}: ")
-    set_run_font(r1, bold=True)
-    r2 = p.add_run(value)
-    set_run_font(r2)
+## 11:00
 
-rule = doc.add_paragraph()
-rule.paragraph_format.space_before = Pt(8)
-rule.paragraph_format.space_after = Pt(10)
-set_paragraph_border_bottom(rule, color=BLUE, size=12, space=3)
+**English:** and make ratings like that's what we care about. The problem is that human eval is very expensive. And so a lot of what benchmarks are doing is trying to get around that and you are trying to distill human preference into something more scalable and you're hoping you do that distillation in a way that's still sufficiently faithful to what human eval wants. But what this means is that inevitably there is a point where you can keep hill climbing on a benchmark and the human eval stays flat. And you can actually take it even further if you want where you keep hill
 
-add_callout(
-    doc,
-    "SCOPE LOCK / 可修改项 01",
-    "本方案把客户的“1,000 条”定义为 1,000 个通过验收的可运行 instances。其内部结构固定为：960 个不同的专业 workflows 各产生 1 个主实例，另加 40 个关键流程的受控变体。该定义对齐 ALE v2 的 workflow 规模，但不声称复制 ALE 的 960 个原始 workflows。",
-    fill=PALE_YELLOW,
-    accent="7F6000",
-)
+**Chinese:** 我们真正关心的是让人类来查看反馈并进行评分。 问题在于人工评估成本非常高。 因此，很多基准测试都在试图解决这个问题，试图将人类的偏好提炼成更具可扩展性的东西，并且希望这种提炼能够足够忠实地反映人类的评估需求。 但这意味着，不可避免地，当你不断攀登某个基准点时，人类的评价就会停滞不前。如果你愿意，你甚至可以更进一步，
 
-add_heading(doc, "Executive decision", 1)
-add_body(doc, "这不是一个“生产一千条题目”的标注项目，而是一项测量系统建设工程。最终验收对象是可从干净环境启动、由 Agent 独立完成、能产出明确 artifact，并可被校准评分器复验的任务实例。")
-add_body(doc, "ALE v2 的统计口径是 960 个 workflows 与 1,490 个 instances，二者不可混用。由于 ALE 只公开约 150 个任务，客户项目无法也不应以“复刻 ALE 私有题库”为目标；可执行目标应是建立一套与 ALE 同量级的 960-workflow 自有覆盖图，并交付 1,000 个已验收实例。")
+## 12:30
 
-add_heading(doc, "1. Deliverable definition", 1)
-add_table(
-    doc,
-    ["交付池", "数量", "计数单位", "用途与规则"],
-    [
-        ("开发与校准集", "100", "独立 workflows / instances", "供客户理解格式、联调 harness、校准评分器；不得用于最终排名。"),
-        ("私有最终测试集", "760", "独立 workflows / instances", "冻结后仅由受控评测服务访问；作为正式比较与验收主集。"),
-        ("滚动替换储备", "100", "独立 workflows / instances", "用于题目泄漏、软件升级或评分器失效后的版本替换。"),
-        ("关键流程变体", "40", "instances", "从高价值、高风险流程中选 40 个，各增加 1 个输入或约束变体，用于鲁棒性检查。"),
-        ("最终合计", "1,000", "accepted instances", "对应 960 个不同 workflows；全部通过质量门槛后方可计入。"),
-        ("生产候选池", "1,250", "candidate instances", "按 80% 最终通过率设置 25% 生产缓冲；未通过项进入返工或淘汰，不混入交付数。"),
-    ],
-    [1900, 900, 1700, 4860],
-    first_col_bold=True,
-)
+**English:** climbing on a benchmark even as the human eval goes down. But if for whatever reason you think this is necessary for marketing or we have sort of organizational politics or incentives that are demanding this that's how it can end up happening. In this instance the prompt is what time is it? And the response is absolutely deranged. No human eval is ever going to choose this but El Marina puts it at the top of the leaderboard. So again, you have this divergence and if you're trying to benchmax, you just cannot care about
 
-add_callout(
-    doc,
-    "RATIONALE",
-    "“至少覆盖 960 workflows”在本方案中的含义是：建立 960 个彼此独立、具有不同工作目标或交付物的客户工作流，而不是给 960 个 ALE 私有题目换写 prompt。仅替换数字、公司名或输入文件，不产生新的 workflow，只能计为 instance variant。",
-    fill=PALE_GREEN,
-    accent="375623",
-)
+**Chinese:** 即使人类的评价下降，你仍然可以在基准线上不断攀升。 但是，如果出于某种原因，你认为这对于市场营销是必要的，或者我们有某种组织政治或激励机制要求这样做，那么最终就会发生这种情况。 在这种情况下，提示是“现在几点？” 而这种反应简直是疯了。 任何人工评测都不会选择这个，但 El Marina 却把它排在了排行榜榜首。 所以，这里又出现了这种分歧，如果你想达到卧推极限，就不能在意这一点
 
-add_heading(doc, "2. Coverage allocation: 13 clusters / 55 subdomains", 1)
-add_body(doc, "项目采用 ALE 的 13 个行业集群、55 个子领域作为一级覆盖框架，再由客户业务优先级进行二次加权。960 个 workflows 的分配在第 2 周冻结，方法如下：")
-add_numbered(doc, "为每个子领域设置 10 个 workflow 的最低覆盖量，共 550 个，防止高流量领域挤压长尾能力。")
-add_numbered(doc, "剩余 410 个 workflow 使用加权分配公式：客户重要性 40% + 经济价值 30% + 当前能力缺口 20% + 环境可实现性 10%。每项按 1-5 分评分。")
-add_numbered(doc, "采用最大余数法把 410 个整数名额分配到 55 个子领域；任何单一子领域不得超过总量的 8%，除非客户书面批准。")
-add_numbered(doc, "每个子领域至少包含 3 类任务：信息获取/分析、工具操作/产出、复核/决策；避免把覆盖等同于职业名称罗列。")
+## 12:00
 
-add_callout(
-    doc,
-    "可修改项 02 / CLIENT INPUT REQUIRED",
-    "第 1 周客户需要提交业务优先级、禁用领域、软件许可边界和数据隐私等级。若客户未提供，项目仍按上述公式启动，但所有权重与分配结果会作为第一项正式签字件，而不是隐藏假设。",
-    fill=PALE_YELLOW,
-    accent="7F6000",
-)
+**English:** that. Another thing you can do that I've heard stories of is you can actually hire a crowdsource army to vote for you in Elmarina since Elmarina basically does no filtering of their workforce. And you might say, well, we anonym, you know, Elmarina anonymizes. So how are they going to know who to vote for? That's actually quite simple. You have your model include a watermark that tells the crowd who to vote for. There's also all sorts of things you can do with running your evals in conditions that are like not fully representative
 
-add_page_break(doc)
+**Chinese:** 。我还听说过一种方法，那就是你可以雇佣一支众包大军在埃尔马里纳为你投票，因为埃尔马里纳基本上不对其员工进行任何筛选。 你可能会说，嗯，我们匿名，你知道，Elmarina 会匿名化。 那么他们怎么知道该投票给谁呢？其实很简单。 你的模型包含一个水印，告诉大家应该投票给谁。此外，你还可以通过在与
 
-add_heading(doc, "3. Task contract: every instance is an executable package", 1)
-add_body(doc, "每个实例必须包含下列 12 个版本化组件，缺一项即不得进入最终 QC：")
-for item in (
-    "workflow_id 与 instance_id：分别标识专业流程和可运行变体；",
-    "domain / subdomain / role 标签及覆盖配额来源；",
-    "专家署名记录、资历验证和冲突声明；",
-    "面向 Agent 的任务说明、成功标准和禁止事项；",
-    "输入文件包、数据来源、许可、隐私和脱敏记录；",
-    "操作系统、软件版本、账号权限和工具 manifest；",
-    "可复现的环境快照与启动/重置脚本；",
-    "专家参考产物或可接受结果集合；",
-    "evaluate() 评分器、rubric 与各项权重；",
-    "正例、负例、边界例和 reward-hacking 测试；",
-    "dry-run 轨迹、缺陷记录、修订历史和审批人；",
-    "split 标签、版本号、访问权限、泄漏状态和退役规则。",
-):
-    add_bullet(doc, item)
+## 12:30
 
-add_heading(doc, "4. Seven quality gates", 1)
-add_table(
-    doc,
-    ["Gate", "责任人", "强制产出", "通过标准"],
-    [
-        ("G0 需求与覆盖", "Program Lead + Domain Lead", "workflow brief、配额映射", "目标、交付物、用户价值和边界均明确；不与现有 workflow 重复。"),
-        ("G1 专家与来源", "Domain Lead + Legal/Privacy", "专家记录、来源清单", "资历通过；数据授权、隐私和许可无阻断项。"),
-        ("G2 任务工程", "Task Engineer", "环境、工具、输入、reference", "从干净快照连续 3 次可启动；工具可用率 100%。"),
-        ("G3 Prompt-Verifier 对齐", "Evaluation Engineer", "覆盖矩阵、评分器、测试集", "每项要求均被评分；每项评分均有 prompt 或成功标准依据。"),
-        ("G4 工程师 dry-run", "Independent QA", "完整轨迹、缺陷单", "非作者可独立完成；无缺失上下文、阻断工具或隐藏人工步骤。"),
-        ("G5 对抗与校准", "Red-team QA + SME", "负例、边界例、作弊测试", "reference=1.0；空/损坏输出≤0.1；关键错误不能获得高分。"),
-        ("G6 最终验收", "Acceptance Committee", "签字记录、split/version", "所有缺陷关闭；复跑通过；权限和私有集状态正确。"),
-    ],
-    [900, 1900, 2500, 4060],
-    first_col_bold=True,
-)
+**English:** of the applesto apples comparison you're trying to make and then not always being super transparent about those conditions in such a way that undermines the validity that the community is trying to interpret because they don't have that contextualizing information. This was a paper um again about Elmarina and talking about how some of the dynamics of how it's run lead to models overfitting on Elmarina. Um in this instance, the specific chart we're seeing is that Meta tested 27 models
 
-add_callout(
-    doc,
-    "COUNTING RULE",
-    "只有通过 G6 的任务才计入 1,000 个 accepted instances。待 QC、返工中、环境不可复现或仅有 prompt 没有评分器的项目全部不计数。",
-    fill=PALE_RED,
-    accent="9C0006",
-)
+**Chinese:** 你想要进行的同类比较并不完全具有代表性的条件下运行评估来进行各种操作，并且不总是对这些条件保持高度透明，从而削弱社区试图解读的有效性，因为他们缺乏这些背景信息。这篇论文再次谈到了 Elmarina，讨论了它的一些运行动态如何导致模型在 Elmarina 上过度拟合。 嗯，就目前的情况来看，我们看到的具体图表显示，Meta 测试了 27 个模型，但
 
-add_heading(doc, "5. Evaluation strategy by output type", 1)
-add_table(
-    doc,
-    ["输出类型", "主评分机制", "人工介入", "验收要求"],
-    [
-        ("客观可验证", "确定性代码 / artifact checks", "专家定义规则；QA 抽样 10%", "同一输出重复评分一致；关键错误有明确扣分。"),
-        ("多解但可 rubric 化", "结构化 rubric + 部分确定性检查", "2 名专家独立复核校准集；分歧时第 3 人裁决", "评分边界经至少 20 个样本校准；专家与自动评分趋势一致。"),
-        ("高度主观", "专业人士盲法成对比较", "每个比较由 3 名合格评审；2/3 一致，否则裁决", "隐藏模型身份与生成顺序；报告胜率、置信区间及评审一致率。"),
-        ("高风险专业判断", "自动检查 + 专家否决权", "领域专家审查全部关键失败", "严重安全、法律或事实错误触发 fail-closed，不被平均分掩盖。"),
-    ],
-    [1700, 2600, 2600, 2460],
-    first_col_bold=True,
-)
+## 13:00
 
-add_body(doc, "ALE 的专家主要参与上游任务定义、参考结果和 rubric QC，运行时以自动评分为主。因此，本方案不把专家盲评当成所有任务的第六个统一步骤；它只用于主观质量或高风险判断确实决定任务成功的类别。")
+**English:** without disclosing that it was doing so. Um which you know distorts the results. So how are we going to end benchmaxing? We need to hold the benchmark industry and the labs to a higher standard. The first thing we need to do when making a good benchmark is start with great human experts. And those experts inform everything that is downstream from what types of tasks are we going to
 
-add_page_break(doc)
+**Chinese:** 并未公开此事。嗯，你知道这会扭曲结果。那么我们该如何终结卧推极限呢？我们需要对标杆行业和实验室提出更高的标准。制定一个好的基准，首先要做的就是找到优秀的人类专家。 这些专家为后续所有环节提供信息，包括我们将让代理执行哪些类型的任务
 
-add_heading(doc, "6. 24-week production plan", 1)
-add_table(
-    doc,
-    ["阶段", "时间", "累计验收", "关键动作与退出条件"],
-    [
-        ("Define", "W1-W2", "0", "冻结 13/55 覆盖图、960 workflow 配额、数据政策、任务 schema 与验收标准。"),
-        ("Pilot", "W3-W4", "50", "每个行业集群至少 3 个试点；验证 Windows/Linux 环境、评分器与 QC 工时。"),
-        ("Calibrate", "W5-W8", "200", "完成 150 个新增验收；基于缺陷数据调整模板、rubric 和专家培训。"),
-        ("Scale I", "W9-W14", "530", "每周验收 55 个；覆盖所有 55 个子领域；开始冻结私有测试集。"),
-        ("Scale II", "W15-W20", "860", "继续每周验收 55 个；补齐长尾配额，完成对抗测试和候选淘汰。"),
-        ("Close", "W21-W22", "1,000", "完成最后 140 个验收；冻结 760 私有、100 储备、40 变体的版本与权限。"),
-        ("Audit & Handoff", "W23-W24", "1,000", "独立抽样复跑、缺陷清零、文档/环境/评分器交接和客户验收。"),
-    ],
-    [1400, 1000, 1200, 5760],
-    first_col_bold=True,
-)
+## 14:30
 
-add_callout(
-    doc,
-    "可修改项 03 / SCHEDULE BASELINE",
-    "24 周是本方案的承诺基线。若客户要求更短周期，必须增加并行专家与工程产能，或减少 960 个独立 workflows 的覆盖要求；不能通过压缩 G3-G6 的质量门槛换取进度。",
-    fill=PALE_YELLOW,
-    accent="7F6000",
-)
+**English:** have the agent do? How is success measured? What are the input files that agents are given? What are the tools that they're given? But we also do need that product sense. So imagine you're making a medical benchmark. It's not enough to have doctors who can answer specific medical questions because if you're trying to test how ready are we for agents to be deployed into hospitals. You also need someone with the business sense to know what's the regulatory environment, what's the legal requirements because that is going to impact what types of tasks you're trying to have the AI solve.
 
-add_heading(doc, "7. Team and throughput model", 1)
-add_table(
-    doc,
-    ["角色", "基线配置", "职责 / 产能依据"],
-    [
-        ("Program & benchmark design", "1 Program Lead + 1 Benchmark Architect", "范围、覆盖、客户决策、版本和验收口径。"),
-        ("Domain governance", "13 Domain Leads", "每个行业集群 1 名负责人；管理专家资历、工作流去重和专业质量。"),
-        ("Expert authors", "42 名并行作者 + reserve pool", "稳定期每人每周提交约 1.5 个候选实例，支持约 62-65 个候选/周。"),
-        ("Task engineering", "10 Task Engineers", "环境、软件、输入包、reference 与自动化启动。"),
-        ("Evaluation engineering", "4 Evaluation Engineers", "evaluate()、rubric、测试集、评分器校准和 reward-hacking 检查。"),
-        ("Independent QA", "6 QA Reviewers", "dry-run、对抗测试、缺陷分级、返工验收和批次抽样。"),
-        ("Infrastructure", "3 Engineers", "Windows/Linux 镜像、运行编排、日志、权限、成本和可复现性。"),
-        ("Legal / privacy / security", "2 shared reviewers", "数据许可、PII、客户政策、私有集访问与泄漏响应。"),
-        ("Acceptance committee", "5 人跨职能委员会", "G6 最终签字；与任务作者分离。"),
-    ],
-    [2350, 2250, 4760],
-    first_col_bold=True,
-)
+**Chinese:** ？ 如何衡量成功？代理需要输入哪些文件？ 他们被赋予了哪些工具？ 但我们也确实需要这种产品意识。 想象一下，你正在制定一项医学基准。 仅仅拥有能够回答具体医疗问题的医生是不够的，因为如果你想测试我们是否做好了将特工部署到医院的准备。你还需要有商业头脑的人来了解监管环境和法律要求，因为这将影响你试图让人工智能解决哪些类型的任务。
 
-add_callout(
-    doc,
-    "可修改项 04 / STAFFING BASELINE",
-    "人员配置由每周 62-65 个候选、约 80% 最终通过率和 50-55 个验收量反推。若专家提交率或一次通过率低于基线，先启用 reserve pool 和返工专班，再调整最终日期。",
-    fill=PALE_YELLOW,
-    accent="7F6000",
-)
+## 14:00
 
-add_heading(doc, "8. Operating dashboard", 1)
-add_table(
-    doc,
-    ["指标", "红线 / 目标", "管理动作"],
-    [
-        ("Accepted instances", "W4=50; W8=200; W14=530; W20=860; W22=1,000", "每周按 workflow 与 instance 双口径报数。"),
-        ("Distinct workflow coverage", "≥960，且 55 个子领域均达最低配额", "重复或仅换输入的条目降级为 variant，不计新 workflow。"),
-        ("最终通过率", "≥80%（1,250 candidates → 1,000 accepted）", "连续两周低于 75% 时暂停扩量，定位缺陷来源。"),
-        ("干净环境启动成功率", "3/3 dry-runs；批量运行 ≥99%", "失败任务退出私有池并回到 G2。"),
-        ("Prompt-verifier coverage", "100% 要求被覆盖；0 项无依据评分", "任何未覆盖项阻断 G3。"),
-        ("严重 false accept", "0", "发现即冻结相关评分器与同模板任务，启动横向审计。"),
-        ("私有集泄漏", "0", "撤下、换入 reserve、追踪访问日志并更新版本。"),
-        ("主观评审一致率", "三人评审 2/3 一致率 ≥80%", "低于阈值时重写 rubric、复训评审并重新校准。"),
-    ],
-    [2600, 3300, 3460],
-    first_col_bold=True,
-)
+**English:** You need high fidelity input data which is best done by going out and getting it from the real world, having actual people create this data. Synthetic approaches are possible, but it is very very hard to do it reliably. The tools need to actually work. A lot of benchmarks have tools that are buggy in various ways. And unless you're intentionally making a benchmark about buggy tools, this just introduces noise. You need verifiers that are fully aligned with the prompts. And this is a two-way alignment. So the verifiers need
 
-add_page_break(doc)
+**Chinese:** 你需要高保真度的输入数据，而最好的方法是走出去，从现实世界中获取数据，让真实的人来创建这些数据。 合成方法是可行的，但要可靠地做到这一点非常非常困难。这些工具必须真正有效。 许多基准测试工具都存在各种各样的缺陷。 除非你是有意对有缺陷的工具进行基准测试，否则这只会引入噪音。你需要与提示完全一致的验证人员。 这是双向对齐。 因此，验证人员
 
-add_heading(doc, "9. Governance and handoff", 1)
-for item in (
-    "公共/开发集、私有最终集、滚动储备和变体池分别存储，使用独立访问组；",
-    "每次运行固定 agent harness、模型版本、系统提示、工具、环境、预算、重试策略和评分器版本；",
-    "私有题目只通过评测服务下发，任务源码、隐藏 reference 与评分器不进入模型运行环境；",
-    "所有任务和输入包使用内容哈希、版本标签与不可变发布清单；",
-    "每月扫描泄漏线索、软件失效、许可变化和评分器异常；触发条件满足即从 reserve 替换；",
-    "客户交接包含覆盖矩阵、任务包、环境镜像、评分器、QC 证据、访问清单、运行手册和变更日志。",
-):
-    add_bullet(doc, item)
+## 14:30
 
-add_heading(doc, "10. What the client receives", 1)
-add_table(
-    doc,
-    ["交付物", "内容", "验收证据"],
-    [
-        ("1,000 accepted task packages", "960 个独立 workflows + 40 个变体", "G6 签字、版本清单、内容哈希。"),
-        ("Coverage map", "13 clusters / 55 subdomains / 960 workflow quotas", "配额公式、客户权重、缺口与完成状态。"),
-        ("Executable environments", "Windows/Linux 镜像、软件与权限 manifest", "3 次干净启动记录、批量运行成功率。"),
-        ("Calibrated evaluators", "确定性评分器、rubric、盲评协议与测试集", "正/负/边界例、false-accept 审计。"),
-        ("Audit trail", "来源、专家、dry-run、缺陷、返工与审批记录", "可追溯到 workflow_id / instance_id。"),
-        ("Private-set governance", "访问、版本、泄漏、轮换与退役制度", "权限清单、轮换储备、响应演练。"),
-    ],
-    [2400, 3900, 3060],
-    first_col_bold=True,
-)
+**English:** to be verifying everything the prompt asks for. And everything the prompt asks for needs to be covered by the verifiers. And if you get either side of those two misaligned, then it's going to be unfair to models and you're introducing random noise. You need to thoroughly QC everything and you need to have a private hold out set so you don't get contaminated. And if you do all this right, then you'll avoid what often happens with benchmarks, which is when labs get to
 
-add_callout(
-    doc,
-    "FINAL POSITION",
-    "客户购买的不是一千个 prompt，而是一个包含 1,000 个已验收实例、960 个专业工作流、可运行环境、校准评分器、质量证据和私有集治理的完整测量系统。",
-    fill=LIGHT_BLUE,
-    accent=DARK_BLUE,
-)
+**Chinese:** 需要验证提示中要求的所有内容。 提示中要求的所有内容都需要由验证人员进行核实。 如果这两个变量中的任何一个出现偏差，那么对模型就是不公平的，而且会引入随机噪声。你需要对所有东西进行彻底的质量控制，并且需要一套私有的备用样品，以免受到污染。如果你把所有这些都做对了，那么你就能避免基准测试中经常发生的情况，即实验室达到
 
-add_heading(doc, "Review markers / 可直接提出修改的位置", 1)
-add_table(
-    doc,
-    ["标记", "当前锁定值", "可修改内容"],
-    [
-        ("可修改项 01", "1,000 instances = 960 workflows + 40 variants", "工作流与变体的数量关系、最终计数单位。"),
-        ("可修改项 02", "55 子领域最低 10 个 + 410 加权分配", "客户权重、禁用领域、软件与数据边界。"),
-        ("可修改项 03", "24 周", "里程碑、并行批次和客户验收窗口。"),
-        ("可修改项 04", "42 位活跃专家作者及配套工程/QA 团队", "人员规模、内外部比例与并行度。"),
-        ("可修改项 05", "验收 KPI 与主观评审阈值", "通过率、抽样率、一致率与 fail-closed 条件。"),
-    ],
-    [1700, 3900, 3760],
-    first_col_bold=True,
-)
+## 15:00
 
-add_heading(doc, "Sources and evidence boundary", 1)
-p = add_body(doc, "1. Agents' Last Exam, arXiv:2606.05405v2: ")
-add_hyperlink(p, "Version-pinned paper", "https://arxiv.org/html/2606.05405v2")
-p = add_body(doc, "2. Official ALE repository: ")
-add_hyperlink(p, "Official GitHub implementation", "https://github.com/rdi-berkeley/agents-last-exam")
-p = add_body(doc, "3. Nick Heiner, Surge AI, When Will The Benchmaxxing Plague End?: ")
-add_hyperlink(p, "Conference talk video", "https://www.youtube.com/watch?v=-npY6XjM8CQ")
-p = add_body(doc, "4. Surge AI, Hemingway-bench methodology: ")
-add_hyperlink(p, "Writing benchmark methodology", "https://surgehq.ai/blog/hemingway-bench-ai-writing-leaderboard")
+**English:** like 80% and say, "Okay, this is saturated." And I used to think that saturation was just them saying again we don't think training on this further is going to increase real world value. And it often does mean that but it can mean that because the lab is saying we realize 20% of these tasks are broken. But the problem is that as you're hill climbing you don't know what 20% are broken until you solve all the others. And so as a result you have a lot of noise. And if that 20% of broken tasks
 
-add_body(doc, "Evidence boundary: ALE v2 reports 960 workflows and 1,490 instances, including 150 public, 1,017 private and 323 pending QC. The 1,000-task delivery allocation, 24-week schedule, staffing plan, pool split and acceptance thresholds in this memo are proposed project decisions created for the client scenario; they are not claims made by the ALE authors.", italic=True)
+**Chinese:** 80% 左右时会说：“好了，这已经饱和了。” 我以前认为，所谓的“饱和”只是他们再次表示，我们认为继续进行这方面的培训不会增加实际价值。这通常意味着这一点，但也可能意味着实验室说我们意识到这些任务中有 20% 是错误的。但问题是，在爬山的过程中，你只有在解决了所有其他问题之后，才知道哪 20% 的问题出在了其他问题上。因此，结果就是噪音很大。 如果这 20% 的失败任务
 
-doc.save(OUT)
-print(OUT.name)
+## 16:30
+
+**English:** is randomly but in a biased way assigning the rewards, it's going to really distort the model relative ranking you're trying to get. So at Serge, we created a benchmark called Hemingway bench to measure writing. There have been a number of writing benchmarks that use various mechanical means to try to assess writing quality, but we believe that writing is just too rich and deep and nuanced and frankly human of an activity to measure with mechanical benchmarks
+
+**Chinese:** 是随机但有偏见地分配奖励的，那么就会严重扭曲你想要获得的模型相对排名。因此，在 Serge，我们创建了一个名为“海明威基准”的基准来衡量写作水平。 已经有很多写作基准使用各种机械方法来尝试评估写作质量，但我们认为写作太过丰富、深刻、微妙，坦白说，它是一种人性化的活动，无法用机械的基准来衡量，
+
+## 16:00
+
+**English:** and LM as a judge doesn't really work either because LLMs don't have good taste in writing. Again, this is sort of the you can't expand the frontier from within the frontier situation. So what we've done is we've just created a workforce of thousands of professional writers in various domains, technical writers, poets, journalists, editors, and we just have them do blind model comparisons and then we create this leaderboard and it is quite expensive, right? Human eval is very expensive. Getting the time of these professionals
+
+**Chinese:** 而且以文学硕士作为评判者也不太奏效，因为法学硕士对写作没有很好的品味。 这又回到了“你不能从边疆内部扩展边疆”的情况。所以我们所做的就是，我们创建了一个由数千名各个领域的专业作家组成的队伍，包括技术作家、诗人、记者、编辑，我们让他们进行盲测模型比较，然后我们创建了这个排行榜，这相当昂贵，对吧？ 人工评估成本非常高。聘请这些专业人士的费用
+
+## 16:30
+
+**English:** is quite expensive. But again, our goal is to maximize quality, not to minimize costs. So in conclusion, benchmaxing is the exploitation of benchmark misalignments between human preference, but we can do better and we can hold the industry to a higher standard. Both the people making the benchmarks like myself and the people who are reporting on the benchmarks. And if you'd like to be a part of that, of course, obligatory pitch at Serge, we're hiring for basically all aspects of that. Uh and if
+
+**Chinese:** 相当昂贵。 但是，我们的目标是最大限度地提高质量，而不是最大限度地降低成本。总之，基准测试过度利用了人类偏好与基准测试之间的偏差，但我们可以做得更好，我们可以要求行业达到更高的标准。 既包括像我这样制定基准的人，也包括报告基准结果的人。 当然，如果您想参与其中，Serge 的招标环节是必不可少的，我们基本上在所有方面都在招聘。 呃，如果
+
+## 17:00
+
+**English:** you'd like more spicy takes from me, uh please follow my substack. Thank you very much.
+
+**Chinese:** 你想看我更多犀利的观点，呃，请关注我的 Substack 账号。非常感谢。
+

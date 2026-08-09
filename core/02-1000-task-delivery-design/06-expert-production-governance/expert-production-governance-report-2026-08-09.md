@@ -140,7 +140,127 @@
 | Visible task contract | description、constraints、allowed resources、input/output paths、end condition | hidden evaluator 不强制题面不可合理推知的要求 |
 | Input manifest | schema、format、hash、provenance、rights、visibility、异常约定 | 可重建、可授权、无 reference clue |
 | Software/environment | OS/image/provider、software/plugins、license、locale/timezone、network、account、dependencies | clean build、health check、版本固定 |
-| Start/reset…3246 tokens truncated…| C | C | I | C | C | C | I | C | C | I | A/R |
+| Start/reset | idempotent start、output/reference 清理、snapshot restore、state/hash checks、retry semantics | 同一 run/新 run 区分；infra exception 不伪装成 expert 0 分 |
+| Expected artifact | required/optional artifacts、path、format、parse/open、cross-file invariants | 可观察终态，不限定不必要的制作路径 |
+| Reference package | canonical artifacts、provenance/hash/rights/custodian、limitations、change history | reference 是受控证据，不是无误差真值 |
+| Alternate-correct register | 已知正确变体、mandatory invariants、可变布局/路径/区间、接受理由 | 不错罚合理多解 [S22, S24] |
+| Rubric/evaluator map | visible requirement → evidence → criterion → gate/credit → scorer/probe | criterion coverage、hard gate 与 partial credit 有理由 |
+| Evaluator control library | canonical、independent correct、alternate-correct、empty/corrupt、known-bad、mutation/metamorphic、shortcut/injection | 同时测 false accept、false reject 与 anti-gaming [S05, S09b, S23] |
+| Independent technical replay | 未参与对应实现者对 environment clean reset/rebuild 与 evaluator coverage/control library 的 replay evidence | Builder 不成为唯一技术 accepter；人员组合与 replay 构成为 [P] |
+| Guideline/FAQ | definitions、demo、checklist、正反例、FAQ、escalation、decision log | 口头标准必须版本化；demo 不是唯一合法路径 |
+| Blind-solver pack | 只含 R0 inputs、visible task、permitted environment；无 reference/evaluator internals | prior exposure、COI、trace 与 blocker log |
+| Batch-zero evidence | raw artifacts、trajectory、logs、health/reset、per-criterion outcome、initial judgments、adjudication | 保留原始分歧与被拒解释，不只保留最终共识 |
+| Change/release | revision、owner、reason、affected instances、regression、limitations、refresh triggers、FA decision | 每次修改都可追溯、可回滚、可重基线 |
+
+## 7. Batch Zero：变量与六类问题诊断
+
+[I/R] 六类 taxonomy 是本项目的 fault-isolation schema，不是任一来源原生分类；实验构成、统计方法、样本与阈值均为 [P]。
+
+### 7.1 必测变量
+
+- **Guideline/task：** visible-spec insufficiency、clarification dependency、item×criterion ambiguity、first-attempt executable completion、reason-code distribution。
+- **Expert：** 按 domain/software/criterion/severity 的 error profile、rationale adequacy、跨 validated cases 的重现、requalification/retest delta。
+- **Case：** input/schema/hash/provenance defect、feasibility、外部依赖、单 case 异常与同 workflow 变体一致性。
+- **Environment：** clean-start、reset reproducibility、rebuild/provider drift、license/network/permission/crash、known-good replay。
+- **Reference：** factual/structural/version/rights defect、independent reconstruction、alternate-correct discovery、coverage limitations。
+- **Evaluator：** false accept/reject、criterion coverage、repeatability、mutation/metamorphic response、known-bad escape、legitimate regression、judge/injection/drift。
+- **Review/governance：** raw agreement + confusion/base rate、chance-corrected reliability（适用时）、decision reversal、calibration drift、yield-pressure override、COI/access/reference incidents。
+
+[R] 所有指标同时报告 raw count、denominator、base rate、missing/excluded reason 与 uncertainty；agreement 按 item×criterion×severity 分层。[P] 统计量与阈值由 measurement scale、decision use 与 pilot 决定。[S06, S28]
+
+### 7.2 六类根因矩阵
+
+| 根因 | 典型信号 | 控制/反证实验 | 归因证据 | 修复 owner |
+|---|---|---|---|---|
+| Guideline | 多名合格 solver 对同一 visible requirement 稳定分歧；FAQ 有隐藏标准 | 固定 case/env/ref/eval，只加澄清句后盲测；reviewer 先不看 reference 解释题意 | 澄清后收敛，case 可行且 ref/eval controls 通过 | GL/BO |
+| Expert | 错误集中同一人/技能步骤，并跨多个 validated cases 重现 | 同 case 换 expert；同 expert 跨 case；blind software sample | 其他匹配专家稳定完成，该 expert 错误随人移动 | GL |
+| Case | input 损坏/缺失、约束矛盾、不可行或外部状态变化 | hash/schema/provenance；多人 feasibility；替换 input 保持 workflow/evaluator | 问题随 case/input 移动，换 expert/guideline/evaluator 仍在 | AU/TE |
+| Environment | known-good 失败、reset 状态不同、license/network/version/crash | preflight/Golden replay；换 image/provider；固定 artifact 只跑 parser/scorer | 失败随 image/provider/session 移动 | EN |
+| Reference | canonical factual/structural/version/rights 错；正确替代与 gold 不同 | blind domain judgment；独立重建；多 ref/invariant；替换 ref | evaluator 行为随 ref 变化；多名独立专家支持 alternate | DR/custodian |
+| Evaluator | known-bad 通过、alternate-correct 被拒、shortcut 得分、judge 漂移 | positive/negative/alternate corpus；mutation；只换 scorer；人工 criterion review | 错误随 evaluator version/prompt/tolerance 移动 | EE/DR |
+
+### 7.3 诊断顺序
+
+1. [R] 保全 frozen package、artifact、trace、state 与原始判断；停止覆盖。
+2. [R] 先排 input/reference hash、start/reset、software/license 与 exception class；infra fault 不记 expert failure。
+3. [R] Domain reviewer 只看 visible contract 与 artifact，先独立判断并写理由。
+4. [R] 再揭示 reference/provenance，比较 mandatory invariants 与 alternate-correct。
+5. [R] 对保存 artifacts 运行 evaluator controls，避免重跑 agent 引入新变量。
+6. [R] 一次只替换 expert、case、environment、reference、evaluator 或 guideline 中一个，观察症状是否随组件移动。
+7. [R] 允许 primary + contributing cause；证据不足标 `underdetermined`；修复后回归 affected lineage。
+
+## 8. Reviewer 晋升、校准、Deboarding 与 Escalation Policy
+
+### 8.1 Reviewer promotion gates
+
+1. **资格边界：** [R] 通过当前 domain/software practitioner qualification；reviewer authority 不是 seniority 奖励。
+2. **Blind qualification set：** [R] 使用未参与创作、未见 live reference 的 canonical、alternate-correct、known-bad、borderline、environment/reference/evaluator incidents；先盲判再揭示 evidence。[S27, S29]
+3. **理由与诊断：** [R] 决定绑定 visible requirement、artifact evidence、criterion 与 severity；能识别六类问题、承认合理多解/unknown、提出最小修复与 regression。
+4. **Independence/COI/custody：** [R] assignment disclosure、security training、最小权限；不得 review 自己或衍生 lineage，不以 yield/throughput 为唯一激励。
+5. **Shadow review：** [R] 决定先不影响 release，由独立 reviewer/FA 对比 item-level decision、rationale、false accept/reject 与 escalation。
+6. **Promotion decision：** [R] GL 提名，OP 汇集 evidence packet，RS 完成 COI/access clearance，既有 DR/independent assurer 提供咨询意见，由 FA 作为唯一 accountable owner 授予、暂停或撤销 reviewer authority；记录人名、日期、scope、expiry/review trigger。[P] Case 数、composition、shadow 期与 threshold 由 pilot 决定。
+
+### 8.2 防自审、泄漏与放宽标准
+
+- [R] Author 可自检、答疑、修订并在合格后 review 其他无冲突任务；不可对自己任务作唯一 domain acceptance、单方改 evaluator/tolerance 后自批、兼唯一 custodian/FA。
+- [R] Solver 只见 R0 input/task/environment；reviewer 两阶段判断；calibration 优先 retired/synthetic anchors，不暴露 live private reference。
+- [R] Rubric/gate/weight/tolerance/judge prompt 只通过 versioned change request 修改；合理多解进入 alternate register 并 backtest 全部受影响 outputs。
+- [R] Dashboard 同时显示 false accept/reject、alternate rejection、root-cause mix、overturn/drift、COI/security；yield 是 funnel variable，不是 reviewer quality KPI。
+- [R] 新 reviewer、新 guideline/evaluator/reference、边界案、异常高 yield/低 escalation 进入风险抽审；抽审比例由 pilot 决定。
+
+### 8.3 Calibration policy
+
+- Initial：domain-relevant blind anchors 覆盖 correct、known-bad、alternate-correct、borderline 与六类 fault。
+- Event-triggered：guideline、software/image、reference、evaluator/judge、客户 requirement 变更；重大 incident；drift；长期未 review。
+- Output：保留初始 item×criterion 判断、理由、confidence/unknown、root cause 与 escalation；会议共识不覆盖原始记录。
+
+### 8.4 Deboarding policy
+
+1. OP 在 engagement end、转岗、暂停、vendor change、material COI 或 incident 开 ticket；记录 effective trigger。
+2. 枚举 SSO/repo/storage/VPN/RDP/benchmark UI/software seats/cloud/API/service tokens/browser sessions/devices/physical access。
+3. RS 批准 scope/urgency，OP 执行，另一人验证；转移 branches、reference、evaluator、images、keys、queues 与 ownership。
+4. 按合同/retention/hold 返还或销毁客户/项目材料；必要时 attestation；提醒 surviving confidentiality/IP obligations。
+5. 保留且限制 quality/security/rights dispute 所需 logs；存在 exposure 时旋转 secret、撤销 share/session、quarantine affected lineage。
+6. 更新 roster、COI、RACI、custody 与 successor；RS 在独立证据复核后关闭。
+
+### 8.5 Escalation policy
+
+| Trigger | Immediate action | Accountable | Resume/closure |
+|---|---|---|---|
+| Guideline ambiguity/reasonable multi-solution | quarantine decision，保留 outputs，开 clarification ticket | GL | GL；若影响 release 则 FA |
+| Case/input defect | 停 affected instance/derivatives，保留原版 | GL | FA 在修复证据后 |
+| Environment/start-reset | freeze image/version，clean-state reproduce | EN | FA 在独立复现后 |
+| Reference correctness/provenance defect | seal current，阻止静默修改，查 lineage | GL | FA 在新 ref 与 rerun 后 |
+| Reference custody/leak/access incident | revoke/contain、保全 access/export logs、查 exposure lineage | RS | RS 关闭 containment；FA 单独决定 release resume |
+| Evaluator under/over-coverage/gaming | freeze evaluator，保留 trace，运行 counterexamples | EE | FA 在 coverage evidence 后 |
+| Reviewer drift/yield pressure | 保留 first-pass，移除 closure authority，独立 adjudication | BO | FA |
+| COI/employer/third-party secret | revoke/recuse/quarantine，不扩散 | RS | RS 管 access；FA 管 release |
+| PII/customer/IP/reference secret | stop processing/release，preserve，classify，rotate/quarantine | RS | FA + BO/client（按合同） |
+| Systemic integrity failure | pause release family，root-cause/corrective plan | BO | FA 在 corrective evidence 后 |
+
+## 9. 完整 RACI
+
+[R] 缩写：`BO` benchmark owner；`GL` group lead；`AU` author；`TE` task engineer；`EN` environment engineer；`EE` evaluator engineer；`IS` independent solver；`DR` domain reviewer；`RS` rights/security reviewer；`OP` operations；`FA` final approver。每行只有一个 `A`；具体人名与兼容组合为 [P]。
+
+| Activity | BO | GL | AU | TE | EN | EE | IS | DR | RS | OP | FA |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| Construct/scope/acceptance policy | A/R | C | I | C | C | C | I | C | C | I | C |
+| Domain guideline/Golden/ambiguity taxonomy | C | A/R | R | C | C | C | C | C | C | I | I |
+| Qualification/roster/conflict-safe assignment | C | A | I | I | I | I | I | C | C | R | I |
+| Reviewer authority grant/suspend/revoke | C | R | I | I | I | I | I | C | C | R | A |
+| Source/data classification and rights intake | C | C | C | C | I | I | I | I | A/R | C | I |
+| Instance/reference/rubric authoring | C | A | R | C | I | C | I | C | C | I | I |
+| Runnable package/input/start-reset | I | C | C | A/R | C | C | C | I | C | I | I |
+| Environment build/pinning/isolation/reproducibility | I | C | I | C | A/R | C | C | I | C | I | I |
+| Evaluator implementation/coverage/versioning | C | C | C | C | C | A/R | I | C | C | I | I |
+| Blind independent solve/evidence capture | I | A | I | C | C | I | R | I | I | R | I |
+| Domain review/alternate adjudication/reason code | I | C | I | I | I | C | C | A/R | C | I | I |
+| Integrated reproducibility/evaluation packet | A | C | I | R | R | R | C | C | C | R | I |
+| Rights/confidentiality/PII/COI clearance | C | C | I | I | I | I | I | C | A/R | C | I |
+| Reference/evaluator-secret custody and split | C | C | I | C | C | C | I | C | A | R | I |
+| Version/change/audit evidence control | A | C | I | R | R | R | I | C | C | R | I |
+| Access approval/provision/review/revoke/log | I | C | I | I | C | C | I | I | A | R | I |
+| Release-readiness decision | C | C | I | C | C | C | I | C | C | I | A/R |
 | Post-release monitor/invalidate/rotate/refresh | A | C | I | C | C | C | I | C | C | R | C |
 | Quality-integrity incident/root-cause plan | A | R | I | R | R | R | C | R | C | R | C |
 | Rights/PII/COI/reference-security incident | C | I | I | C | C | C | I | I | A | R | C |

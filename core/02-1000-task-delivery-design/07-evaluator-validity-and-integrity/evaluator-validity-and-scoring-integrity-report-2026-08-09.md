@@ -303,7 +303,75 @@ mode 冲突；alternate-correct rejection；judge disagreement/order instability
 
 ### 9.2 Recommended layer `[R]`
 
-公开 contract、wrapper、error/status semantics、representative positives/negatives；隐藏易被特化的 qualification/final functional/metamorphic/mutation/…1072 tokens truncated…ons；
+公开 contract、wrapper、error/status semantics、representative positives/negatives；隐藏易被特化的 qualification/final functional/metamorphic/mutation/anti-tampering tests；final isolated scoring；query accounting 与 tiered feedback；退役后 delayed audit release；private/EaaS 需 independent audit、commitment、escrow/export 与 regrade。
+
+### 9.3 No ratio claim
+
+`[P]` 哪些 assets/tests 属 public/hidden/private、延迟多久、允许多少 queries、返回多细 feedback，要由客户威胁模型、法律/隐私、价值与 pilot 决定。本研究不给任何比例或时长。
+
+---
+
+## 10. H — Integrity threat model
+
+完整矩阵见 `deliverables/06_integrity_threat_model.md`。
+
+| Threat | Key detector | Primary prevention | Corrective action |
+|---|---|---|---|
+| grader tampering | hash/write/process/file log/diff | separate read-only judge | quarantine; classify platform vs agent; regrade if needed |
+| reference leakage | canary/file/network/search trajectory | remove from agent layer; post-run mount | rotate; invalidate platform-exposed runs |
+| metadata shortcut | counterfactual metadata mutation | minimize/randomize non-semantic fields | semantic tests; scorer repair |
+| artifact spoofing | magic/parser/backend replay | parse + semantic recomputation | quarantine parser revision; affected-set regrade |
+| judge injection | canary/order swap/disagreement/rationale | structured minimal input + isolation + abstain | blind arbitration; prompt/parser patch |
+| feedback leakage | query history/score delta/similarity | tiered/coarse feedback | restrict/rotate/review final probing |
+| repeated-query hill climb | submission lineage and score sequence | accounting/final holdout | quarantine or final limited evaluation |
+| search-time contamination | retrieved URL/content + use evidence | isolated/allowlisted snapshot + full logs | clean rerun if required; separate label |
+| environment manipulation | pre/post state and cross-trial anomaly | fresh snapshot/isolation | integrity violation or invalid environment |
+| patch/trajectory hiding | signed manifest/event-chain gaps | append-only lineage/harness capture | no formal score until evidence complete |
+
+### 10.1 Threat-model boundary
+
+`[C]` NIST CAISI 明确 transcript detection 仍有 false positives/negatives；单一 network rule 不适合所有任务。[S07]  
+`[I]` 因此 threat controls 必须由 intended affordances 定义。合法 retrieval/tool use 与污染/越权的边界，必须在 prompt/protocol 先写清楚。
+
+---
+
+## 11. Evaluator defect, agent failure and environment failure
+
+完整 policy 见 `deliverables/07_failure_and_regrade_policy.md`。
+
+### 11.1 Minimum external classification
+
+- `FAIL_AGENT`：环境健康，scorer 通过 calibration，artifact 不满足明确 requirement，无 integrity breach。
+- `INVALID_EVALUATOR`：gold fail、known-bad pass、alternate-correct reject、shortcut accepted、wrong tolerance/weight/check 或 unexpected nondeterminism。
+- `INVALID_ENV`：reset/hash、dependency、permission、network/service/resource/judge infrastructure 失败，使 agent 没有有效完成/评分机会。
+
+### 11.2 Internal root causes
+
+另保留 `INVALID_TASK_SPEC`、`INVALID_REFERENCE`、`INVALID_HARNESS`、`INTEGRITY_VIOLATION`、`INDETERMINATE`。Failure origin 与 observed symptom 分开，避免 parser crash 最终表现为“agent 0 分”。
+
+### 11.3 Regrade policy `[R]`
+
+1. 旧 revision 与 evidence freeze；
+2. 最小 counterexample + root-cause class；
+3. 新 revision，不 silent in-place patch；
+4. 原反例、old gold/bad、alternate-correct/near-miss、held-out exploit 全部 regression；
+5. executable `affected_run_selector` 找到所有历史 runs；
+6. frozen artifacts 用 old/new shadow regrade；
+7. independent approval、rollback、correction note；
+8. 保存 original/superseded/new score、version、reason、date 和 comparability。
+
+`[P]` 客户预先决定 artifact-only regrade 还是 full agent rerun；二者测量对象不同。无法重放时标 `NOT_REGRADABLE`，不得猜测。
+
+---
+
+## 12. 可直接采用的项目建议
+
+### 12.1 Asset package contract `[R]`
+
+每个 asset 包含：
+
+- `task_spec`：atomic requirements、construct、score use、process/tool constraints；
+- `reference_pack`：provenance、independent review、allowed equivalence、known limitations；
 - `evaluator_pack`：mode components、score semantics、component evidence、version；
 - `test_pack`：十二类最低 fixtures + targeted regression；
 - `protocol_manifest`：model/harness/prompt/tools/budget/retry/environment/network；

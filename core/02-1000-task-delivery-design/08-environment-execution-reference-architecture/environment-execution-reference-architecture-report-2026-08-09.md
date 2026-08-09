@@ -175,7 +175,258 @@ flowchart LR
 - **[R] Policy fields：** retry eligibility、network profile、retention、download/quarantine、waiver、cleanup/revocation、acceptance threshold profile；全部 versioned 且 pre-frozen。
 - **[R] Secret-sensitive fields：** 只保存 opaque binding/audit ID。Hidden reference plaintext hash、exact object locator 与 evaluator prompt 也可属于 restricted/evaluator-only metadata；不因“不是 password”就进入 public view。
 
-## 4. Substrate selection：VM、container、nested、existing sandbox、remot…8498 tokens truncated…tart attestations / attempted starts`；同时报告各 required-field mismatch | substrate × OS × image family × reset path | `θ_SSI`、mismatch taxonomy、equivalence classes |
+## 4. Substrate selection：VM、container、nested、existing sandbox、remote provider
+
+### 4.1 决策矩阵
+
+| 候选 | 最适用 | Windows GUI | GPU / driver | Licensed professional software | Reset / reproducibility | 主要风险与项目定位 |
+|---|---|---|---|---|---|---|
+| **Full VM** | Windows/Linux desktop、系统级配置、高风险不可信代码、独立 kernel、driver-sensitive app | 支持完整 desktop；固定版 ALE 的 Windows/多数正式任务走 VM [S102][S104] | 可 passthrough/vGPU；必须锁 host manager、guest driver、profile、license、render/compute/encode [S117][S119] | 技术上可行；自动化、VDI、cloud、clone/snapshot 权利逐产品确认 [S122] | 从 immutable image/fresh overlay 创建；仍要测试 profile、attached volume、license lease、cloud-init | **[R]** Windows GUI、licensed GUI、强 guest boundary 的默认正式池；hypervisor/management/device 仍是信任面 |
+| **Ordinary shared-kernel container** | Linux CLI、repo build/test、terminal、无 desktop/kernel 独占依赖 | 普通 Windows container 不支持 desktop/RDP interactive app [S114] | 可共享 host GPU 做 compute；不能自动代表 GUI fidelity | 常受 GUI/installer/machine identity/redistribution 限制 | 新 container 容易；但 volume、bind mount、daemon、cache、GPU/external service 要清理 | **[R]** Linux CLI fast lane；rootless、最小 mount；高风险/privileged/DinD 升级到 microVM/VM [S106] |
+| **Hypervisor-isolated container / microVM** | 保留 container workflow 但需要 separate-kernel boundary | Separate kernel 不自动获得 desktop 支持 [S114][S115] | 取决于 runtime/device model | 逐产品支持矩阵 | 可重建；仍需核验 daemon/nested/device state | **[R]** 中间档；按实际 effective boundary 录入，不能按 marketing 名称假定等价 |
+| **Nested virtualization** | 外层已虚拟化、task 仍需完整 inner guest；兼容/CI lab | 支持取决于 extensions、guest image 与 provider | 固定版 ALE local QEMU 不支持 GPU；passthrough/IOMMU 复杂 [S101] | machine identity、activation、support 需合同/pilot | outer VM + inner VM + runner 三层 reset/cleanup；有性能与网络/时钟变量 [S116] | **[R]** 逐 host-family 验收的后备；不是 latency-sensitive、GPU 或通用默认路径 |
+| **Existing/static sandbox** | 单 task debug、镜像开发、人工复盘、失败取证 | 取决于机器 | 取决于机器 | 可能方便保留激活状态 | 固定版 ALE static provider 不 create/stop/reset/delete [S103] | **[R]** `debug_only`；只有外部 controller 提供 fresh snapshot attestation、exclusive lease、residue probe 才能例外进入正式池 |
+| **Remote desktop / managed workstation provider** | Windows GUI、CAD/CAM/video、GPU workstation、远程 session | 可支持；client/server、resolution/scaling/monitor/device redirection 都属于身份 [S118] | 区分 application rendering 与 frame encoding；需 SKU/driver/codec/license [S117] | 可支持但 EULA、named/concurrent、stable machine identity 仍适用 | reboot/reset/rebuild/restore 语义按 provider；user profile volume 可能被恢复 [S121] | **[R]** 它是 managed VM/session provider，不是新的 isolation primitive；只有可 pin/export/reset/replay 者合格 |
+
+### 4.2 Routing policy（可直接实现）
+
+1. `requires_windows_desktop=true` → 排除 ordinary Windows container；路由至 full Windows VM 或 qualified remote workstation。[S114]
+2. `requires_gpu=true` → 强制拆为 `gpu_compute`、`gpu_app_render`、`gpu_frame_encode`，各自执行 capability probe；不得仅记录 `gpu=true`。[S117]-[S120]
+3. `licensed_software=true` → 在 virtualization/image/automation/seat/session 权利、activation identity、checkout/return owner 均有客户批准前，不 promotion image family。[S104][S122]
+4. Linux CLI 且无需独立 kernel/device → container candidate；若 agent 可执行 privileged/DinD、host mount 或 kernel attack → 提升到 hypervisor-isolated/microVM/full VM。[S106][S109][S110]
+5. Nested virtualization → 把 outer/inner hypervisor、VT-x/AMD-V/KVM/IOMMU、network/storage/clock 与 GPU support 纳入 environment identity；逐 host family 验收。[S101][S116]
+6. Existing sandbox → 默认 `purpose=debug_only`；production exception 需要 exclusive lease、external reset attestation 与 stale reference/credential/profile canary test。[S103]
+7. Remote provider → 默认 `qualification_status=pending`；资格由 image pinning、reset semantics、artifact/control API、session/GPU/license 可观测性与 cross-provider oracle 决定，而不是品牌。
+
+### 4.3 Remote provider qualification checklist
+
+| 资格面 | 必须可固定或导出的证据 | 不满足时 |
+|---|---|---|
+| Image/host identity | direct image/version、build provenance、provider/SKU/region/zone、CPU/GPU/hypervisor class | 不能证明同一起点，限 debug |
+| Storage/reset | OS/profile/ephemeral/output volumes；reboot/reset/rebuild/restore/delete 的实证状态转换 | 存在跨 run 污染风险 |
+| GUI session | client/server version、resolution、DPI、monitors、dynamic resolution、codec/chroma、redirections | screenshot/coordinate/UI state 不可比 |
+| GPU path | physical/vGPU profile、host+guest drivers、compute/render/encode、license state | 功能或性能路径不确定 |
+| Identity/license | pooled/dedicated、machine identity、task account、seat/checkout/return | 可能 seat 泄漏、clone collision 或违规 |
+| Control/evidence | preflight、start/stop/reset/delete、console、screenshot/video、disk/artifact export、orphan enumeration | 无法归因或保存失败 run |
+| Reproducibility | deterministic oracle 的 same-provider repeat 与 cross-provider comparison | 不进入正式 release pool |
+
+## 5. Image build、sign、scan、version 与 rollback policy
+
+### 5.1 证据对象不是同义词
+
+| 对象 | 它回答什么 | 它不能回答什么 |
+|---|---|---|
+| Content digest | “这次解析到的 bytes 是什么” [S206] | 谁授权、是否含漏洞、是否可启动、host/runtime 是否相同 |
+| Signature | “某 signer 对某 digest 作了声明” | signer 的 build 是否可信；内容是否安全 |
+| Provenance | “哪个 builder 按哪些参数/依赖产生 artifact” [S207][S208] | 独立重建是否 bit-identical；运行时是否等价 |
+| SBOM | “声明/发现了哪些组件与关系” [S209][S210][S212] | 完整性自动保证；漏洞是否可利用；配置/host 全貌 |
+| Vulnerability/malware/license scan | “特定工具和数据库在特定时点发现什么” | 无 false positive/negative；以后不会出现新问题 [S214] |
+| Acceptance/replay tests | “此 candidate 在指定 host/profile 能否进入预期 task state” | 未测试组合或未来 provider 状态 |
+
+### 5.2 Build and promotion pipeline
+
+1. **Source freeze：** version-control IaC、Packer/Dockerfile/PowerShell recipe、base digest/provider image、offline installers/package lock、driver/runtime、configuration、cleanup scripts；影响输出的 build cache 也进入 resolved dependencies。[S207][S221][S222]
+2. **Ephemeral builder：** 独立 builder identity；无 production/task/evaluator secrets；禁止手工登录修补 candidate。对 proprietary installer 记录 lawful custody/hash，不把 installer 或 entitlement 非法再分发。
+3. **Produce：** 创建 immutable image/disk；生成 image/disk digest、provider immutable ID、SLSA/in-toto-style provenance、SBOM、license inventory 与 build log。[S206]-[S210]
+4. **Verify：** 验签与 provenance policy；scan 并记录 scanner engine/DB；secret canary/layer/history scan；boot/start-state/software/plugin/license/GPU/display/network/reference-isolation tests；无阈值默认值。[S204][S205][S213][S214]
+5. **Independent approval：** Builder 不能独自 promotion；approver 绑定全部 evidence、waiver owner/expiry/scope、pilot threshold profile。
+6. **Publish：** 写入 immutable release ID；移动 signed `candidate → accepted` channel；benchmark release 与 run 只保存 direct digest/version，不能只保存 `latest`/family。[S206][S216]
+7. **Operate：** Continuous rescan 是新的 attestation，不改变旧 image bytes；若新风险超过客户 policy，标 `quarantined/revoked`，由客户决定历史 comparability 处置。
+
+### 5.3 Version model
+
+建议使用三个不可混淆的版本：
+
+- `environment_release_id = env/<family>/<semantic-release>+<manifest-digest-prefix>`：人类可读 release；manifest 不可变。
+- `image_artifact_id = <provider-image-id and/or algorithm:digest>`：实际 bytes/provider artifact。
+- `promotion_channel = candidate | accepted | deprecated | quarantined | revoked`：可变指针；每次变更有签名事件。
+
+**[R] 触发新 release 的变化：** base/OS patch、package/plugin/installer、config/registry/policy、driver/GPU profile、font/display/locale、remote-session client/server/codec、network/mirror fixture、license client/model、harness/evaluator dependency、cleanup/start/reset behavior。纯 metadata 修正若不影响语义，也应产生新 manifest revision 并声明 equivalence rationale。
+
+### 5.4 Patch、rollback 与重现声明
+
+- **[R] Patch：** 不在 accepted image 上 in-place 修改。以新依赖重建 candidate，跑资格测试，再 promotion；旧 run 仍绑定旧 digest。Digest pinning 会同时冻结缺陷与安全漏洞，因此“永不更新”不是可复现策略。[S204][S205][S215]
+- **[R] Rollback：** 只移动 channel 指针；rollback candidate 必须重新验签、rescan、验证 provider availability、license/activation 与 acceptance。若 rollback 原因是应用回归而旧版有安全风险，客户在测量连续性与风险之间裁决，不自动回退。
+- **[R] 保留：** 保存 current + rollback predecessor 及其 manifests/provenance/SBOM/scan/acceptance；具体代数、期限与 legal hold 是 **[P]**。
+- **[R] 三种 reproducibility claim 分开报告：** `build_artifact_reproducibility`（可合法/技术上做到时的独立 bit-identical rebuild）、`start_state_equivalence`（观测态与批准 equivalence）、`task_execution_replayability`（输入/lifecycle/harness/evaluator/artifact 足以重放或裁决）。[S211]
+- **[P] Constrained boundary：** Windows/driver/proprietary installer/remote activation 无法独立归档或 bit-rebuild 时，标 `reproducibility_boundary: constrained`；保留 lawful evidence，做 clean-room reinstall/start-state replay，但不声称完整 bit-reproducible。
+
+## 6. Credentials、licenses 与 network controls
+
+### 6.1 Credential and license control matrix
+
+| Class | Holder / injection | 禁止进入 | Teardown evidence | 关键边界 |
+|---|---|---|---|---|
+| Agent model/API | Host gateway；guest 仅 run/audience/action/model scoped capability。无法 broker 时才给短寿命 direct token | image、prompt/context、CLI args、generic env dump、trajectory、screenshots、shared logs | issuance/use/revoke IDs；token opaque ID | Shell-capable agent 可读任何显式注入其进程的 credential；broker 只能缩小价值，不会让 agent 可信 [S303][S307] |
+| Cloud provisioner/admin | Control-plane workload/operator identity only | execution guest、task account、judge、output | provider create/delete/audit IDs；tagged-resource reconciliation | 不得把创建/删除 project 资源的权限交给被测 guest [S305][S309][S310] |
+| Input/output object capability | Prefer host staging 或 per-run presigned/downscoped read-input/write-output capability | general bucket/project、cross-task prefixes | object access log、expiry/revoke、prefix reconciliation | Input-read 与 output-write 分离；server-side scope |
+| Professional license | License broker/application service；guest 只知道 endpoint/session | vendor portal/download/admin credential、public image、research transcript | checkout/release/deactivate events；seat reconciliation | named/floating/node-locked/GPU/VDI 权利逐产品/合同决定 [S311][S312][S122] |
+| Task account | Synthetic per-instance/run identity 或 brokered pre-authenticated profile | 真实组织身份/数据、跨 instance 账户、master image | logout/revoke/delete/reset + task audit | 若登录本身是 task，capability 对 agent 可见是 affordance；用合成数据限后果 |
+| Evaluator API/model | Judge plane only；exact model/prompt/sampling pinned | execution、task/reference image、agent-visible proxy | judge call/audit/revoke；replay package | Remote judge 有 nondeterminism、retention、version drift |
+| Hidden-reference key | Protected reference service/judge；judge tmpfs/stream | execution image/env/command line/log | key-access event/version；judge teardown | 固定版 ALE baked-in path 的 guest command 是反例 [S302] |
+| Break-glass admin | Human JIT/MFA/approval vault | 所有自动化 agent/image/task/harness | approval/use/rotation/incident ticket | 流程与 owner 是 **[P]** |
+
+**[R] Manifest binding 最小字段：** `binding_id`、class、owner plane、issuer、opaque subject、audience、actions、resource scope、injection method、issued/expires、revocation/audit refs、redaction profile、`value_present:false`。不要公开小候选空间 secret 的 hash。
+
+**[R] Teardown 顺序：** fence agent access → freeze/hash output → collect required telemetry → revoke run/task capabilities → logout task/license → delete/sanitize ephemeral state → reconcile provider/license/task resources → 对任何 uncertain exposure 做 rotate。VM 删除不等于 credential revoke、license return 或 media sanitization。[S008]
+
+### 6.2 Network profile matrix
+
+| Profile | 何时选择 | 强制控制 | 主要收益 | 反方证据 / 边界 |
+|---|---|---|---|---|
+| `offline` | 输入、software、docs 自包含；live state 不是 construct | guest egress deny；model 走 host gateway；内部 artifact channel | 最强 reset、contamination 与 exfil containment | 会扭曲真实 research/SaaS/current-data/license task；allowed model/tool channel 仍可能泄露 |
+| `allowlist` | 固定 model gateway、license、mirror、task API 必需 | default deny；DNS+IP/SNI/service/action/method；redirect 复核；metadata/control/judge/reference deny | 可审计的固定依赖 | CDN/auth 动态性导致误阻；allowlisted 内容仍可被攻陷或含 injection |
+| `simulated_or_mirrored` | 需要 web/SaaS interaction，但不要求当前 public state | self-hosted site/API、synthetic data/accounts、fixture hash、deterministic reset、无 production path | 可复现交互；WebArena 提供独立可行模式 [S317] | replica 可能遗漏 auth/anti-bot/latency/UI drift；测量的是 replica |
+| `controlled_open` | live/current search 或网站本身是 construct | dedicated egress proxy；阻断 private/metadata/control/judge/reference/adjacent-run；download quarantine；synthetic identity；no admin key；kill switch | 最高当前生态真实性 | 结果漂移、prompt injection、public solution discovery 与 query/data leakage；精确 rerun 可能不可能 [S007][S314]-[S316] |
+
+### 6.3 Search contamination、恶意下载与 exfiltration
+
+- **[R] Task policy 预先声明：** 哪些 search/sites/data/current date 是合法 affordance；是否允许访问 benchmark/repo/domain；query/URL 是否记录以及隐私级别。不能在发现 agent 搜到答案后再改变规则。[S007]
+- **[R] Canary 与 audit：** 在公开 task/reference surface 放置可识别但不泄题的 canary；记录 benchmark-domain/solution hits、queries、redirects 与下载 hashes。命中是 review evidence，不自动等于作弊；task construct 决定 disposition。
+- **[R] Egress consequence control：** AgentDojo 与 indirect prompt-injection research 说明，受信任工具返回不可信内容就可能 hijack agent。[S315][S316] 因此阻断 cloud metadata、local/private/control/judge networks；用 action/resource scoped token；真实组织数据与 production accounts 不进入 task。
+- **[R] Download quarantine：** 先落入不可执行 quarantine；做 media/type/size/hash、archive depth/path traversal/bomb、macro/link、malware/parser policy；转换后的 safe derivative 与原件分别 hash。Judge 也把 agent artifact 当 hostile input。[S313]
+- **[P] Live exception：** 所需 endpoint/action、mirror freshness、false-block/bypass、DLP、logging privacy、download limits 与 contamination response 均由 client/pilot 设定；不从公开 benchmark 导出。
+
+## 7. Hidden-reference isolation 与 evaluator placement
+
+### 7.1 Option comparison
+
+| 方案 | Reference leakage | Grader tampering / hostile artifact | Reproducibility / operations | 推荐位置 |
+|---|---|---|---|---|
+| **Reference 在 run 中 read-only mount** | 极高：agent 可读/枚举/侧信道；read-only 只防写 | agent 可为 evaluator 布置状态 | 简单但测量失效 | **禁止** |
+| **Same guest post-run staging** | 比 run-time mount 好；仍受残留进程、tampered runtime、baked ciphertext/secret path 影响 [S302] | 最高：agent 可改解释器、app、registry、PATH、dependencies、assertions | 适合不可导出/on-VM verifier 的兼容性；难证明 clean | **低保证例外**；需 fence/quiescence/attestation/clone |
+| **Host-side passive scoring** | Reference 不进 guest | 低到中；host parser 仍可能被恶意文件攻击 | 对 hash/schema/simple deterministic checks 最容易 replay | **默认：简单被动 scorer** |
+| **Fresh separate judge container** | 强 placement/principal boundary | Shared host/kernel 仍需 hardening；可 no-network/read-only/resource-limit | 快速、可 version/digest；适合安全解析的 file artifacts | **默认：中等复杂 evaluator** |
+| **Fresh separate judge VM** | 强边界 | 更强 parser/kernel 隔离；仍需 quarantine 与 patch | 较重但适合 active document、macro、media、Windows app、复杂二进制 | **高风险 artifact / Windows/GPU evaluator** |
+| **Remote evaluation service** | Reference custody 最集中；execution 无访问 | 服务本身成为 opaque/high-value target | API/version/availability/retention/data residency/model drift；需 regrade package | **条件式**：第三方 custody 或 centralized secret 优势明确时 |
+| **Clean clone of execution state** | Agent 主体终止后 reference 只给 clone/judge identity | 若 clone 包含 agent tampering，仍需 clean verifier overlay/attestation | 可处理不可导出 state；clone/version/identity 可记录 | **same-guest 的优先替代** |
+
+### 7.2 Recommended default protocol
+
+1. **Execution completion：** 在 time/budget/normal termination 时保留 partial output 与 system state evidence；停止 agent harness 与其 child/background processes，撤销 model/task/output-write capabilities。
+2. **Freeze：** 以 host-controlled append/finalize channel 收集 output；生成 manifest（path/type/size/hash）；保存 execution filesystem/snapshot reference 供 incident use；之后 output immutable。
+3. **Quarantine：** 在无 reference、无 evaluator secret 的 sandbox 中执行 type validation、archive traversal/bomb、macro/link、malware 与 parser corpus checks；任何 escape 进入 security incident。[S313]
+4. **Judge placement：** Passive deterministic check → host-side restricted process；active/complex parser → fresh no-network judge container/VM；licensed non-exportable state → fenced clone + clean verifier identity；remote service → exact service/evaluator version 与 retention policy。
+5. **Reference delivery：** Judge-only identity 从 protected store 读取；reference read-only/tmpfs/stream，execution 无路由/credential；记录 ciphertext/plaintext hashes 在 evaluator-only ledger。
+6. **Score：** 记录 evaluator code/image/deps/fixtures、input bundle/reference hashes、model-judge prompt/model/sampling、score schema；签名 score 与 judge logs。
+7. **Regrade：** Judge/reference/service failure 只对同一 frozen output regrade；不得重跑 agent。所有 judge attempts 并存并链接。
+8. **Destroy：** 删除 judge tmpfs/VM，revoke evaluator capability；按 policy 保留可 replay evidence。Reference 永不回写 execution 或公开 run artifact。
+
+### 7.3 ALE-specific gap analysis
+
+- **[F]** Paper/code lifecycle 明确把 agent 执行与 reference staging 排成前后阶段，并在输出后 evaluator；这是优于 run-time reference mount 的控制。[S001][S002]
+- **[F]** `local_host` backend 在 agent 后从 host copy reference；`baked_in_sandbox` 则在 image 内留 `reference.7z`，host 读取公开示例中的 project-wide password 后让 guest 解密。[S002][S302]
+- **[I]** 密码“不转发为 agent env”不能证明 agent 对 ciphertext/runtime/之后的 guest command 没有影响；时序隔离没有形成 placement/principal boundary。
+- **[F/I]** Reference staging error 可被记录为 skipped/continue，具体路径与 evaluator 行为决定后果。[S302] **[R]** `reference_hash_match && reference_stage_complete && evaluator_fixture_pass` 必须是 run-validity gate；缺失/损坏 reference 进入 `freeze_and_regrade` 或 invalid run，不能把低分归给 agent。
+- **[R]** 固定 ALE 实现是本报告的设计输入与反方证据，不应被描述为“已泄漏”或“已被攻击”；公开证据支持的是 attack surface 与 assurance gap，而不是事件发生率。
+
+### 7.4 双向 tamper model
+
+- **Agent → reference/evaluator：** 读取/猜测 reference；改变 PATH/interpreter/app/registry/deps；禁用 assertions；留下 background process；修改 network/DNS；注入 artifact payload；消耗 judge resources。[S007][S302][S313]
+- **Judge/reference → execution/data：** Evaluator 过度权限；remote judge retention；malicious/corrupt reference；scorer network call；judge key/log 泄漏；score overwrite。
+- **[R]** Separate judge 只解决 placement 的一部分。Judge 必须 no-network by default、reference/evaluator read-only、artifact input-only、resource-limited、patched/disposable，并用 positive/negative/gaming fixtures 验证。
+
+## 8. Environment acceptance 与 reproducibility tests
+
+以下 test ID 可直接进入 CI/qualification。所有 `θ_*`、重复次数与抽样规模均为 **[P]**。
+
+| ID | 测试 | Procedure / oracle | Evidence / disposition |
+|---|---|---|---|
+| ENV-001 | Image/provenance/SBOM | Resolve direct image；验 digest/signature/provenance/SBOM links；对 mutable tag 做反向解析 | 任一 subject mismatch → candidate reject |
+| ENV-002 | Image secret absence | 扫 image layers/history/common credential paths/registry/strings/canaries | 发现 real secret → reject + revoke/rotate；记录 scanner/rules |
+| ENV-003 | Start-state integrity | Fresh launch；比较 OS/kernel/patch/accounts/ACL/mount/profile/config/clock/network/forbidden residue 与 declared | required drift 且无 approved equivalence → `not admitted` |
+| ENV-004 | Reset & cross-run isolation | 在 run A 写入 canary/profile/cache/reference-like residue；按每个 reset verb 后启动 B；枚举 disk/volume/account/service | 任何 forbidden carry-over → pool quarantine |
+| ENV-005 | Software/plugin/launch | Scripted deterministic oracle 启动 app；查 exact version/plugin/config；打开代表 fixture；退出 | launch/readiness/version/license event；不用待测 agent |
+| ENV-006 | Display/locale/font | 验 resolution/DPI/scale/color/session/codec/monitors/locale/timezone/keyboard/font hashes；校准 surface | exact facts + pilot visual/structural tolerance |
+| ENV-007 | GPU path | 分别测 compute、app render、frame encode；记录 device/profile/host+guest driver/runtime/license | 任一 required path fallback/不匹配 → `not admitted` |
+| ENV-008 | Input integrity | Stage 前后 hash/size/media/path/ACL；损坏/缺失 fixture；拒绝 reference 出现在 public paths | `input_integrity_rate`；不匹配为 infra/data incident |
+| ENV-009 | Credential surface/scope | Canary 检查 agent-visible env/files/process/CLI/crash/screenshot/model context；尝试越 audience/action/resource | Unauthorized success → security reject；不可避免 task capability 单独声明 |
+| ENV-010 | Revocation/license return | normal/fail/timeout/cancel/host-loss 后尝试 reuse；查 task/license/provider audit | latency distributions；uncertain cleanup → quarantine/rotate/reconcile |
+| ENV-011 | Network default-deny/bypass | Probe metadata/private/control/judge/reference/adjacent-run/unlisted sites；redirect/DNS/literal IP/IPv6/proxy bypass/tunnel | 任一 forbidden route → reject policy |
+| ENV-012 | Download quarantine | benign/active/malformed/archive-bomb/path-traversal/macro/link/parser canaries | 原始/转换 hashes、containment；escape = security incident |
+| ENV-013 | Search contamination | 用配置 search/tool 查 unique public/reference canary、benchmark domain、known solution surface | 命中进入 construct-aware review，不自动判作弊 |
+| ENV-014 | Reference isolation/quiescence | Agent 留 delayed/background process；agent 前后 probe reference/judge/store；same-guest 与 fresh judge 对比 | 任何 unauthorized access 或 residual survival → same-guest rejected |
+| ENV-015 | Grader tamper | Agent 改 evaluator dependency/interpreter/app state；同一 output 在 same-guest 与 fresh judge 打分 | divergence/attestation；要求 fresh judge/clean clone |
+| ENV-016 | Hostile artifact vs judge | Parser exploit、macro、symlink、archive bomb、resource exhaustion、network exfil corpus | 无 boundary escape；failure 修补/requalify judge image |
+| ENV-017 | Evaluator fixtures/repeatability | Positive、negative、partial、gaming、corrupt-ref fixtures；同一 frozen artifact 重复 judge | deterministic exact agreement；stochastic divergence/flip distribution |
+| ENV-018 | Crash/timeout/partial artifacts | 在 provision/preflight/agent/output/judge/cleanup 阶段 fault injection | first attempt、events、partial output、stderr/trace、resource IDs、disposition 齐全 |
+| ENV-019 | Regrade without rerun | Freeze 后注入 reference/evaluator/service failure；repair；只重跑 judge | agent output hash 不变；多 judge attempts 正确链接 |
+| ENV-020 | Retry eligibility gate | 注入 pre-effect provider fault 与 post-action crash；检查 orchestration | 前者 fresh recovery；后者 new trial；不得覆盖/选优 |
+| ENV-021 | Cleanup/orphan/sanitization | 在每一 lifecycle stage kill orchestrator；枚举 VM/container/disk/profile/port/key/task/license；检查 storage policy evidence | 完整性与恢复时间分布；受影响 pool 隔离直到 reconciled [S008] |
+| ENV-022 | Cross-host/provider equivalence | 两个已单独通过 family 用同一 deterministic scripted oracle，不使用 stochastic agent | output/evaluator/GUI anchors 与 timing telemetry 分层比较 |
+| ENV-023 | Incident drill | quota、host loss、control timeout、license outage、secret detection、judge escape | detect→contain→recover→post-recovery ENV-003；保留 timeline |
+
+**Oracle 原则：** Environment acceptance 使用 deterministic script 或已校验人工 replay，不使用待测 agent。GUI 不对真实 app 全局要求 pixel-exact；只对 calibration surface 做 exact check，真实 app 使用 window/anchor facts 与 pilot 视觉容差。Licensed app 只在合法 entitlement 下测试 activation/check-out/return/deactivate，证据不记录 secret value。
+
+## 9. Infrastructure-vs-agent failure taxonomy 与 retry
+
+### 9.1 两轴 schema
+
+**Axis A — diagnostic cause / owner**
+
+1. `operator_infrastructure`：provider/control/network/storage/host 环境未按已接受 contract 交付，且有独立 telemetry。
+2. `environment_readiness_or_drift`：pre-agent image/start/software/license/display/GPU/input/policy mismatch。
+3. `evaluated_system_or_agent`：有效起点后，model+harness+tools 的策略、动作、拒绝、格式/位置、资源使用或 agent-caused crash。
+4. `task_or_evaluator_defect`：歧义/损坏 input/reference、evaluator/parser/judge bug/flakiness。
+5. `external_service_or_license`：live site/search/model/license/provider dependency 的 drift/outage/quota/policy；归属取决于预先声明的 construct 与 owner。
+6. `security_or_policy_incident`：prompt injection、malware、exfil、forbidden-plane access、reference leak、grader tamper、safety termination。
+7. `budget_termination`：有效起点后到达 wall/token/tool/cost/disk/memory/compute limit；记录 resource 与 budget owner。
+8. `undetermined`：证据不足；不能为了保留样本而强行归 infra。
+
+**Axis B — measurement disposition**
+
+- `score_partial_or_zero`：有效 episode；正常 scorer 对 artifact/state 评分。
+- `valid_system_failure`：端到端被测系统失败，即使无普通 scorer 输出也计入。
+- `invalid_before_measurement_retry_eligible`：独立证据证明 operator defect 在 subject effect 前发生。
+- `freeze_and_regrade`：subject output 有效；reference/evaluator 失败。
+- `new_independent_trial`：subject effect 后重启；另行报告，不替换 first attempt。
+- `security_quarantine`：隔离并 incident review，再决定统计处理。
+- `undetermined_pending_review`：证据不足，暂停 selection/score。
+
+每个 event 记录 `owner`、stage、`first_agent_observation_at`、`first_external_effect_at`、evidence refs、confidence、reviewer、policy version、disposition。Exception substring 只能做 routing，不能自动裁决。
+
+### 9.2 Examples and retry treatment
+
+| 场景 | 归因所需证据 | 默认 disposition | Retry / preservation |
+|---|---|---|---|
+| Provider create/boot 在 agent 前失败 | provider event、无 agent start/effect、resolved spec | infra / not admitted | Fresh instance recovery；原 attempt/events 保留 |
+| Start-state/version/input mismatch | preflight diff/hash | environment drift | Rebuild/re-stage；不计 agent |
+| App/license preflight 失败 | scripted oracle、任务未要求 agent 配置/login | readiness/external service | 修复后 fresh recovery；若 login 是 task 则不是 infra |
+| Agent 操作导致 app crash/OS shutdown | trajectory/process/app evidence | evaluated system/agent | 不自动 retry；score state/partial output |
+| Host/node 未交付 declared resource | host telemetry、邻居干扰或 GPU fallback | operator infra | 只有独立证据时 fresh recovery |
+| Agent 在固定 budget 内耗尽 disk/GPU/token/time | budget/trajectory/resource events | evaluated system 或 budget termination | 不给额外 budget；保留 partial output |
+| Model/API 429/auth/outage | gateway/provider telemetry + ownership contract | provider-owned SLA breach 或 evaluated service failure | 取决于 measured system boundary；预先声明 |
+| Output copy/upload 失败但 guest digest 存在 | guest/host artifact telemetry | artifact pipeline | 从隔离 snapshot 重收；不得给 agent 再修改机会 |
+| Evaluator exception/reference mismatch | frozen output hash、judge log、ref hash | task/evaluator | 只 regrade 同一 artifact |
+| Cleanup/license return/revoke 失败 | provider/broker reconciliation | cleanup/security incident | Score 可先 pending；隔离 pool，修复不重跑 agent |
+| API request response 丢失，effect 不确定 | idempotency key/state reconciliation | undetermined infra incident | 不盲目重发；保存 ambiguous state [S320] |
+
+### 9.3 Retry decision rule
+
+Transparent infrastructure recovery 只有同时满足下列条件才成立：
+
+1. Failure signature 在 policy 中预先声明；
+2. 独立 telemetry 证明是 operator-owned defect，而非低分后的推测；
+3. 发生在 agent 获得额外 observation、budget 或 irreversible external effect 之前；或可证明原 micro-operation 未生效/真正幂等；
+4. 从通过 attestation 的 clean start 恢复；model/harness/prompt/tools/time/budget/network/environment family 不变；
+5. First attempt、partial output、crash/timeout/log/telemetry 全部保留，recovery attempt 有 parent link；
+6. Official estimator/attempt-selection policy 在运行前冻结。
+
+以下会改变测量对象：延长 budget、改 prompt/tool/network/credential；保留 agent-created state 再继续但不计入 agent system；只重试低分；best-of-N/last-success；把 app crash/timeout 一律当 infra；丢弃 failed attempt。固定版 ALE 会自动重排 failed unit 到 `max_attempts`，这是实现事实，不是本项目应照搬的 estimator。[S003][S303]
+
+### 9.4 Failed-run artifact contract
+
+每个 attempt（completed/failed/timeout/cancelled/security quarantine）至少保存：resolved manifest 与 attestation、phase/event timeline、agent trajectory、model/tool request metadata（按 policy 脱敏）、stdout/stderr/exception/traceback、resource/network telemetry、screenshots/video（若允许）、process/exit/health、partial output manifest+hash、provider/VM/container/disk IDs、judge attempts、failure two-axis record、cleanup/revocation/sanitization evidence。Raw 与 redacted artifact 分层存放，redaction profile/version 与发现记录进入 ledger；secret detection 触发 revoke/rotate，而不仅是视觉遮盖。[S307][S308][S319]
+
+## 10. Pilot-calibrated reproducibility SLA
+
+### 10.1 指标字典
+
+所有阈值以 `θ_*` 表示；`N_*` 是 pilot 实际观测分母，不是预先推导的生产数量。
+
+| Metric | Definition / formula | 分层 | Pilot 输出 |
+|---|---|---|---|
+| `SSI` Start-state integrity | `accepted start attestations / attempted starts`；同时报告各 required-field mismatch | substrate × OS × image family × reset path | `θ_SSI`、mismatch taxonomy、equivalence classes |
 | `SLR` Software launch readiness | `app/plugin/version/license probe pass / eligible preflights` | app/version/license model/cold-warm | `θ_SLR`、launch latency distribution |
 | `IIR` Input integrity | `all visible input hashes/ACL/path match / staged attempts` | input type/size/staging backend | `θ_IIR`、corruption/missing handling |
 | `GSF` GUI state fidelity | display/session facts match + structural/visual calibration statistic | app/display/session/client/codec | `θ_GSF` 与 per-app tolerance |

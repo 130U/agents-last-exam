@@ -75,7 +75,87 @@ const base     = new Float32Array(count * 3);
 const source   = new Float32Array(count * 3);
 const target   = new Float32Array(count * 3);
 const color    = new Float32Array(count * 3);
-const delay    = ne…632 tokens truncated…or (let y = 0; y < height; y += step) {
+const delay    = new Float32Array(count);
+const repX     = new Float32Array(count);
+const repY     = new Float32Array(count);
+const repVX    = new Float32Array(count);
+const repVY    = new Float32Array(count);
+```
+
+这样有三个好处：
+
+1. 内存连续，适合每帧顺序扫描。
+2. 可以直接作为 `THREE.BufferAttribute` 的底层数据。
+3. 不会每帧创建成千上万个 `{x, y, z}` 对象并触发垃圾回收。
+
+### 2.3 状态循环
+
+桌面端目标状态：
+
+```text
+scatter → UniPat → scatter → logo → scatter → AI → repeat
+```
+
+移动端目标状态：
+
+```text
+scatter → logo → scatter → AI → repeat
+```
+
+原站参数：
+
+```ts
+desktopSequence = [0, 1, 0, 3, 0, 5];
+desktopTimes    = [3.5, 8.0, 3.0, 8.0, 3.0, 8.0];
+mobileSequence  = [0, 3, 0, 5];
+mobileTimes     = [3.5, 8.0, 3.0, 8.0];
+transitionTime  = 3.2;
+maxDelay        = 0.38;
+```
+
+这里有一个复刻时值得修正的细节：原站同一个 `stateTimer` 同时覆盖变形时间和稳定展示时间。因此“8 秒”实际包含 3.2 秒变形；而“3 秒 scatter”可能刚完成变形就进入下一状态。建议我们的实现拆成 `transitionElapsed` 与 `holdElapsed` 两只时钟，让配置中的 `hold` 真正代表形状完成后的停留时间。若目标是逐帧完全一致，再保留原逻辑。
+
+## 3. 文字和 Logo 为什么能由散点组成
+
+### 3.1 文字像素采样
+
+文字并不是 Three.js 字体几何，也不是 SVG Path。原站流程是：
+
+1. 创建一个不显示在页面上的 2D Canvas。
+2. 使用与页面一致的字体把文字画成白色。
+3. 调用 `getImageData()` 读取像素。
+4. 每隔 4 像素检查一次 Alpha。
+5. Alpha 大于阈值的像素被转换为世界坐标。
+6. 这些坐标成为粒子的目标点。
+
+最小实现：
+
+```ts
+export function sampleText(
+  text: string,
+  font: string,
+  width = 640,
+  height = 240,
+  step = 4,
+) {
+  const canvas = document.createElement('canvas');
+  canvas.width = width;
+  canvas.height = height;
+
+  const ctx = canvas.getContext('2d', { willReadFrequently: true });
+  if (!ctx) return [];
+
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = '#fff';
+  ctx.font = font;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(text, width / 2, height / 2);
+
+  const pixels = ctx.getImageData(0, 0, width, height).data;
+  const points: Array<[number, number]> = [];
+
+  for (let y = 0; y < height; y += step) {
     for (let x = 0; x < width; x += step) {
       const alpha = pixels[(y * width + x) * 4 + 3];
       if (alpha > 128) {

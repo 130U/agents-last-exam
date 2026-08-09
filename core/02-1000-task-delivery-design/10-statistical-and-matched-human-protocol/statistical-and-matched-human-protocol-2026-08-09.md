@@ -194,7 +194,166 @@
 
 **[项目建议]**
 
-1. 冻结每个 estimand 的 population、weights、effect sc…3694 tokens truncated…ngs、agreement statistic/CI、adjudication reason、old/new evaluator version。
+1. 冻结每个 estimand 的 population、weights、effect scale、interval、`h*`/`δ*`、ranking loss、cost ceiling 与 multiplicity。
+2. 设计覆盖关键 domain/workflow/evaluator strata 的 crossed pilot；在共同 instances 上交叉少量候选 configurations/repeats，并加入 provider×time blocks 和 evaluator reruns。
+3. 从 pilot 估计或形成不确定区间：`σ_workflow`、`σ_instance`、`σ_trial`、`σ_judge`、ICC、paired discordance、config×workflow slope、infra/evaluator failure、missingness、cost/time 分布。
+4. 拟合多个 plausible data-generating processes：empirical cluster bootstrap、frequentist mixed model、Bayesian hierarchical；不要只 plug-in 一组点估计。
+5. 枚举候选设计 `D=(W,{m_w},{R_ci},configs,provider blocks,evaluator panel)`；将 outcome、failure、retry、quarantine、regrade 和 missingness 一并模拟。
+6. 每次 simulation 运行与最终完全相同的 estimator/CI/multiplicity/rank pipeline，计算：coverage、half-width 分布、MDE power、false-selection、pairwise sign reversal、true-best/top-k recovery、rank interval、fit failure、未决分母、成本均值/尾部。
+7. 报 simulation Monte Carlo error，例如 `MCSE(q̂)=√[q̂(1-q̂)/L]`；`L` 由期望 MC precision 决定，不给固定值。
+8. 选择在所有注册 plausible scenarios 下满足决策准则的最低成本 Pareto 设计；若不存在，发布可行性前沿并要求客户更改精度、MDE、覆盖或预算之一。
+9. 主运行开始前冻结 allocation 与停止规则。若 pilot 仅用于 design，不得混入 confirmatory estimate；若要纳入，须预先定义无 outcome-dependent selection 的组合规则。
+
+### 4.4 Repeats 与覆盖的决策规则
+
+**[项目建议]** 当 `σ_trial` 主导且 cluster coverage 已足时增加 repeats；当 `σ_workflow/σ_instance` 或 config×workflow interaction 主导时增加独立 workflows/instances；当 provider/time variance 主导时增加 blocks，而不是把同一时段请求堆成“独立 trials”；当 evaluator noise 主导时优先固定 artifact 的 evaluator panel/reruns，而不是重跑 agent。
+
+---
+
+## 5. F — ranking/configuration sensitivity test
+
+### 5.1 Baseline 与 perturbation matrix
+
+**[项目建议]** 先冻结 baseline config，再为以下轴预注册有科学意义的 levels 和 perturbation budget。优先 paired/crossed blocked 或 fractional-factorial 设计；不能把 uncontrolled one-factor-at-a-time 当因果结论。
+
+| 轴 | 最小测试 | 关键 interactions / 解释 |
+|---|---|---|
+| Task subset | repeated stratified subsets、anchor panel、leave-domain/workflow-out | subset 稳定不等于外部代表性 |
+| Seed | common crossed seed schedule；fixed-seed repeatability + changed/no-seed robustness | seed×provider；seed 不是绝对复现保证 |
+| Provider | provider/region/snapshot × time blocks；相同 request schema | model 与 serving stack 不可自动分离 |
+| Harness | frozen harness commits 或规范化 wrappers 的 paired cells | model×harness 是高优先 interaction [S67] |
+| Prompt/context | exact hash；system/developer/context policy 分开改变 | prompt×workflow；不可把差异归因裸模型 |
+| Tools | tool manifest/version/permission、tool-off 或 constrained arm | tool×task family；检查实际调用和 failures |
+| Budget | 预注册 time/token/tool/cost grid | budget×retry；比较 frontier 而非只看最大预算 |
+| Retry policy | no-agent-retry 与有限 policy arm；同总 budget | retry 会改变 estimand，不是免费 repeats [S61,S62] |
+| Evaluator | old/new scorer 全量 artifact regrade；judge prompt/model panel | evaluator×task/config；报告重分类矩阵 [S66,S68] |
+
+### 5.2 每个 sensitivity cell 的输出
+
+**[项目建议]**
+
+- absolute FPR/Mean Score/cost/failure shift 及 clustered interval；
+- paired delta 与 decision-relevant pair 的 sign flip；
+- Kendall/Spearman 的分布，而不是单点；
+- top-k membership/Jaccard、rank interval、`P(best)` 或 regret；
+- task-level reclassification/confusion matrix；
+- provider/infra/evaluator failure composition；
+- configuration × workflow/domain interaction plot/table；
+- 若多轴同时改变，报告 marginal effect 之前先报告交互和 cell coverage。
+
+**[反方证据]** 高全局 rank correlation 仍可能伴随 top-1 flip、关键 pair 反转或所有系统被同一个偏置 evaluator 同方向影响。[S35,S64,S68] 若排名对配置显著敏感，发布单位只能是完整 system configuration；不再声称“模型本身排名”。
+
+---
+
+## 6. G — failure、exclusion、quarantine 与 regrade policy
+
+### 6.1 主分母
+
+定义：
+
+- `N_plan(c)`：冻结 release 上配置 `c` 的 planned trial slots；
+- `N_scored(c)`：有效 agent outcomes，包括 agent failure 的零/部分分；
+- `N_infra_invalid(c)`：被独立验证且一对一 replacement 的技术无效 execution；
+- `N_eval_pending(c)`：immutable agent outcome 等待有效 scoring；
+- `N_unresolved(c)`：恢复窗口结束仍没有有效 score 的计划槽位；
+- `N_quarantine`：通过 release-level versioned 决策对所有配置对称移除的 slots。
+
+**[项目建议]** primary performance denominator 以 `N_plan` 为起点；valid agent timeout/crash/missing artifact 留在 `N_scored` 并计失败或 rubric partial。`N_infra_invalid` 不进入 conditional capability estimate 的最终有效槽位，但 replacement 后原 execution 仍进入 service reliability、availability、time 和 cost ledger。`N_eval_pending` 不得作为 complete-case 静默删除。
+
+### 6.2 事件矩阵
+
+| 事件 | capability estimand | operational estimand | 处理 |
+|---|---|---|---|
+| 达到 agent time/token/tool/cost cap | failure/partial | failure | 正常评分已有 artifact；不排除 |
+| agent exception、agent-attributable crash | failure/partial | failure | 保留 logs/artifacts；无免费新 trial |
+| harness wrapper bug 且 harness 属于 tested config | 通常 failure | failure | 版本修复后新 config/release sensitivity |
+| 独立验证的 host/provider transport failure，agent 未见 outcome | infra-invalid 后一对一 replacement，或按预注册计 failure | 始终记录 operational failure | 同 planned_trial_id continuation/new execution_id |
+| live network denial 是目标环境固有事件 | 通常 include | failure | 若从 capability 排除，必须同时报告 unconditional operational estimate |
+| 正常终止但 required artifact 缺失 | failure/partial | failure | 不得改称 evaluator missingness |
+| artifact 存在但 parser/scorer 崩溃 | evaluator pending | measurement failure | 冻结 artifact；按同 evaluator version rerun/regrade |
+| stochastic judge malformed/inconsistent | evaluator failure/noise | judge cost/failure | 按冻结 rerun rule；保存全部 grades；不增加 agent trial |
+| task 被证实无解、泄露、instruction/reference 冲突 | quarantine candidate | 报告 | blind/symmetric release-level decision；版本化 |
+
+**[事实]** 冻结 ALE evaluator utilities 明确区分 `JudgeInfrastructureError`；代码注释还记录一个退役 judge endpoint 曾使运行被静默记零的历史风险。[S09] 这直接支持 evaluator failure 不能自动等同 agent failure，但不证明任何具体本项目 case 的归因。
+
+### 6.3 未决结果与 bounds
+
+**[项目建议]** 若 `N_eval_pending + N_unresolved > 0` 且与配置相关，不发布 complete-case 最终排名。先发布 provisional coverage，并对 unresolved outcome 分别赋 rubric 最小/最大形成 score/rank bounds；或等待 recovery window 完成。failure attribution 对结论敏感时，同时报告：
+
+- conditional capability（验证 infra-invalid 后 replacement）；
+- end-to-end operational reliability（infra/network 也计失败）；
+- ambiguous cases 全计失败 vs 全排除的 bounds。
+
+### 6.4 Quarantine
+
+**[项目建议]** 只有在预注册 invalidity 条件满足、adjudicators 尽可能对 config/outcome blind、对所有配置和 repeats 对称、记录 discovery time/reason/affected IDs/repair plan、并提升 task/release version 时才可 quarantine。主表用 repaired frozen release；附表保留原 manifest 的 worst/best bounds。不得因为某系统“遇到怪问题”而事后移除。
+
+### 6.5 Repaired scorer
+
+- **Measurement-preserving repair**：只改 parser/tolerance/implementation bug，能从 immutable artifacts 重新计算且不改 instruction、affordance、reference intent、output contract。**[项目建议]** bump evaluator version；全量同源 artifacts regrade；保留 old/new scores 与 provenance；发布 paired deltas/rank sensitivity。
+- **Measurement-changing repair**：改变 instruction、reference/rubric construct、hidden state、tool/environment 或 output contract。**[项目建议]** 新 task/benchmark version 并重跑 agent；artifact-only regrade 不可当可比结果。
+- **Stochastic judge update**：judge model/prompt/order/seed policy 变化。**[项目建议]** 新 evaluator version；对完整 artifact panel 按注册 repeat/calibration plan 重评分。
+
+只重评失败或申诉样本会把 measurement 依赖于 outcome，禁止用于主结论。[S65,S66]
+
+---
+
+## 7. H–I — matched-human recruitment 与 affordance protocol
+
+### 7.1 先定义 human estimand
+
+| arm | 目标人群/用途 | 主地位 | 边界 |
+|---|---|---|---|
+| Independent practicing expert | 与目标职业/任务相匹配、近期实践、未创作该任务 | 主 matched-human baseline | 需要客户定义目标岗位/工作实践 |
+| Generalist | 目标 deployment 本来面向 general workforce，或作 transfer arm | 独立 secondary arm | 不能与专家混池平均 |
+| Task author | rubric/scorer sanity、ceiling/diagnostic | diagnostic only | 预先知道意图/reference；不是默认 human upper bound |
+| Human+AI | 实际允许 LLM/agent 的工作配置 | 独立 augmented arm | 工具、模型、版本、预算和培训均需冻结 |
+
+**[事实]** RE-Bench 按环境相关专业度匹配参与者且允许 internet、LLMs 和其他工具；PaperBench 将任务作者/rubric creation 与独立 PhD baseline 区分。[S40,S44]  
+**[项目建议]** 主臂采用独立 practicing experts；任务作者只做 evaluator calibration 与边界诊断。若客户真正目标是 generalist 或 AI-augmented workforce，则另注册 co-primary arm，而不是事后改标签。
+
+### 7.2 Recruitment 与 conflict protocol
+
+**[项目建议]**
+
+1. 客户先提供 target-role statement：工作内容、最低必要软件/领域知识、实践环境、允许协作/工具。
+2. 招募记录：current/recent role、实践 recency、training/credentials、代表性工作证据、software familiarity、domain/subdomain、language、可用性。
+3. 使用与评测 task 不同的 qualification microtask 和标准化 software warm-up；不过度训练具体任务策略。
+4. block/random assign 到 tasks；task self-selection 只能作为 `best-fit/self-selected` 独立 arm。
+5. 记录 recruitment frame、invited/screened/eligible/consented/assigned/completed 流程，不把 attrition 隐藏。
+6. 冲突字段：task author/reference/rubric/evaluator exposure、prior benchmark exposure、model/provider/client/employer affiliation、financial interest、prior test access、同事沟通。
+7. 任务作者、直接利益相关者或见过 hidden reference 的人不得进入 primary independent-expert arm。
+
+**[待客户/pilot]** 何为“近期”、最低 expertise、软件熟悉度门槛、招募渠道、补偿模式和实际样本量必须由目标岗位与 pilot 决定；不设万能年限或证书阈值。[S48,S49,S55]
+
+### 7.3 Affordance matching matrix
+
+| 维度 | 冻结字段 | 匹配原则 | 允许的不对称如何处理 |
+|---|---|---|---|
+| Instruction | 同一 task contract、clarification policy、禁止事项 | 语义和验收目标等价 | 界面措辞差异逐项记录，做 sensitivity |
+| Input/initial state | files、credentials、filesystem、seed data | 信息集合与起始状态等价 | 人类 onboarding 单列，不泄露任务策略 |
+| Software | app/version/plugins/CLI、permissions | 完成同一功能所需能力等价 | human GUI vs agent API 分臂或记录 interface burden |
+| Internet | allowlist、authentication、live services | 相同资源类别与时段 | personalized session/账号优势单列 |
+| Documentation | manuals、search、help channels | 相同可访问文档集合 | 人类记忆不可能清除；登记 familiarity |
+| Time | wall cap、active-time规则、pause policy | 同一 decision-relevant deadline | human breaks 与 unattended compute 分开记 |
+| Attempts/feedback | resubmission、grader feedback、clarification | 相同次数与信息价值；均计总预算 | 无法匹配则独立 arm |
+| Hardware/resources | CPU/RAM/GPU、parallelism、storage | 功能与资源 ceiling 可比较 | human workstation 与 agent cloud costs 均披露 |
+| Output format | artifact paths、schema、submission steps | 相同 grader contract | human format assistance 必须记录/计时 |
+
+**[研究者推断]** “功能 affordance 匹配”比“表面交互完全相同”更可辩护；人类的经验记忆、GUI motor cost 和 agent token context 不可直接换算。建议同时保留 `matched-lab` 与 `deployment-like` 两个清楚命名的配置，而不是制造虚假的完全等价。[S40,S41,S44]
+
+---
+
+## 8. J — human quality/time/cost/agreement schema 与分析
+
+### 8.1 每个 assigned human attempt 的必填字段
+
+**身份与人群**：`participant_id_pseudonymous`、arm、role/current practice、recency、credentials/training、domain expertise、software familiarity、qualification result、task assignment mode、conflicts、prior exposure。  
+**配置与过程**：instruction/input/software/internet/docs/hardware/output hashes、time/attempt budgets、tool/LLM assistance、start/end/pause/resume、attempt events、help/clarification、artifact/log IDs。  
+**结果**：full pass、partial score、rubric dimensions、required-artifact completeness、reviewer scores、adjudicated score、confidence、error type、failure/withdrawal/technical event。  
+**时间**：wall、active labor、setup/familiarization、break、unattended compute、infrastructure pause、time-to-success/censor reason。  
+**成本**：compensation、recruitment/screening、review/adjudication、software/license、compute/infrastructure、management；全部使用实际 ledger 与客户定义边界。  
+**review**：reviewer IDs/qualification、blinding、order、raw independent ratings、agreement statistic/CI、adjudication reason、old/new evaluator version。
 
 机器可执行字段见 `schemas/human_baseline_attempt.schema.yaml`。
 

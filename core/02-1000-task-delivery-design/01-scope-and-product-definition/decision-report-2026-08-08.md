@@ -181,7 +181,172 @@
 7. **Reference package**：gold/reference artifacts、tolerances、known alternatives、isolation/access rules；
 8. **Evaluator**：versioned code、rubric/weights/gates、partial-credit logic、judge model/prompt if any、debug output policy、failure semantics；
 9. **Runner/harness contract**：supported interface、input/output directories、budget/timeout、retry policy、telemetry/logging；
-10. **Metadata**：domain/subdomain、workflow family、software、artifact/evaluat…4085 tokens truncated…uite、regrade pipeline；
+10. **Metadata**：domain/subdomain、workflow family、software、artifact/evaluator modes、estimated human complexity（若有证据）、language/region；
+11. **Provenance/license**：component-level creator/rightsholder、source、derivation、license/version/evidence、attribution、redistribution/commercial-use、third-party exclusions、privacy/consent；
+12. **QA record**：expert review、engineer dry-run、gold pass、negative/near-miss controls、reset/replay、flake tests、known evaluator limitations、adjudication；
+13. **Version/change record**：manifest hash、environment/evaluator commits、migration/deprecation、breaking changes、regrade requirement；
+14. **Run artifacts schema**：run ID、agent/harness/model/config、timestamps、logs/trajectory、outputs、evaluator result、cost/runtime fields与错误分类。
+
+### 5.4 客户采购“数据”与采购“可运行 benchmark system”的区别
+
+| 交付层 | 最低资产 | 合理承诺 | 不能自动承诺 |
+|---|---|---|---|
+| **Dataset / task records** | prompt、inputs/pointers、metadata、可能含 reference | record 数、schema/content/rights completeness | 可执行、可复现、score valid、软件可合法分发 |
+| **Runnable instance package** | 上述 + pinned env、initial state、reference、evaluator、run/reset scripts、QA/version | 在支持平台可 reset/run/score | 跨 workflow 代表性、长期 hidden integrity |
+| **Benchmark harness/system** | 上述 + orchestration、isolation、timeouts、budget/retry、logging、aggregation/versioning | 固定 protocol 下比较多个 instances/configs | score 等于现实岗位能力；任意 harness 可比 |
+| **Managed private service** | 上述 + IAM、secret store、scheduler、artifact store、audit/monitoring、rotation/incident response | 受控 private evaluation | 永久无污染、零侧信道/泄漏 |
+| **OTS commercial product** | 上述 + commercial rights、security/support/SLA、docs、update/deprecation | 在合同与许可范围内销售/授权 | 对所有客户/地区/软件适用；零第三方权利风险 |
+
+独立的 SWE-bench、NIST 与 MLPerf 资料也分别把 environment、tests/evaluator、system description、logs、validation 和 final package 作为系统层，而非数据行。[S13](sources/13_swebench_repo.md) [S14](sources/14_nist_ai_rmf.md) [S21](sources/21_mlperf_submission_guide.md)
+
+### 5.5 哪些需求可在项目开始前确定，哪些必须由 pilot 得出
+
+| 项目前可确定（policy / contract） | 只能由代表性 pilot 估计或校准 |
+|---|---|
+| 用户、决策与 success claim | safe workflow→instance expansion yield |
+| 计数单位与 accepted definition | workflow fixed hours、instance marginal hours |
+| taxonomy 目标、排除行业/软件 | candidate→accepted yield、revision/QC cycles |
+| purpose/access 分区与权限 owner | evaluator 类型分布、build/calibration time |
+| training/validation/final 隔离原则 | environment/license feasibility、flake/reset rate |
+| asset schema、provenance/license 字段 | expert sourcing/availability/coverage gaps |
+| 支持的 harness interface 与结果 schema | runtime/API/license/storage 成本分布 |
+| QA gates、审计与 change-control 原则 | stochastic variance、needed trial count |
+| OTS/public release 是否属于目标 | evaluator false-positive/false-negative、human escalation rate |
+| 预算/工期上限与 go/no-go 决策权 | domain allocation、concentration cap、rotation cadence |
+
+**[项目建议]** Pilot 必须覆盖 domain、software stack、environment type、evaluator mode、license class 与 workflow multiplicity 的代表性 strata；不能只选最易自动化的 Linux/CLI tasks 后外推全项目。
+
+---
+
+## 6. Scope scenarios 与决策矩阵
+
+### 6.1 七种可采购 scenario
+
+- **S1 Workflow-breadth benchmark**：1,000 个独立 workflows，每个至少一个 runnable instance。
+- **S2 Instance-depth benchmark**：`W<1000`，经验证的 variants 合计 1,000 runnable instances。
+- **S3 Training/agent-improvement corpus**：1,000 个可暴露实例及反馈/trajectory，用于 SFT/RL/harness improvement。
+- **S4 Public development/demo product**：公开、易运行、可审计，主要用于开发和展示。
+- **S5 Private final holdout service**：sealed final instances + submission/evaluation service。
+- **S6 Hybrid benchmark system（推荐）**：dev/demo + restricted validation + private final + rotation；training 如需另行隔离。
+- **S7 Capability diagnostic + OTS platform**：在 hybrid/runnable system 上增加客户 weighting、failure analytics、rights/SLA/support，多客户授权。
+
+### 6.2 决策矩阵
+
+说明：真实性/有效性/保密性/可复用性/客户价值/商业化用 **高为好**；成本与污染风险用 **高表示负担/风险高**。所有等级是相对的 **[研究员推断]**，不是公开测量值。
+
+| Scenario | 真实性 | 评测有效性 | 保密性 | 可复用性 | 生产成本 | 基础设施成本 | 客户价值 | 污染风险 | 后续商业化 |
+|---|---|---|---|---|---|---|---|---|---|
+| **S1 1,000 workflows** | 高（若真实 sourced） | 高 breadth；每 workflow 样本深度可能低 | 高（若 private） | 中 | **极高** | **极高** | 高，适合 broad coverage | 低–中 | 高，但 rights/维护困难 |
+| **S2 W workflows / 1,000 instances** | 中–高，取决于 variant validity | 高于 within-family robustness；跨 workflow claim 有限 | 高（若 private） | **高** | 中–高 | 中–高 | 高，适合目标能力诊断 | 低–中 | 高，便于扩展/更新 |
+| **S3 Training corpus** | 中–高 | 对“训练收益”有效；对 hidden final **低** | 低–中 | **高** | 中–高 | 中–高（trajectory/feedback） | 高，若目标是 improvement | **极高**（若复用作 final） | 中–高，取决于 rights |
+| **S4 Public dev/demo** | 中 | 对 debug/demo 高；对最终 generalization 低 | **低** | **高** | 低–中 | 低–中 | 中，透明/onboarding | **高** | 高作为获客层，防御性低 |
+| **S5 Private final service** | 高 | **高**，若 construct/holdout/QA 成立 | **高** | 中；需 rotation | 高 | 高（IAM/secret/audit） | **高**，适合验收 | 低但非零 | 中–高，偏 managed service |
+| **S6 Hybrid system** | **高** | **高**，兼顾开发与 final | 分层；final 高 | **高** | **高–极高** | **高** | **极高** | 中，可治理 | **高** |
+| **S7 Diagnostic + OTS** | 中–高 | 中–高，依赖 weighting/benchmark core | 高或分层 | **高** | 高 | **高** | **极高**，若诊断可行动 | 中 | **极高**，但 legal/support 重 |
+
+### 6.3 选择逻辑
+
+1. 若客户真正要训练资产，选 **S3**，但另购/另建未暴露 final holdout；不要在名称上假装 S3 是 hidden benchmark。
+2. 若客户只要面试展示或 community onboarding，选 **S4**；不要为此支付 S5/S6 的私有平台成本。
+3. 若目标是一次性独立验收，选 **S5**；但没有 dev/validation 会让失败难以诊断。
+4. 若目标是持续研发、模型选择、最终验收和后续商业化，选 **S6**，再按需叠加 **S7**。
+5. **S1** 只有在 breadth 本身是核心采购目标、预算/rights/软件覆盖充足且客户明确接受高固定成本时才是默认候选；ALE 的 960 workflow 论文数字不是要求客户复刻这一规模。
+
+---
+
+## 7. 反方证据与不确定性
+
+### 7.1 当前结论在什么条件下会失效？
+
+1. **产品不是 benchmark。** 若客户只要 prompt/input records、教学材料或 known-task regression，完整 VM/evaluator/private service 可能过度设计；但必须改名并降低 success claim。
+2. **同一实例复用的目标不是 generalization。** 已训练的 instance 可以继续测 mastery/regression；H2 只否定它同时被称为 hidden/unseen final。
+3. **human evaluation 被明确接受。** 某些多解专业交付可能无法自动 verifiable；可以改为 expert review product，但它不再是 ALE 的主要 runtime 评测构造，成本/一致性也需重估。
+4. **software/environment 不可封装或合法提供。** 若关键应用、license server、live web/API 或 confidential source 不能重现，runnable promise 失效；只能交付 static data/spec 或 managed environment。
+5. **workflow variants 不保持同一 grading contract。** 若改 inputs 后实际能力、难度、software path 或 acceptable outputs 改变，应新建 workflow/evaluator，而不是强行计为 instance。
+6. **客户的 intended population 与 taxonomy 不同。** ALE 13/55 只是参考；真实客户价值取决于客户 workflows、risk weighting、地域/语言/软件栈。
+
+### 7.2 哪些数字只是特定快照，不能当生产配额？
+
+`1,490`、两个不同的 `960`、`530`、`150/1,017/323`、`152`、GitHub `152 curated paths / 160 tier memberships / 165 code dirs`、HF `153 rows`、`250+ / 300+ experts`、`1,500+ tasks`、`5,000 target`、13/55 与 code/data surface 的 14/51 IDs，全部是指定 surface/revision/unit 的观察；没有一个自动成为本项目 allocation、专家配比、acceptance yield 或 schedule target。
+
+### 7.3 哪些成功可能来自 evaluator weakness、数据泄漏或 harness 差异？
+
+- **Evaluator weakness：** 只检格式/表面字段、忽略副作用、path/filename shortcut、permissive tolerance、brittle parser、错误 ground truth、LLM judge 偏好、环境残留假阳性。当前 ALE head 的 grader-hardening 与 open ground-truth issue 是具体提醒。[S08](sources/08_github_grader_fix_commit.md) [S23](sources/23_open_ground_truth_issue.md)
+- **Leakage：** 训练见过具体 prompt/input/reference；开发者针对公开 evaluator 写规则；expert/customer 重复使用；模板级变体泄漏；private pool 被日志/反馈侧信道暴露。Private 只降低风险，不证明“干净”。
+- **Harness/system 差异：** model、system prompt、tool surface、GUI bridge、memory/subagents、budget、timeout、retry、parallelism、rate limit、environment 和 evaluator revision 都可能改变结果。[S07](sources/07_leaderboard_snapshot_2026-08-08.md) [S09](sources/09_ai_agents_that_matter.md) [S10](sources/10_reproducible_lm_evaluation.md)
+- **Selection/repetition：** best-of-runs、task subset、缺失 run、重复次数不同会高估可部署的 single-system reliability。
+
+### 7.4 哪些建议合理但没有公开数据支持？
+
+- 精确 workflow:instance 比、domain allocation、每 workflow concentration cap；
+- 专家人数、双审负载、工程师/专家比例；
+- 每日产能、总工期、P50/P80 预算、asset 单价；
+- candidate→accepted、rights clearance 与 QC pass rates；
+- evaluator false-positive/false-negative、flake 与重复 trial 数；
+- private rotation cadence、retirement thresholds、leak incident rate；
+- OTS 产品的客户 willingness-to-pay、renewal/support burden。
+
+以上全部应写为 pilot variables，不写成“行业标准”。
+
+### 7.5 Steelman：私有 benchmark 的代价
+
+**[研究员推断]** Private holdout 降低直接污染，却会削弱第三方复现、representativeness audit、错误发现和客户信任。合理设计不是“全公开”或“全黑箱”二选一，而是：公开 dev/audit slice + 受限 validation + private final/rotation；公开方法、schema、抽样原则和 evaluator QA 统计，但不公开 final instance secrets。
+
+---
+
+## 8. 对 1,000-task 项目的具体决策影响
+
+### 8.1 专家组织：按责任分离，而不是从 task count 反推人数
+
+| 角色 | 核心责任 | 必要 separation of duties |
+|---|---|---|
+| Product/scope owner | 决策用途、units、taxonomy、acceptance、预算/变更 | 不以数量压力覆盖 QA gate |
+| Domain lead / advisory committee | workflow landscape、代表性、专家准入、争议仲裁 | 不单独批准自己提交的 asset |
+| SME author | 提供真实 workflow、inputs/reference、专业 rubric 与 provenance | 不作为 evaluator 唯一验收人 |
+| Task implementation engineer | `main.py`、start/reset、asset staging、dry-run | 与 final access/score release 分权 |
+| Evaluator engineer | grader、tests、partial credit、calibration、regrading | 需要 independent QA/negative controls |
+| Environment/platform engineer | VM/container/image/software/license/network、runner | 不接触不必要的 final reference 内容 |
+| Independent QA reviewer | gold/negative/near-miss、flake、reference/ground-truth、release sign-off | 与作者/实现者独立 |
+| Data rights/privacy/security | rights chain、PII/secret、OTS/public eligibility、IAM/audit | 具有 blocking authority |
+| Benchmark ops / PM | expert ops、stage gates、capacity、defects、SLA | count only final-QC accepted assets |
+| Red-team/adjudication | evaluator gaming、leakage、disputes、post-release issue | 可触发 quarantine/rotation/regrade |
+
+**[公开资料不足]** 不给出精确 headcount。Pilot 应测每一角色在不同 evaluator/environment strata 的时间分布与并发限制。
+
+### 8.2 生产流程与 stage gates
+
+1. **G0 Product charter**：用户、用途、unit、success claim、access、OTS/public intent 冻结。
+2. **G1 Taxonomy & sourcing plan**：客户 workflow landscape、coverage gaps、expert criteria、rights red flags。
+3. **G2 Candidate intake**：五字段 + provenance/rights questionnaire；此时只计 `candidate_submission`。
+4. **G3 First review**：CRV、正确工具、end-to-end、可评性、重复/冲突、revise/reject/accept-for-build。
+5. **G4 Implementation**：inputs、env、start/reset、reference isolation、evaluator、metadata、runner。
+6. **G5 Engineer dry-run**：从 clean state 执行、reference/evaluator staging、logs/artifacts 完整。
+7. **G6 Evaluator QA**：gold、negative、near-miss、format/content separation、side-effect、judge calibration、replay。
+8. **G7 Rights/security gate**：component rights、PII/secret、training/redistribution/commercial use、license entitlement。
+9. **G8 Independent final QC**：domain peer review、ground-truth/adjudication、difficulty/context/evaluator bound。
+10. **G9 Baseline & reliability**：至少一个 supported agent path，pilot-derived repetitions，flake/failure classification。
+11. **G10 Partition & seal**：purpose/access assignment、manifest freeze、final secrets/IAM/audit/rotation reserve。
+12. **G11 Delivery/UAT**：clean-room install、customer-run smoke、result schema、docs/training、known limitations。
+
+**计数规则：** 只有通过 G8、能通过 G11 acceptance 的资产计入 `1,000 accepted runnable instances`；candidate、submission、pending-QC、quarantined、failed run 与 repeated trial 不计入。
+
+### 8.3 Evaluation 设计
+
+- **Deterministic preferred, not blindly trusted.** Exact/structured/geometric/behavioral checks优先，但也要验证 ground truth、tolerance、parsing 和 side effects。
+- **Gate + partial score.** 缺文件/不可解析/安全红线可 hard gate；其他质量维度尽量保留 component-level partial credit，防止单一格式问题 false zero。
+- **LLM judge only when necessary.** Narrow binary/evidence-anchored probes；固定 model/prompt；swap/order/repeat calibration；human escalation。[S22](sources/22_llm_judge_bias.md)
+- **Evaluator tests are first-class assets.** Gold pass、known bad fail、near-miss boundary、adversarial shortcut、missing/malformed component、legacy artifact regrade。
+- **Reliability has two axes.** 同一 instance 重复 trial 的 run stochasticity；instances 对目标 workflow/domain 的 task-sampling uncertainty。二者不能互相替代。
+
+### 8.4 基础设施最小组成
+
+1. versioned task/instance registry 与 immutable manifest；
+2. component artifact store（input/reference/evaluator/logs）和 checksum；
+3. environment image/build pipeline、digest/SBOM、health/reset；
+4. sandbox/provisioner 与 software/license entitlement 管理；
+5. harness adapter/runner、budget/timeout/retry、queue/scheduler；
+6. secret store、reference post-run staging、IAM、access log；
+7. evaluator service、judge version、regression suite、regrade pipeline；
 8. trajectory/output/result store、failure taxonomy、cost/runtime telemetry；
 9. QA/reviewer/adjudication workflow、defect/quarantine/rotation；
 10. reporting/API/dashboard、version comparison、export policy；

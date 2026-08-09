@@ -161,7 +161,511 @@ signatures_attestations: []
 
 `R`=read；`W`=write/change；`X`=单次 runtime ephemeral use；`A`=approve；`—`=无权限。此表是最小职责分离模板，不预设实际团队人数。
 
-**标签说明：** 整张矩阵是 **[P] 项目建议**；NIST/WIPO/W3C/MLCommons 只支持最小权限、审计、provenance…12549 tokens truncated…P] 回应：** 采用 tiered transparency：公开 construct、taxonomy、method、aggregate stats、version history、synthetic/examples；受控 independent audit raw surface；提供不泄漏 oracle 的 appeal；退役后按风险延迟披露。
+**标签说明：** 整张矩阵是 **[P] 项目建议**；NIST/WIPO/W3C/MLCommons 只支持最小权限、审计、provenance 和独立检查等原则，不直接规定这些角色或权限单元格。
+
+| Trust domain / role | Private input / environment | Submitted artifact | Reference | Evaluator production secret | Real ID map | Keys / markers | Logs | Approval |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Registered submitter | —；只经 API/runtime | own artifact W | — | interface only | own pseudonym | — | own receipt/allowed feedback | — |
+| **Agent execution worker** | X | content-addressed handoff W | **—** | **—** | pseudonym only | — | append-only run events | — |
+| **Scoring worker** | **—**；不得读 agent workspace/credentials | X immutable handoff | X | X | — | non-scoring trap X only | append-only score event | — |
+| Append-only log writer | — | hashes only | — | — | pseudonym/event ID | — | append only；default no read | — |
+| Source curator | R/W input source | — | — | — | — | — | asset history R | — |
+| Reference adjudicator | selected/masked R | test artifacts R | R/W candidate | — | — | — | adjudication log W | reference approval under review |
+| Evaluator maintainer | synthetic/masked fixtures | test artifacts R | selected test reference | R/W non-production code；no prod key | — | — | evaluator-test logs R | code review only |
+| Identity registrar | — | — | — | — | R/W | copy-recipient mapping only | identity events | mapping approval |
+| Release steward | metadata only | hashes only | version metadata | build/version metadata | — | — | R | publication A；不得自批作者资产 |
+| Security / independent audit | controlled R | controlled R | controlled R | controlled R under dual control | controlled R only if needed | controlled R under dual control | R + integrity verify | recommendation / appeal |
+| Key/marker custodian | marker placement interface only | — | marker placement only | key injection interface only | recipient mapping scoped R | R/W | marker events only | key rotation A under dual control |
+
+**[P] 强制 trust boundary：** Agent execution worker 永远不 mount/decrypt reference 或 evaluator secret；scoring worker 永远不获得 agent workspace、tool credentials、network session 或修改 handoff artifact 的权限。攻陷任一 domain 均不能独立跨越这条边界。
+
+**[P] 权限实现不能只用 R/W/X。** Secret capability 需分别声明 `list / read / export / decrypt / mount / append / network_egress / approve`；`W` 不隐含 delete/overwrite。Break-glass 约束覆盖人、service account、CI runner、host、backup、observability 与 support tooling，并产生 stable event、expiry、双人/独立 review。实际角色合并与供应商权限为 [V]。
+
+## 5. Contamination taxonomy
+
+**标签说明：** 下表“定义与边界”默认是把公开方法映射到 ALE-style 场景的 **[I] 研究者推断**；“主要检测/首要缓解”是 **[P] 项目建议**；“不能推断”是证据边界。各类来源直接支持的内容与机构主张在来源卡中分别标为 [E]/[C]。
+
+| ID | 类型 | 定义与边界 | 主要检测 | 首要缓解 | 不能推断 |
+|---|---|---|---|---|---|
+| T1 | **Pretraining exposure** | 基础模型参数形成阶段出现 prompt/input/reference/solution/grader 线索或近重复；通用领域知识不自动算污染 | 训练 cutoff/manifest attestation；公开语料/code/cache 搜索；membership probes；canary；fresh paired runs | private/reserve 不发布；提交绑定 base model/cutoff；重大疑点以经 preflight promotion 的 fresh private-final clean rerun | detector 未命中 ≠ 无暴露；黑盒供应商常不可完全审计 |
+| T2 | **Post-training optimization** | SFT/RL/distillation、prompt/harness/tool/memory/routing 对 benchmark item 或反馈进行针对优化 | post-training lineage；benchmark-specific strings/branches/cache；public→validation→fresh active-private gap | dev/training 可合法优化但单独标记；final/reserve 禁止针对性更新；身份绑定完整 agent config | 性能提升序列本身不能证明动机或数据来源 |
+| T3 | **Public solution** | gold/reference、human solution、walkthrough、repair patch、rubric/grader probe 出现在 web/code/video/log | web/code/transcript 定期搜索；reference/artifact structural fingerprints；时间线关联；copy marker | 公共池使用专门可公开 reference；private/reserve reference 和 scorer 细节隔离；retire 后才评估披露 | 删除网页不能删除模型参数、镜像、缓存和截图 |
+| T4 | **Near-duplicate** | paraphrase/translation/格式或数值变换/模板换皮/近似文件、reference 或 evaluator graph | exact hash → normalized fingerprints → semantic retrieval → graph compare → expert adjudication | family 跨池重建 concrete surface；pilot 校准 detector | 单一字符串去重不充分；阈值过严会误删合法同领域任务 |
+| T5 | **Search-time contamination** | agent 运行时经 web、code search、history、enterprise KB、cache、vector store、shared memory 找到题目/答案/ grader 线索 | 完整 network/DNS/proxy/query/snippet/tool/URL/content hashes；controlled-network 对照 | 若开放 web 属构念，隐藏 searchable IDs 并审计轨迹；否则 allowlist/mirror/offline | ALE-style 发生率/效应证据不足，必须 pilot；禁网也可能破坏真实构念 |
+| T6 | **Reference/evaluator leakage** | reference、hidden tests、judge prompt、tolerance/weight/hash、gold patch、seed、grader API behavior 泄漏 | secret/repo history audit；non-scoring trap；异常边界行为；scorer query/error sequence；独立 exploit review | EaaS；reference/key 分仓；ephemeral mount；最小 error/feedback；rotate secret surface | 大量黑盒 query 仍可能反推；grader bug 可伪装成攻击 |
+| T7 | **Internal leakage** | 员工、专家、供应商、平台管理员、自动化系统故意/意外/被入侵泄露 | identity-bound access/download/egress logs；per-recipient copy marker；DLP；privilege recertification | need-to-know、JIT、自动过期、职责分离、双人导出、offboarding revoke | 内部生产必然需要部分访问；过度监控有隐私/劳动成本 |
+| T8 | **Repeated-query hill climbing** | 看不到 raw holdout，仍根据 score/pass/error/rank/latency 反复优化 | account+org+model-lineage linkage；提交序列/score gradient；跨账号同步；fresh final/新晋 promoted item 复核 | 同时限制 query、feedback granularity/delay、final selection、reset 与 eligibility；给 dev surface 足够 diagnostics | 正常产品迭代也会提高分数；模式是调查线索，不是作弊证明 |
+
+**[P] contamination registry 不使用单一布尔值。** 至少记录 `vector`、`exposed_surface`、`first_known_time`、`source`、`affected_assets`、`affected_model_lineage`、`detection_method`、`evidence_strength`、`score_impact_status`、`containment`、`regrade_or_bridge`。
+
+## 6. Contamination detection / mitigation mapping
+
+符号：`P` 主要预防；`D` 主要检测/取证；`M` 降低影响或泄漏信息量；`—` 无直接作用。
+
+**标签说明：** 这张作用映射是 **[I] 研究者综合判断**，后续 control baseline 是 **[P] 项目建议**；它不表示来源机构对本项目的认证。
+
+| Vector | Gated access | EaaS | Query limits | Submission logging | Canary/watermark | Delayed/coarse feedback | Audit trail |
+|---|---|---|---|---|---|---|---|
+| T1 Pretraining | P/M 防未来扩散 | P/M 不外发秘密 | — | D 版本/时间线 | D 有条件检测 | — | D 训练声明与 provenance |
+| T2 Post-training | P/M 限制取材 | P/M 隐藏 scorer | M | D lineage/迭代 | D 部分暴露 | M | D 优化历史 |
+| T3 Public solution | P 仅对未公开池 | P 保留 reference | M 限制反馈复原 | D 异常引用 | D 泄漏/归因 | M 只延缓 | D 首次公开/复制链 |
+| T4 Near-duplicate | M | M | —/M | D detector/adjudication | D 仅有标记者 | — | D family/input/ref/grader lineage |
+| T5 Search-time | M 隐藏 IDs | P/M 若也控网络 | M 需纳入检索预算 | D trajectory/network | D 若命中 marker | —/M | D URL/query/content chain |
+| T6 Reference/grader | P | P 但集中风险 | M 黑盒反推 | D query/error | D copy/trap | M | D secret/access/run/score |
+| T7 Internal | P JIT/least privilege | M 减少副本 | — | D access/egress | D per-recipient | —/M | D tamper-evident chain |
+| T8 Hill climbing | —/M 身份辅助 | —/M 服务也产生反馈 | M 核心之一 | D 序列核心证据 | —/D 特殊 trap | M 核心之一 | D org/model linkage |
+
+### 6.1 控制的效用与反证
+
+| 控制 | 直接价值 | 必须实现的证据 | 反方证据 / 适用边界 | [V] 客户或 pilot 决定 |
+|---|---|---|---|---|
+| **Gated access** | 降低 anonymous scraping，支持身份、用途、撤权和 need-to-know | actor/org、purpose、ACL、条款、expiry、download/export、revocation logs | 无法消除 provider 既有训练、授权 insider、sybil/collusion；会降低开放复现 | eligibility、审批、期限、研究者/auditor/appeal 权利 |
+| **Evaluation-as-a-service** | raw input/reference/grader 不离开受控节点；环境标准化；集中日志 | image/commit/digest、secret mount、network policy、run manifest、reproduction/appeal、独立 audit | operator/service 成为集中信任与可用性单点；error/artifact/log 可泄漏；私有服务仍可 hill-climb | 模型交付方式、IP/data residency、隔离、network realism、证据返还 |
+| **Query limits** | 限制自适应交互和 scorer 反推 | account+org+model-lineage+release counters、reset/exception log | 少量高信息反馈仍危险；多账号绕过；过紧限制妨碍 reliability/debug | 各 identity scope 的 quota、误操作恢复、例外与跨版本累计 |
+| **Submission logging** | attribution、pattern detection、incident reconstruction、regrade evidence | immutable submission ID、config hashes、pool/version、trace/artifact/score/feedback hashes | 日志不能自己防止事故；privileged actor 可篡改；日志本身是敏感 attack surface | retention、privacy notice、redaction、legal hold、review cadence |
+| **Exclusion notice / crawler canary** | 向愿意合作的 crawler/trainer 发出过滤信号；BIG-bench 是实践先例 | 固定文本、placement/version、预期 crawler 行为 | 不是统计检测器；可忽略/删除；未出现不证明未训练 | notice 文本、传播渠道、合作方义务 |
+| **Per-recipient forensic mark** | 复制/分发归因 | recipient mapping、copy-level ledger、chain of custody、合法性 | 可被重写/截图；命中只是调查线索，可能 false flag | marking modality、recipient notice、证据与 appeal 标准 |
+| **Statistical training watermark** | 在预注册 null/alternative 下检测部分训练暴露 | key custody、power/FPR/FNR、utility、blind calibration、adjudication | MIA/检测研究显示部分设置接近随机或被 distribution shift 误导；命中/未命中都不是 verdict [R22] | sample size、operating point、validity region、retest rule |
+| **Non-scoring honeytoken / grader trap** | 侦测 scorer probing、secret lookup 或异常 path | 不影响正常分数、secret design、trigger null、review protocol | 命中可由 bug/环境/偶然触发；不得自动定罪或下榜 | placement、false-positive handling、incident scope |
+| **Delayed/coarse feedback** | 降低每次反馈的信息量和即时调参速度 | feedback schedule、aggregation/precision/error taxonomy、released payload hash | 延迟只改变速度；过粗会妨碍 grader defect 发现、appeal 和小团队参与 | delay、granularity、security error、release-window、appeal turnaround |
+| **Audit trail** | 可追溯 asset→access→run→artifact→grader→score→feedback→leaderboard | immutable manifest、provenance graph、raw trace/hash、actor/owner、integrity proof | Provenance 模型不保证记录真实；审计可能抽样不足或有利益冲突 | auditor independence、范围、公开摘要、retention、解封权限 |
+
+### 6.2 多维 feedback-risk ledger，不伪造统一“信息量”
+
+**[I]** Repeated-query 风险不仅由 submission count 决定，但目前没有可把 score、error、rank timing、artifact 和 search leakage 直接相加的共同单位。因此 pilot 前不使用无量纲 `L_release` 标量。
+
+**[P]** 每个 actor/org/model-lineage/release 维护风险向量：`{query_count, task_level_feedback, score_precision, error_specificity, delay, selectable_final_submissions, cross_account_linkage, artifact_export, search_exposure}`；policy 在每个维度设约束/监控，不提前加权求和。
+
+**[V]** 只有 pilot 定义各维单位、normalization、interaction、uncertainty 和 decision loss 后，才可讨论 scalar information budget。Pilot 比较详细/聚合、即时/延迟、账号/组织绑定、fixed/fresh holdout、开放/隐藏 grader error，并纳入 Shaky Ladder 类后续攻击的 red-team regression。[R23](sources/R23_shaky_ladder_attack.md)
+
+## 7. Lifecycle state machine
+
+```mermaid
+stateDiagram-v2
+    [*] --> proposed
+    proposed --> implemented: runnable package + provenance
+    implemented --> validated: engineering + measurement QA
+    validated --> accepted: independent acceptance
+    implemented --> q1: credible risk
+    validated --> q1: credible risk
+    accepted --> q1: credible risk
+    state "quarantined\nasset A@v1" as q1
+    state "repaired\nasset A@v2 (NEW)" as r2
+    q1 --> q1: preserve old version immutable
+    q1 --> r2: repair event CREATES v2 + repairs edge
+    r2 --> validated: v2 full revalidation
+    q1 --> retired: v1 irreparable / no authority
+    accepted --> retired: planned retirement
+    proposed --> [*]: rejected / withdrawn / deferred event
+    retired --> [*]
+```
+
+### 7.1 状态定义与 gates
+
+**标签说明：** 全部状态定义、进入/退出 gate 和 leaderboard 后果为 **[P] 项目建议**；W3C/NIST 提供 provenance、monitor/change/incident 原则，不直接规定这 7 个原子状态。
+
+| State | 进入条件 | 允许行为与离开 gate | Leaderboard 含义 |
+|---|---|---|---|
+| `proposed` | Construct、family、来源/权利初审、预期 I/O 和 evaluator idea；stable draft ID | 评审、拒绝、实现 | 不算 accepted runnable asset；不得 official score |
+| `implemented` | package 可安装/启动/提交/评分；manifest/hash/license snapshot | reference run、negative/metamorphic、exploit、rebuild、安全检查 | engineering QA only |
+| `validated` | 可运行、reference 可复现、evaluator/construct/权限/安全/许可证据通过 | 独立 acceptance；证据过期退回或 quarantine | calibration only |
+| `accepted` | 独立于作者的 acceptance authority 批准 scope/version/limitations | 可建立 pool assignment、access class 与 release membership；这些不改变 lifecycle | 只有进入特定 release role 后才有计分含义 |
+| `quarantined` | credible contamination、grader、environment、license、safety 或治理问题 | 保全证据、停止受影响访问/计分、scope、repair/retire | current board freeze/annotation；历史不删除 |
+| `repaired` | **仅属于 repair event 新建的 version**；`repairs` edge 指向旧 version；旧 version 保持 `quarantined` 或随后独立 `retired`；repair record 完整 | 新 version 重新走 `validated → accepted`；不能直返 active | old/new asset-version、grader 与 score 分开 |
+| `retired` | current scoring 资格终止；reason/effective time/affected release 披露 | immutable archive；可建立 successor link | frozen history 保留并标注 |
+
+**派生视图定义：** `active-public`、`active-private`、`rotation` 和 `replaced` 依第 3.0 节规则计算；查询结果必须同时返回组成它的 lifecycle、pool、access、release role、exposure eligibility 与 lineage，禁止只返回复合词。
+
+**[P] 状态不变量：**
+
+- 同一 `asset_version` 只有一个 lifecycle status，但可拥有多个 append-only release-membership records；historical membership 不因 current removal 被覆盖。
+- Pool/access/release/exposure 变化各自产生 event；input/reference/evaluator/environment 改变产生新的 immutable version。
+- `repaired` 是**新 version**必须重验证的暂态，不是旧 version 从 `quarantined` 原地变更的目标；`retired` 是资格终止；`repairs`、`supersedes` 和 `replaces` 都是跨 version 的 lineage edge。
+- Repair transaction 必须原子地：(a) 保持 old `asset_version` 状态不变；(b) 创建 new `asset_version_id`；(c) 写入含两端 asset 和 version 身份的 `repairs` edge。默认 `repairs/supersedes` 为同一 `asset_id` 的新 version，`replaces` 为不同 `asset_id`；例外必须记录 authority 和 reason。
+- 旧 version 永不物理覆盖。若法律/安全要求删除 payload，仍保留允许的 tombstone、hash、时间、授权和原因；保留边界为 [V]。
+- `proposed` 的 rejected/withdrawn/deferred 不物理删除；记录 `proposal_disposition, reason, authority, effective_at`，以支持 selection/yield pilot。
+
+## 8. Refresh、repair、quarantine 与 retirement decision tree
+
+```mermaid
+flowchart TD
+    A["Trigger or credible report"] --> B{"Routine lifecycle refresh or integrity/safety/legal incident?"}
+    B -- Routine --> C["Planned construct / coverage / relevance review"]
+    C --> D{"Material change needed?"}
+    D -- No --> E["No change / annotation / next review date"]
+    D -- Yes --> F["Versioned refresh; bridge; retire/replace if semantics change"]
+    B -- Incident --> G{"Immediate safety, rights, secret or scoring-integrity risk?"}
+    G -- Yes --> H["Quarantine + access containment + evidence preservation"]
+    G -- No --> I["Controlled review; retain scoring only with affirmative evidence"]
+    H --> J["Scope assets, versions, lineages, runs, window and actors"]
+    I --> J
+    J --> K{"Validity or rights materially affected?"}
+    K -- No --> L["Independent approval: no_change + unpause + reasoned notice"]
+    K -- Unknown --> M["Remain quarantined; submission pause; disclose uncertainty"]
+    K -- Yes --> N{"Bounded repair preserves construct/input/success semantics/affordance?"}
+    N -- Yes --> O["New repaired version → validation → acceptance → impact analysis"]
+    N -- No --> P["Retire/replace or fresh clean rerun"]
+    P --> Q{"Urgent coverage gap?"}
+    Q -- Yes --> R["Promote only pristine reserve after preflight"]
+    Q -- No --> S["Disclose gap; scheduled replenishment"]
+```
+
+### 8.1 九类 refresh trigger
+
+**标签说明：** 来源卡中的 benchmark refresh 事实或作者动机分别标 [E]/[C]；下表把它们映射成“可观察信号”属于 **[I] 研究者推断**，“首要动作”是 **[P] 项目建议**，“待确定”全部为 **[V] 客户/pilot 变量**。
+
+| Trigger | 可观察信号 [I] | 首要动作 [P] | 待确定 [V] |
+|---|---|---|---|
+| **Saturation** | score distribution 接近 ceiling、challenge headroom 消失 | 分 task/domain/system 分析；从 reserve 生成 challenge replacement；保留健康 anchors | 系统集合、观察窗口、ceiling/materiality、cadence |
+| **Discrimination loss** | 能力不同系统得分趋同；rank 对抽样/重跑不稳定；item 与 construct 关系减弱 | repeated-run variance、item information、bootstrap/rank stability；先排除噪声和 grader defect | precision/uncertainty、共同系统、分 domain policy |
+| **Contamination** | solution/train disclosure、near-dup、canary/log、verbatim/search/insider/provider signal | 锁定 exposure、保存 trace、界定 window；相应 asset/family/grader quarantine | evidence grade、scope、通知、freeze 层级 |
+| **Environment drift** | dependency/app/API/OS/license server 改变；reference run 失败 | 重建并对照；区分 infra invalid 与 capability failure；repair 或 replace | support matrix、health cadence、允许差异、fallback |
+| **License change** | 分发、运行、模型调用、保留或商用权利改变/撤回 | 暂停访问/新 run；权利 owner 决定 restricted use、repair 或 retire | 法域、notice、deletion/legal hold、archive/regrade 权利 |
+| **Evaluator defect** | false accept/reject、parser error、reward exploit、judge drift、reference contradiction | quarantine grader/items；保存 outputs；old/new 双评分 impact analysis | materiality、sample review、regrade eligibility、appeal |
+| **Task obsolescence** | 工具/规范/workflow 不再存在，或不再测目标工作 | construct owner 复核 relevance；语义改变则 retire/replace | 权威更新源、review cadence、customer acceptance |
+| **Customer change** | target capability、risk、用户、合规或产品用途改变 | 重新 MAP construct/coverage；旧版冻结，新版重走 acceptance | intended-use change authority、major-release rule |
+| **Safety incident** | 危险操作、真实 secret/PII、恶意 artifact、越权 tool | immediate containment、撤权、隔离、evidence preservation、通知 | severity、通报/披露、retention、recovery authority |
+
+### 8.2 Repair 还是 replacement
+
+**[P] Repair = same `asset_id` + new immutable `asset_version_id`。** 仅当 construct、concrete input meaning、required output 与 success semantics 不变：非语义 typo/manifest/path；恢复原 contract 所承诺的依赖/环境；修正 parser/scorer implementation；或原 success definition 清楚但 reference implementation 错误。全部仍需 revalidation。
+
+**[P] Replacement = new `asset_id` + `replaces` edge。** 更换 concrete input/required deliverable；reference truth 本身有歧义或 success semantics 改变；改变 target capability、允许工具、资源语义或主要交互；污染已破坏 unseen interpretation；license/safety/obsolescence 使原任务不再合法、可运行或相关。
+
+**[P] Alternate metric view 不是 repair。** 同一 item evidence 用不同 aggregation/reporting 产生 `alternate_metric_score`；它不得命名为 corrected，也不得自动获得 original metric 的 official priority。是否可比较由预注册 intended use、definition 与 bridge evidence 判断。
+
+“增加更多 tests”可能是 implementation fix，也可能改变 success semantics。Construct owner 和 evaluator reviewer 必须联合判断并发布 old/new delta；不能仅因为代码 diff 小就称为 patch。
+
+## 9. Contamination / grader-leak incident response
+
+### 9.1 预案与七步流程
+
+1. **Prepare [P]：** 预先定义 incident commander、measurement owner、security/legal/safety、freeze authority、evidence store、contact tree、kill switch、replacement inventory、notification 与 broken-task 模板。
+2. **Detect / triage [P]：** 创建 stable incident ID；记录来源、时间、资产/版本、可信度、直接事实、机构判断和未知；先保全，不先清理 trace。
+3. **Contain [P]：** 按最小充分 scope 暂停 query、grader、asset、workflow family 或 release；撤销 credential；快照 ACL、logs、manifest、artifact、service image、key metadata。
+4. **Scope / analyze [P]：** 界定受影响 input/reference/grader/ID/用户/model lineage/submission/leaderboard/时间窗；区分“暴露已确认”与“分数因暴露提高已证明”。
+5. **Eradicate / repair [P]：** 修复 root cause、轮换 secret、创建新的 evaluator/asset/environment version；旧 version 与证据保持 immutable。
+6. **Recover [P]：** revalidation、acceptance、clean/bridge/common-agent runs；按证据 reopen、retire 或 replace；更新 controls。
+7. **Disclose / improve [P]：** 发布 issue class、affected versions/window、score treatment、repair/replacement、uncertainty、appeal；postmortem 进入 control/authoring/review checklist。
+
+这是把 NIST SP 800-61r3 的 prepare/detect/respond/recover/improve 结构迁移到 benchmark；score/leaderboard 后果是本项目建议，不是 NIST 原文要求。[L11](sources/L11_nist_sp800_61_incident_response.md)
+
+### 9.2 Grader/reference leak 的特别规则
+
+- **[P]** Confirmed grader/reference secret leak 默认 quarantine 共享该 attack surface 的 evaluator bundle 与 sibling family，直到 scope review 证明可缩小；只换 task ID 不构成修复。
+- **[P]** 若仅发现 contamination signal，先标 `suspected`/`signal_supported`；signal 可能是 false positive 或 denial-of-evaluation，未经 scope/independent review 不能自动判 guilt、删除 entry 或扩大 quarantine。
+- **[P]** `regrade` 只回答旧 artifact 在新 scorer 下的分数；它不能让已暴露 input/reference/grader secret 重新成为 unseen evidence。
+- **[P]** Incident 期间保留 `historical_snapshot`；对 current live 使用 `submission_pause / entry_withdrawn / claim_scope_invalid` 等明确动作；禁止静默删题后重排。
+
+### 9.2.1 Incident → score treatment matrix
+
+| Incident class | Historical regrade | Unseen claim | Official treatment |
+|---|---|---|---|
+| Bounded grader implementation bug | 条件满足时允许 `corrected_score_view` | 仅在披露假设和 coverage 后可保留 | Original + corrected；coverage 不足只做 delta，不重排全榜 |
+| Grader secret / exploit leak | 可作 `alternate_forensic_score` | Regrade 默认不能恢复 | `submission_pause` / affected `claim_scope_invalid`；新 secret + clean rerun |
+| Reference / solution leak | 不能恢复 validity | 对受影响 actor/model lineage/window 失效 | Rotate/replace + fresh clean rerun；旧结果仅 historical/exposed view |
+| Input / public / search contamination | Regrade 无关 | 依 exposure evidence 界定 | Quarantine、scope、fresh unseen instances；允许 false-positive no_change path |
+| Environment / protocol drift | 通常不足 | 需同环境或 bridge 假设 | Common-agent rerun、bridge 或 `not comparable` |
+
+### 9.3 Broken-task disclosure 最小字段
+
+```yaml
+incident_id: ...
+status: investigating|bounded|repaired|retired|closed
+owner: ...
+detected_at: ...
+contained_at: ...
+decision_at: ...
+effective_at: ...
+published_at: ...
+last_updated: ...
+supersedes_notice: null
+affected_asset_versions: []
+affected_release_ids: []
+affected_actor_orgs: []
+affected_model_lineages: []
+affected_result_window: {from: ..., to: ...}
+issue_class: contamination|grader_defect|environment|license|safety|obsolete|other
+directly_confirmed_facts: []
+maintainer_interpretation: []
+unknowns: []
+containment: []
+evidence_grade: suspected|signal_supported|independently_reproduced|confirmed_scope|not_assessable
+root_cause: {status: unknown|hypothesis|confirmed, evidence: []}
+score_treatment: submission_pause|annotation|corrected_score_view|alternate_score_view|entry_withdrawn|claim_scope_invalid|no_change
+repair_or_replacement: ...
+evidence_and_method: []
+independent_reviewer: ...
+appeal_or_contact: ...
+```
+
+**[P]** Defect count 必须同时披露 denominator、selection mechanism 和外推边界；对 failure-conditioned audit 的缺陷比例不能外推到全体。安全/隐私/商业秘密可采用 delayed/redacted disclosure，但至少披露受影响版本、score treatment、有效时间和剩余不确定性；具体延迟为 [V]
+
+## 10. Versioning 与 leaderboard policy
+
+### 10.1 Version vector
+
+**[P] 每条 official result 绑定：**
+
+```text
+suite_release_id
++ asset_manifest_hash
++ pool_snapshot_id
++ input/reference bundle versions
++ environment bundle version
++ evaluator bundle version
++ harness/protocol version
++ metric definition version
++ access/feedback policy version
++ leaderboard policy version
++ agent/model/config identity
++ budget/retry/repeat policy
++ run timestamp
+```
+
+Composite `release_id` 可供展示，但不可隐藏向量。Metadata-only 修改仍需新 manifest 与 regression 证据；evaluator、aggregation、missing/broken handling、partial-credit/pass semantics 改变必须递增 evaluator/metric version；environment/app/API 改变必须递增 environment version，若改变 affordance/construct 则新 asset/release。
+
+| Change class | 条件 [P] | Leaderboard 默认后果 |
+|---|---|---|
+| Metadata-only | 不改变 agent-visible 信息、执行、reference、grader、aggregation；regression 证明 | 原 native score 可保留；发布 patch note |
+| Compatible repair | 修复已定义 contract implementation；old/new 可双评分 | append `corrected_score_view`；original priority 与升级条件在事故前预注册 |
+| Content rotation | 增删/替换 concrete instances；blueprint 基本不变 | 新 release；native score 不直接并表；运行 bridge |
+| Protocol/environment change | Harness/tools/budget/runtime 可能改变行为 | 新 release/protocol；common-agent rerun |
+| Alternate reporting metric | 同一 per-item evidence，不改变 task success；另一个预注册 aggregation/view | `alternate_metric_score` 独立展示；不取代 original official |
+| Construct/metric break | Target capability、success definition、或 intended use 实质改变 | 新 scale/major release；默认 not comparable |
+
+### 10.2 Historical regrade
+
+**[P] 允许 append-only regrade 需同时满足：**
+
+1. 原 submission artifact、必要 trace/log、原 score/version identity 完整；
+2. 新 grader 能对同一 artifact 评分，不需要 agent 获取新信息或采取未发生行为；
+3. 修复的是既有 evaluator contract 的 implementation defect；独立新 metric view 不叫 correction；
+4. 受影响 assets、submissions、window 可界定；
+5. old/new grader、reference、environment 差异已版本化并独立审查；
+6. 新 score 明确回答“旧 artifact 在新 scorer 下如何”，而不是伪造“原 run 当时本应怎样”。
+
+若 artifacts 缺失、new tests 要求新行为、environment/tool/reference/instruction 已变、success definition 已变、proprietary agent 无法复现、影响面/selection bias 不可界定，则保留 original，标 `not_regradable`，用 common-agent bridge reruns 研究版本差异。
+
+展示分为 `original_score@R@G1`、`corrected_score@R@G2`、`alternate_metric_score@M2` 与 `bridge_estimate@B`；四者不互换。披露 affected tasks、delta、coverage/missingness 和 uncertainty。若 regrade coverage 不完整，只发布 covered-subset delta analysis，不发布新的全榜 rank；绝不把未能 regrade 的 submissions 当 0 或静默丢弃。
+
+### 10.3 Anchor、bridge runs 与 common-agent reruns
+
+**[P] Anchor gate：** Anchor 使用独立 `linking_anchor` release role，排除在 native unseen-core numerator 之外。其 concrete input、reference truth、evaluator semantics、environment affordance、instructions 和 administration position 可跨 release 保持；覆盖目标 construct；grader 已通过 exploit/false-accept/false-reject validation；exposure/query 可审计；不进入 training；检查跨系统行为和 differential drift。公开 anchor 只支持 linking diagnostics，不承担 unseen 证据。
+
+**[P] Bridge protocol：**
+
+1. 冻结 old/new releases、共同 protocol 与 infrastructure window；
+2. 选择可复现 common agent configs，覆盖稳定 baseline 与目标系统区间；具体数量/重复为 [V]；
+3. 同 configs 成对运行 old/new，保存 raw outputs、traces、invalid reasons、repeat variation；
+4. 分解 anchor-only、retained-task、new/retired composition、environment/grader effects；
+5. 只有 anchor invariance、coverage、fit 与 uncertainty 达到客户预先冻结的 acceptance rule 才发布 linked estimate；否则 `not comparable`；
+6. 用后续新 submissions 检查 bridge 外推；失效即撤回解释，但保留研究记录。
+
+**[I]** 对异质、交互、环境依赖的 agent benchmark，应默认称 `bridge/linking`，而非 `equating`。教育测量方法提供设计原则，不能直接证明 ALE-style scores 已可严格等值。
+
+### 10.4 三种 leaderboard 视图
+
+| View | 内容 | 不允许 |
+|---|---|---|
+| **Historical snapshot** | 关闭 release 的 immutable manifest、native metric、当时结果；可追加 annotation、withdrawal、corrected view | 改写历史列；把 aging/exposed 分数称当前 unseen 能力 |
+| **Current live** | 当前 release/current protocol 的新运行；展示 agent/config、time、version vector、query policy、budget/retry/repeat、logs status | 旧 release entry 自动 carry forward；混合 grader/metric versions |
+| **Bridge analysis** | common-agent paired runs、linked estimates、uncertainty、applicable range、non-comparable regions | 把 estimate 冒充 official native score；为只有单边 native result 的系统生成伪跨版排名 |
+
+**Leaderboard action vocabulary [P]：** `historical_snapshot` 是历史对象；`submission_pause` 是停止新 entry 的事故动作；`entry_withdrawn` 保留记录但取消指定榜单资格；`claim_scope_invalid` 撤销某一解释而非删除分数；`alternate_score_view` 不取代 official。Credible grader/reference/rights/safety issue 触发最小 scope pause 与 evidence preservation；恢复要求 root cause/false-positive finding、版本/验证、score treatment、notice lineage 和 appeal 完成。
+
+## 11. Public/private/rotation allocation：变量、公式与 pilot
+
+设 `p ∈ {dev, validation, final, reserve, training}`，stratum/workflow family 为 `s`，`n[p,s]` 为**accepted concrete runnable instances**。Archive 是历史状态，不与 active inventory 重复计数。
+
+### 11.1 Hard constraints [P]
+
+- 每个 active concrete `instance_id` 只有一个主要用途池；多重暴露写 exposure ledger，不靠复制 ID。
+- Training 与 final/reserve 的 concrete hashes、reference、grader secrets 及 adjudicated semantic-near-duplicate clusters 不重叠；只允许通过 gate 的 family-level 复用。
+- 客户要求的 construct/domain/software/environment/risk coverage 明确成约束。
+- Final 的决策 precision/discrimination 在 pilot 估计的 item information、run variance、grader uncertainty 下满足客户可接受 decision error。
+- Reserve 满足选定 planning horizon 下由 pilot 观测的 retirement/incident/drift demand；不以公开 benchmark 比例替代。
+- Anchor/bridge coverage、权利、访问、数据驻留与安全约束显式进入模型。
+
+### 11.2 Feasible set、Pareto 与 sensitivity；不使用无量纲单目标
+
+**[P]** Pilot 前只构造 feasible set：满足 coverage、decision-uncertainty、rights、安全、access、reserve-cleanliness 和 bridge constraints 的 `n[p,s]` 组合。对每个可行方案并列报告多维向量 `{maintenance burden, access-ops burden, exposure risk, decision error, coverage gap, refresh resilience}`，做 Pareto 与 sensitivity；不把不同单位直接相加。
+
+**[V]** 只有客户定义单位、normalization、weights、uncertainty 与 decision loss 后，才可生成 scalar objective；所有输入仍来自 pilot，而非公开 benchmark counts。
+
+### 11.3 决定比例的变量 [V]
+
+- 最终 score 将授权什么决策，以及 false ranking/false confidence 的损失；
+- Construct、domain、software、environment、安全/合规 strata 的 coverage；
+- 用户/组织/model lineage 数、submission cadence、run variance、反馈粒度和所需 turnaround；
+- Transparency、reproducibility、appeal、procurement、independent-audit obligations；
+- 模型/post-training 更新 cadence、task exposure half-life、公开 solution 传播速度；
+- Family 内 semantic/template/evaluator transfer risk；
+- Pilot 的 evaluator defect/exploit、environment/license attrition 和 reserve burn-rate 分布；
+- 每 family 生成独立有效 instances 的能力、维护/rebuild/replacement burden；
+- Legal、confidentiality、privacy、export、safety、client isolation；
+- Anchor/bridge 的信息与稳定性需求；public/training 是否是独立产品。
+
+### 11.4 Pilot measurement plan
+
+| Pilot stream | 测什么 | 输出变量，不提前填值 |
+|---|---|---|
+| Authoring / acceptance | 每 stratum 从 proposed→implemented→validated→accepted 的 transition、rework 与 rejection reason | `yield[s]`、authoring/engineering/review effort distributions |
+| Run reliability | 重复运行、provider outage、environment/tool failures、infra invalid 与 score variance | `run_variance[s]`、`p_infra_invalid[s]`、rerun evidence |
+| Evaluator validity | known-good/bad、alternate-correct、metamorphic、exploit fixtures、human disagreement | false accept/reject evidence、disagreement、materiality classes |
+| Contamination detectors | exact/semantic/file/graph/canary/membership 的 blind labeled set | precision/recall/FPR/FNR/coverage 与 not-assessable regions |
+| Hill climbing | query×granularity×delay×identity regimes 的 red-team | information leakage proxy、iteration gain、legitimate developer friction |
+| Pool/release comparability | common-agent public/validation/native-final/linking-anchor paired runs；不把 emergency reserve 当 bridge | directional gaps、composition effects、rank stability、coverage |
+| Refresh / reserve | observed defect, drift, license, contamination, safety, obsolescence incidents | attrition/burn-rate distribution 与 planning scenarios |
+| Operations / rights | IAM approval/revoke、EaaS queue、audit/appeal、data retention、vendor/legal review | access-ops burden、rights constraints、evidence retention feasibility |
+
+Pilot 后做情景分析，而不是单点配额：例如 transparency-priority、integrity-priority、customer-isolation-priority 三种 objective weights，输出 feasible ranges、binding constraints、sensitivity 和哪些变量改变会切换 policy。
+
+## 12. 三种 release-policy options（不预设比例）
+
+### Option A — Open-core + sealed final
+
+- **架构：** 公开 dev/demo corpus 与 harness/evaluator contract；注册用户使用 restricted validation；sealed private final；unqueried reserve。
+- **适用：** 生态 adoption、复现、外部方法审计和人才/供应商接入重要。
+- **优势：** 开发体验与公开 audit 最强；private final 仍保留最终决策面。
+- **残余风险：** public family optimization 可迁移；validation 仍会 adaptive；需 family gate、反馈预算、reserve 与 bridge。
+- **客户必须选：** 哪些 construct/strata 必须公开审计；何时 private→public；public solution policy；independent auditor 权限。
+
+### Option B — Managed evaluation service
+
+- **架构：** 仅 integration kit/schema simulator 公开；restricted/final 由服务端执行；身份、query/feedback budget、日志、attested manifest、独立审计与 appeal。
+- **适用：** final-decision integrity、reference/evaluator secrecy、统一环境或 rights 控制占主导。
+- **优势：** 原始 secret 副本最少；run environment 与 evidence 集中。
+- **残余风险：** Operator/service 单点、black-box bias、内部权限、日志泄漏、availability、IP/data residency；私有服务仍可能 hill-climb。
+- **客户必须选：** 可接受的 operator trust、模型交付方式、数据驻留、network realism、evidence return、service outage treatment。
+
+### Option C — Federated customer-private releases
+
+- **架构：** 公共方法/harness；每客户独立 private instances/environments/ACL；另设受控 anchor/bridge surface；不把 raw customer data 合并成 universal pool。
+- **适用：** Confidential、regulated 或高度客户特定的专业 workflows。
+- **优势：** 客户隔离、rights 和现实流程贴合度强；降低跨客户泄漏。
+- **残余风险：** 版本/运维复杂，通用排行榜意义弱，anchor 也可能暴露/漂移；结果必须 customer/release scoped。
+- **客户必须选：** 是否需要 global ranking；跨客户 family/anchor 允许范围；谁托管评测；客户离场后的 archive/regrade/retention。
+
+## 13. 可直接采用的项目建议
+
+### 13.1 Minimum viable governance
+
+1. **[P]** 建立 immutable/event-sourced registry，分开存 lifecycle、pool purpose、access class、release membership、version/lineage、actor-relative exposure、rights 和 incident；禁止复合 `release_state`。
+2. **[P]** 从 authoring 开始给 workflow family、concrete instance、input/reference/evaluator/environment 各自 stable internal ID 与 hash；外部 ID 使用 scoped pseudonym。
+3. **[P]** `active-public/private`、`rotation`、`replaced` 只作为可审计 derived views；accepted inventory 不自动等于 current release/private holdout。
+4. **[P]** Public 主功能由 intended decision 决定；restricted-validation 明确为 adaptive；private-final 不作为调试器；rotation 使用 contact class 与 burn/disposition rule。
+5. **[P]** Family 跨池实施强制 checklist：new input/reference、multimodal near-dup、new/segregated evaluator secret、clean environment、non-joinable IDs、purpose ACL、pilot discrimination。
+6. **[P]** 用 gated EaaS + **agent/scoring 两个 trust domains** + controlled network + identity/model-lineage feedback controls + tamper-evident logs + 分型传感器 + independent audit/appeal。
+7. **[P]** 在上线前预建 quarantine、broken-task disclosure、submission_pause/unpause、repair/replacement、score-treatment matrix 和 false-positive/no_change path。
+8. **[P]** 保存 raw artifact/trace/log 与 old graders，用于 bounded regrade；无法保留时预先声明 `not_regradable`。
+9. **[P]** 每个 release 先做 common-agent paired bridge；native score 始终 primary，linked estimate 始终 secondary；证据不够就 `not comparable`。
+10. **[P]** 同时维护 historical snapshot、current live、bridge analysis；corrected/alternate/bridge 视图分离；coverage 不完整不重排全榜。
+11. **[P]** 定期 review saturation、discrimination、contamination、environment、license、grader、obsolescence、client change、safety；所有 operational thresholds 由客户/pilot 冻结。
+12. **[P]** 私有集提供受控独立 audit 与不泄漏 oracle 的 defect appeal；secrecy 不能成为拒绝 validity audit 的理由。
+
+### 13.2 最小数据对象
+
+```yaml
+workflow_family_id: wf_...
+asset_id: inst_...
+asset_version_id: inst_...@v...
+asset_lifecycle_status: proposed|implemented|validated|accepted|quarantined|repaired|retired
+pool_assignment:
+  purpose: development_demo|restricted_validation|private_final|rotation_reserve|training
+  effective_from: ...
+  effective_to: null
+access_class: public|identity_gated|private_service|audit_only
+release_memberships:
+  - {release_id: ..., role: native_unseen_core|linking_anchor|public_dev|validation, effective_from: ..., effective_to: ...}
+manifest_hash: sha256:...
+input_bundle_hash: sha256:...
+reference_version: ...
+evaluator_version: ...
+environment_version: ...
+license_snapshot: ...
+exposure_relations:
+  - {surface: ..., actor_org: ..., model_lineage: ..., first_known_time: ..., evidence_strength: ...}
+global_eligibility_decision: ...
+validation_evidence: []
+incident_ids: []
+lineage_edges:
+  - type: repairs|supersedes|replaces|derived_from
+    from_asset_id: ...
+    from_asset_version_id: ...
+    to_asset_id: ...
+    to_asset_version_id: ...
+    exception_authority: null
+    exception_reason: null
+archive_disposition: null
+proposal_disposition: null
+change_record:
+  actor: ...
+  timestamp: ...
+  reason: ...
+  approved_by: ...
+```
+
+### 13.3 Candidate implementation deliverables for a client-defined window
+
+本报告不承诺 90-day 或任何日历窗口。只有客户明确给出时间约束、依赖、审批/采购 lead time，并用 pilot 测得 effort、acceptance/rework 和 throughput 后，才能产出 full/partial/infeasible scope scenarios 与 stop/rescope conditions。
+
+- **Governance package：** pool policy、state machine、RACI/authority、version vector、change/incident/disclosure templates。
+- **Registry prototype：** assets、families、exposure、access、runs、scores、incidents 的 append-only schema；manifest/hash/signature workflow。
+- **Control pilot：** EaaS、network modes、feedback regimes、logging/canary、appeal/audit 的最小 end-to-end run。
+- **Measurement pilot：** 分层 authoring/acceptance、grader validation、run variance、near-dup/detector、bridge/rank-stability、reserve attrition variables。
+- **Release decision：** 用 measured variables比较三种 policy；明确 binding constraints、remaining uncertainty、stop/rescope conditions。
+
+### 13.4 Policy-spec release-gate tests
+
+修订版包含五个**规范逻辑**桌面测试：reference leak 不能靠 regrade 恢复 unseen；agent/scoring worker trust domains 分离；public anchor/private unseen/reserve 可无歧义并存；false-positive contamination 可 no_change/unpause；repair 创建新 version 且旧 version 身份与状态不被覆写。测试记录见 [release-gate tests](qa/release_gate_tests.md)。这不等于生产 IAM/EaaS/registry/leaderboard 已实现或通过 penetration test；实现验证仍为 [V]。
+
+## 14. 必须由客户确认的问题
+
+### 14.1 Decision 与 unit
+
+1. 最终 score 将授权什么：研发方向、供应商选择、客户 acceptance、采购、安全 assurance，还是对外 leaderboard？可接受 false ranking/false confidence 风险是什么？
+2. “1,000 assets”究竟是 workflow families、workflows、accepted concrete runnable instances，还是合同定义的 mixture？是否排除 proposed、rejected、quarantined、retired、重复 run 和 submission？
+3. 目标 claim 是首次处理未知 workflow、同 family 新实例泛化、允许开放互联网的真实执行，还是在公开任务上的工程优化？
+
+### 14.2 Pool 与 access
+
+4. Public subset 的主功能优先级：example、developer practice、harness integration、debug、external audit、representativeness check？哪些不能同时满足？
+5. Private final 的主功能：frontier discrimination、customer acceptance、unseen generalization、安全/合规 assurance，还是 procurement decision？
+6. 哪些角色/客户/供应商需要 dev、validation、final、reserve、archive access？哪些角色必须分权？
+7. 模型以 API、container、weights、remote agent 哪种方式进入 EaaS？IP、data residency、export、subprocessor、network 和 credentials 限制是什么？
+8. Private/raw evidence 对 independent auditor、researcher 和 appeal 可开放到什么层级？NDA、redaction、retention 和解封条件是什么？
+
+### 14.3 Feedback、污染与 incident
+
+9. Query budget 绑定个人、组织、model lineage、harness、customer program 还是组合？需要何种合法 debug、reliability repeat、exception 和 appeal？
+10. Public/restricted/final 分别可返回 task-level score、pass/fail、error、trace、rank、aggregate score 到什么粒度和延迟？
+11. Open web、allowlist、controlled mirror、offline 哪种模式符合 target construct？允许 enterprise KB、shared memory、human escalation 吗？
+12. Threat actors 包括哪些：模型供应商、外部参评者、内部员工、专家、数据/工程 vendor、平台管理员？风险容忍和通知对象是谁？
+13. Canary/watermark 的 modality、可接受 utility 影响、key custody、per-recipient marking 合法性、trigger confidence 和 false-positive workflow 是什么？
+14. Incident 的 freeze authority、严重度、通知时限、证据保留、legal/safety redaction、appeal authority 和公开 disclosure 边界是什么？
+
+### 14.4 Lifecycle、metrics 与 comparability
+
+15. 谁拥有 proposed→accepted、activation、quarantine、repair、retire、replace、unfreeze 的 decision rights？作者能否批准自己的 asset？
+16. 哪些 evaluator/environment 变化仍算 compatible repair，哪些必须 new ID/major release？
+17. Historical regrade 需要保留哪些 artifacts/logs；最低 coverage；missing submissions 如何处理；original/corrected 谁是 current official？
+18. Metric 的 reporting unit、workflow/domain weighting、partial credit、full pass、invalid/timeout/infra/broken handling、repeat aggregation、tie/uncertainty policy 是什么？
+19. Anchor 的 coverage、保密期、reuse、退出条件；common agents、repeats、bridge model、linked-estimate acceptance 与有效期是什么？
+20. 哪些情况允许正式结论为 `not comparable`，而不是业务强制生成趋势线？
+
+### 14.5 Rights、change 与 reserve
+
+21. 哪些 assets 可公开、训练、第三方 audit、客户特定评测？客户/第三方数据能否进入 archive、regrade 或未来 research？
+22. 目标 workflow、法律/许可、app/API/OS、模型供应商和客户需求的 change owner/authoritative source 是什么？
+23. Reserve 要覆盖怎样的 planning horizon 和 risk scenarios？Emergency promotion 与普通 promotion 的 gate 有何不同？
+24. 客户离场、合同终止、license 撤回、data deletion 或 safety incident 时，payload、tombstone、logs、leaderboard、regrade evidence 如何处理？
+
+## 15. 反方证据、失败案例与回应
+
+### 15.1 “完全开放更容易审计，私有集制造黑箱”
+
+**[E]** Public benchmark surfaces enable direct third-party inspection and reproduction in their released scope. **[I]** 因此完全保密会增加 bias/representativeness、grader defect、appeal 对 operator 的依赖；强 gating 也增加参与门槛。**[P] 回应：** 采用 tiered transparency：公开 construct、taxonomy、method、aggregate stats、version history、synthetic/examples；受控 independent audit raw surface；提供不泄漏 oracle 的 appeal；退役后按风险延迟披露。
 
 ### 15.2 “Private/EaaS 已经解决污染”
 

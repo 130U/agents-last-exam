@@ -174,7 +174,352 @@ flowchart LR
 
 Each runnable benchmark instance separates three components: a task specification, an agent, and an environment. The task specification is an executable `main.py` containing the instruction, input assets, required software, hidden references, and evaluation criteria. It exposes `load()` as a pure declaration of task metadata and compute requirements, `start()` to provision a deterministic initial state, and `evaluate()` to retrieve outputs or invoke a VM-side verifier and then score the result in `[0,1]` against isolated references or rubrics.
 
-The agent is a harness orchestrating a foundation model. It observes screenshots, shell output, and file contents; chooses mouse, keyboard, command-line, file, or API actions; and repeats until it delivers or…8870 tokens truncated…研发。**可验证、广泛采用的 metric 会集中工程注意力，让系统更快针对该能力进步。
+The agent is a harness orchestrating a foundation model. It observes screenshots, shell output, and file contents; chooses mouse, keyboard, command-line, file, or API actions; and repeats until it delivers or stops. The environment is a remote VM with four standard directories: read-only `input/`, pre-installed `software/`, writable `output/`, and hidden `reference/` material used only after the run.
+
+**中文对照**
+
+每个可运行 benchmark instance 被拆成三个可替换组件：task specification、agent、environment。task specification 是一个可执行的 `main.py`，编码任务说明、输入 asset、所需软件、隐藏 reference 和评价标准，并暴露三个生命周期函数：`load()` 纯声明任务 metadata 与算力要求、既不连接也不修改 VM；`start()` 配置确定性的初始状态；`evaluate()` 取回输出或调用 VM-side verifier，再依据隔离的 reference/rubric 把结果评分到 `[0,1]`。
+
+agent 由 harness 编排 foundation model。它观察截图、shell 输出和文件内容，选择鼠标、键盘、命令行、文件或 API 动作，循环执行，直到提交或停止。environment 是远程 VM，采用四目录契约：只读的 `input/`、预装应用的 `software/`、唯一交付目录 `output/`、以及运行期间对 agent 隐藏、仅供评分的 `reference/`。
+
+```mermaid
+sequenceDiagram
+    participant T as Task specification
+    participant V as VM environment
+    participant A as Agent = harness + model
+    T-->>T: load()：声明 task / metadata / compute
+    T->>V: start()：配置 VM、输入与软件初始状态
+    T->>A: 只给 description + metadata
+    loop action loop
+        A->>V: GUI / CLI / file / API action
+        V-->>A: screenshot / output / state
+    end
+    A-->>T: 结束并留下 output artifacts
+    T->>V: evaluate()：取回 output 或调用 VM verifier
+    T-->>T: 对隔离的 reference/rubric 评分，返回 [0,1]
+```
+
+### 3.2 Agent Architecture / 从 CLI、GUI Agent 到 GCUA
+
+**English faithful paraphrase**
+
+ALE divides operational agent capability into five layers. The Brain provides reasoning and planning; Eyes perceive GUI state; the Body manages orchestration and control flow; Hands expose structured tools; and Feet provide the runtime where actions take effect. CLI agents usually lack visual perception, while GUI agents often have a shallow orchestration layer and a narrow mouse-and-keyboard tool surface. ALE targets a generalist agent that combines all five.
+
+Contemporary harnesses are described as more than a thin reasoning loop. They construct modular system prompts, expose unified tools, dispatch sub-agents, and compact context during long runs. ALE primarily adds GUI operations as normal tools inside the main loop. A separate visual GUI sub-agent can be used for models without native vision.
+
+**中文对照**
+
+ALE 把智能体的操作能力拆成五层：Brain 负责推理与规划；Eyes 读取 GUI 状态；Body 负责 orchestration 与 control flow；Hands 暴露结构化工具；Feet 是动作实际发生的 runtime。传统 CLI agent 通常没有视觉 Eyes；GUI agent 虽能看屏幕和点击，但常常缺少强 Body、广 Hands 和完整 Feet。ALE 要测的是五层合一的 generalist agent。
+
+论文所说的现代 harness 也不只是一个薄 ReAct loop。它会组装模块化 system prompt、统一管理工具、调度 sub-agent，并在长运行中压缩 context。ALE 的主评测方式是把 GUI 操作作为普通工具加入同一个主循环；对没有原生视觉输入的模型，也可把 GUI 交给单独视觉 sub-agent。
+
+**本文归纳**
+
+ALE 的观测分数属于完整“被测 agent + 评测条件”组合：**model × harness** 在指定的 **prompt/tools × GUI bridge × environment/runtime × budget × evaluator** 下运行。即使论文观察到所测样本中 model 差异大于 harness 差异，也不能把 ALE 误称为“裸模型 benchmark”。
+
+### 3.3 Evaluation Modes / 异质交付物如何评分
+
+**English faithful paraphrase**
+
+Because outputs range from financial workbooks and software programs to meshes, rendered scenes, and interactive world states, ALE does not force every task into one metric. Authors choose among exact or hashed values, structured fields with tolerances, geometric distances, visual comparison, behavioral state replay, semantic rubrics, and execution against held-out tests or an oracle.
+
+Signals are composed through gate-and-score, weighted rubrics, binary-checklist averages, or pairwise file aggregation. Gate-and-score is common: a hard validity condition must pass before a continuous quality score is considered. A machining output, for example, can receive zero if a collision gate fails even when its shape is otherwise close to the reference.
+
+Deterministic code is preferred whenever the artifact can be reduced to bytes, fields, geometry, world state, or executable behavior. The open reference tree is reported as 93.2% code-based and 6.8% LLM-as-judge. When model judging is unavoidable for visual or creative artifacts, prompts are narrow, reference-grounded questions, and code performs the final aggregation.
+
+**中文对照**
+
+由于 ALE 的输出可能是财务 workbook、程序、3D mesh、渲染画面或交互世界状态，它不强迫所有 task 共用一个 metric。作者可以选择精确值/哈希、带容差的结构化字段、几何距离、视觉比较、固定轨迹下的行为状态、语义 rubric，或把可执行 artifact 放到隐藏测试集/标准程序上运行。
+
+这些信号再通过四种模式组合：gate-and-score、weighted rubric、binary checklist average、pairwise file aggregation。最常见的是 gate-and-score：必须先通过一个硬有效性条件，才计算连续质量分。例如加工结果即使外形接近 reference，只要碰撞 gate 失败，也可能直接得 0。
+
+只要 artifact 能还原为 bytes、fields、geometry、world state 或 executable behavior，ALE 就优先使用确定性代码。论文对开放 reference task tree 的静态分析是 93.2% code-based、6.8% LLM-as-judge。视觉/创意产物确实无法代码化时，model judge 只回答窄、以 reference 为依据的问题，最后权重与聚合仍由代码完成。
+
+**如何理解分数**
+
+- Mean Score 是 task-specific evaluator 的平均归一化部分分；它可能来自 checklist，也可能来自连续几何分、质量函数、weighted rubric 或 gate-and-score，因此没有统一的“完成多少评分项”含义。
+- Full Pass Rate 要求任务分数严格等于 `1.0`，即满足该 evaluator 编码的全部验收条件；一个关键 gate 缺失即可失去 full pass。
+- 二者的差距直接说明“部分满足 rubric，但未完整满足”；它本身不是现实世界可靠性的校准概率。
+
+## 4 Experiment / 实验
+
+### 4.1 Setup and Main Results / 设置与主要结果
+
+**English faithful paraphrase**
+
+In the main ALE evaluation (the upper part of Table 1), tested systems are configured as GCUAs through a common GUI-as-Tool bridge; the lower ALE-CLI block also includes CLI-only agents without desktop GUI access. The paper compares complete model–harness pairings, sweeps backbone models while fixing OpenClaw, and changes harnesses while fixing GPT-5.5 or Opus 4.7. Each task run has a five-hour wall-clock cap. The reported metrics include full-pass rate, mean score, aggregate API cost, wall-clock time, and token consumption. Where a configuration includes repetitions, the reported `±` comes from three independent runs of the same task instance; this does not mean the entire suite was repeated three times for every system.
+
+The public evaluation is organized into three tier views. Near-Term contains 67 tasks that current systems can partly complete and is intended for rapid iteration. Full-Spectrum contains 55 tasks, at least one from every subdomain, and is intended to test breadth. Last-Exam contains 38 of the hardest tasks and preserves long-term headroom. Their membership counts sum to 160, while Table 1 deduplicates 152 distinct public tasks; this may indicate tier overlap, but the paper also elsewhere reports 150 public tasks, so a frozen manifest is needed to separate overlap from snapshot drift. One task run typically costs about USD 3–10 and takes from tens of minutes to hours.
+
+Among the mainstream pairings in Table 1, Codex with GPT-5.5 records the highest overall distinct-task full-pass rate, 24.0%. Its Near-Term Pass/Score is 38.1/64.7, Full-Spectrum is 22.7/36.0, and Last-Exam is 0.0/11.2. ALE-Claw with GPT-5.5 records 23.0% overall and 2.6/12.8 on Last-Exam. Claude Code with Fable 5 records 22.0% overall and 0.0/5.2 on Last-Exam. Most mainstream configurations fully pass zero of the 38 hardest tasks; a few pass one, which appears as 2.6%.
+
+The paper also evaluates CLI agents on 105 Linux-only tasks. Codex with GPT-5.5 reaches 23.3% overall full pass, with 37.2%, 19.0%, and 0.0% across Near-Term, Full-Spectrum, and Last-Exam; the paper contrasts this with the system's 82% on Terminal-Bench. ALE-Claw is a simplified OpenClaw variant that retains the single action loop, modular tools, GUI-as-Tool, and context compaction; with the model fixed, it performs similarly to default OpenClaw.
+
+**中文对照**
+
+主 ALE 评测（Table 1 上半部分）把被测系统扩展为 GCUA 配置，并通过统一的 GUI-as-Tool bridge 接入桌面操作；下半部分 ALE-CLI 还包含没有 GUI desktop access 的 CLI-only agent。论文既比较完整的 model–harness 组合，也固定 OpenClaw 更换 backbone model，还分别固定 GPT-5.5 或 Opus 4.7 更换 harness。每个 task run 最多 5 小时。表中同时报告 Full Pass Rate、Mean Score、总 API cost、总 wall-clock time 和 token 使用量。若某配置包含重复运行，表中的 `±` 来自同一个 task instance 的三次独立运行；这不等于每个系统都把整套 suite 重跑三次。
+
+公开评测被组织成三个 tier 视图：
+
+- **Near-Term，67 题**：当前系统已经能部分推进，面向快速迭代。
+- **Full-Spectrum，55 题**：每个 subdomain 至少一题，面向广度。
+- **Last-Exam，38 题**：最难的一组，面向阶段性里程碑，而非日常调参。
+
+单个前沿 agent 运行一题通常花费约 3–10 美元，持续几十分钟到数小时。
+
+Table 1 的代表性结果如下；Pass 与 Mean Score 均按 `0–100` 显示，例如 `64.7` 对应平均归一化部分分 `0.647`：
+
+| 完整配置 | Near-Term Pass / Score（%） | Full-Spectrum Pass / Score（%） | Last-Exam Pass / Score（%） | Overall Full Pass（%） |
+|---|---:|---:|---:|---:|
+| Codex + GPT-5.5 | 38.1 / 64.7 | 22.7 / 36.0 | 0.0 / 11.2 | 24.0 |
+| ALE-Claw + GPT-5.5 | 32.8 / 67.4 | 23.6 / 41.1 | 2.6 / 12.8 | 23.0 |
+| Claude Code + Fable 5 | 34.3 / 63.4 | 20.9 / 34.1 | 0.0 / 5.2 | 22.0 |
+
+Last-Exam 的分母是 38，因此 `2.6% ≈ 1/38`，`0% = 0/38`。v2 摘要的 `<1%` 是主流 model–harness 配置在 Last-Exam 上的 **平均** Full Pass Rate；它与个别配置的 0% 或 2.6% 可以同时成立。
+
+**计数口径提醒**
+
+三个 tier 的成员数相加是 `67 + 55 + 38 = 160`，而 Table 1 caption 说 Overall 对三档中的 distinct tasks 去重，§4 文本又写 152 个 distinct public tasks；这些证据提示 tier **可能**有重叠。与此同时，§2.3、Figure 5 与 Appendix B 的 inventory 又写 150 个 public task，因此不能仅凭加总反推出一个固定重叠关系。应把 overlap 与快照/manifest 漂移一起标记，复现时以冻结 manifest 为准。
+
+**ALE-CLI 补充实验。**论文另在 105 个 Linux-only 任务上比较 CLI agent。Codex + GPT-5.5 的 Overall Full Pass Rate 为 23.3%，Near-Term / Full-Spectrum / Last-Exam 分别为 37.2% / 19.0% / 0.0%；作者把这与该系统在 Terminal-Bench 上的 82% 作对照，用来说明 ALE-CLI 覆盖的专业交付仍显著更难。ALE-Claw 则由 OpenClaw 简化而来，保留单循环、模块化工具、GUI-as-Tool 与 context compaction；固定模型时，论文报告它与默认 OpenClaw 表现相近。
+
+### 4.2 Analysis / 分析
+
+**English faithful paraphrase**
+
+Across the selected public task set, GPT-5.5 and Fable 5 show broadly similar domain profiles when scores are averaged over harnesses with completed runs; sparse Transportation is excluded. Computational mathematics and agriculture/environment are strongest at roughly 55%–85%, business and legal form a middle group around 50%–55%, and education is below 25%. The authors suggest that this may reflect both underlying model capability and unequal training exposure to specialized tool-use workflows.
+
+Tool traces show that both the model and the harness affect the action mix. Although graphical software is listed as the primary tool for 34% of public tasks, GUI calls remain relatively rare. Agents often try to replace the intended professional application with shell scripts or ad-hoc code.
+
+In the paper’s model-mediated classification of failed Claude Code + Opus 4.7 runs, Approach errors account for 47%, Understanding for 31%, and the remaining classified errors for 22%. Within those categories, wrong strategy is 30%, incomplete or abandoned work 17%, domain-knowledge gaps 25%, hallucination or fabrication 6%, wrong output format 10%, implementation bugs 8%, and GUI/browser failure 4%. The hierarchy places GUI/browser failure under Infrastructure, while the distribution paragraph folds it into the remaining Execution errors. The authors interpret the combined Understanding and Approach share as evidence that knowledge and strategy are more limiting than low-level execution; this is an interpretation, not the only causal conclusion available from the percentages.
+
+**中文对照**
+
+在 selected public task set 上，GPT-5.5 与 Fable 5 的分数按“有完成运行的 harness”取平均，并排除样本稀疏的 Transportation 后，显示出大体相似的领域轮廓：计算/数学与农业/环境约 55%–85%，business 和 legal 约 50%–55%，education 低于 25%。作者推测，这可能同时反映模型底层能力差异，以及训练时对代码相关工具任务与专业工作流的暴露不均。
+
+工具轨迹显示，model 和 harness 都会改变 action mix。虽然 34% 的公开任务把图形软件列为主要工具，实际 GUI 调用仍相对少；agent 经常尝试用 shell script 或临时代码替代原本的专业应用。
+
+论文只对 **Claude Code + Opus 4.7** 的失败 public-task runs 做了模型辅助分类：
+
+| 一级类 | 二级原因 | 占可分类失败 |
+|---|---|---:|
+| Approach | Wrong Strategy | 30% |
+| Approach | Incomplete / Abandoned | 17% |
+| Understanding | Domain Knowledge Gap | 25% |
+| Understanding | Hallucination / Fabrication | 6% |
+| Execution | Output Format Error | 10% |
+| Execution | Implementation Bug | 8% |
+| Infrastructure in hierarchy | GUI / Browser Failure | 4% |
+
+合计为 Approach 47%、Understanding 31%、其余 22%；最大二级类是 Wrong Strategy（30%），其次是 Domain Knowledge Gap（25%）。论文的 taxonomy hierarchy 把 GUI/Browser Failure 放在 Infrastructure，但分布段又把它并入“remaining 22% Execution errors”，存在内部标签不一致。作者把 Understanding + Approach 的高占比解释为知识/策略是主要瓶颈；这是作者解释，不是百分比分布唯一推出的因果结论。该分析只覆盖一个配置，且由 Codex 分析卡 + GPT-4o 分类并排除 timeout/resource case，不能推广到所有 agent。
+
+## 5 Related Work / 相关工作
+
+**English faithful paraphrase**
+
+The paper separates prior evaluations into three families. Exam-style benchmarks such as MMLU, GPQA, and HLE test short-form knowledge. Agent and computer-use benchmarks such as GAIA, SWE-bench, OSWorld, WebArena, and Terminal-Bench add multi-step interaction but focus on comparatively few software-centered domains. GDPval and the Remote Labor Index are closer to professional project evaluation, but under ALE’s own mapping they cover fewer subdomains and depend on expert human grading.
+
+ALE’s claimed distinction is the combination of practitioner-sourced projects, long horizons, coverage across its entire taxonomy, and mostly automated artifact-based verification. The comparison uses an ALE-authored taxonomy and an LLM-assisted mapping, so the reported breadth advantage is an author-produced comparison rather than an independent audit.
+
+**中文对照**
+
+论文把既有评测分成三组：
+
+- MMLU、GPQA、HLE 等考试/问答 benchmark，主要测短形式知识；
+- GAIA、SWE-bench、OSWorld、WebArena、Terminal-Bench 等 agent/computer-use benchmark，引入多步交互，但集中在相对少量的软件领域；
+- GDPval 和 Remote Labor Index，更接近专业项目评测，但按 ALE 自己的 mapping 覆盖较少 subdomain，并依赖专家人工评分。
+
+ALE 声称自己的差异，是把从业者真实项目、长程执行、taxonomy 全覆盖和大多数 artifact-based 自动验收放在一起。需要注意，coverage 比较使用 ALE 自己设计的坐标系和 LLM-assisted mapping，因此它是作者完成的比较，不是第三方独立审计。
+
+## 6 Conclusion / 结论
+
+**English faithful paraphrase**
+
+The conclusion describes ALE as 960 expert-authored task workflows and 1,490 task instances across 55 digital fields. Tasks are based on work that specialists have previously delivered and are evaluated with deterministic checks or structured rubrics instead of open-ended model judgment. Current agents fully solve only a small fraction. The authors present eventual benchmark saturation as a signal that agents can sustain tool-intensive professional work and as a possible bridge between benchmark progress and economically meaningful deployment. This conclusion-level “960 workflows” is not demonstrably identical to Figure 5's “960 external-submission variants”; the paper gives no one-to-one mapping, and 323 of the 1,490 Figure 5 items remain pending QC.
+
+**中文对照**
+
+结论把 ALE 概括为：覆盖 55 个数字工作领域、包含 960 个专家编写的 task workflow 和 1,490 个 task instance；任务来自专家已经交付过的工作，并用确定性检查或结构化 rubric，而非开放式模型意见进行评估。当前 agent 只能完整通过很小一部分。作者把未来的 benchmark saturation 描述为一种信号：agent 已经能够持续执行工具密集的专业工作，并可能把 benchmark 进步连接到有经济意义的部署。这里的“960 workflows”不能直接当作 Figure 5 的“960 external-submission variants”：论文没有给出两种单位的一一映射，而且 Figure 5 的 1,490 项中仍有 323 项 pending QC。
+
+**证据边界**
+
+论文没有 matched human baseline，没有按劳动力市场权重抽样，也没有测实际部署或 GDP。因此“饱和意味着工业采用/GDP 影响”是作者的愿景性解释，不是这项实验已经建立的预测效度。
+
+## Acknowledgments and Appendix A / 致谢与作者信息
+
+**English faithful paraphrase**
+
+Appendix A records the organization and execution team, advisory committee, a large set of data contributors, and their affiliations. The paper names UC Berkeley as the leading institution. The funding disclosure thanks the Tianqiao & Chrissy Chen Institute, Snorkel AI, and UniPat AI for financial and credit support.
+
+**中文对照**
+
+Appendix A 列出组织与执行团队、顾问委员会、大量数据贡献者及其单位，并把 UC Berkeley 写为 leading institution。资金披露感谢 Tianqiao & Chrissy Chen Institute、Snorkel AI 与 UniPat AI 提供 financial and credit support。完整长名单保留在原文，不在本稿重复。
+
+## Appendix B Benchmark Construction Details / Benchmark 构建细节
+
+### B.1 Taxonomy Details / Taxonomy 细节
+
+**English faithful paraphrase**
+
+Appendix B defines the in-scope construct as valuable professional work whose primary outputs can be produced through digital interfaces, software, files, and APIs; requires domain expertise; and yields objectively assessable artifacts. SOC 2018 supplies the occupational backbone and O*NET supplies task, activity, and technology records. A fixed temperature-zero classifier screens 1,016 O*NET 30.2 entries, consolidation leaves 117 SOC base codes, and expert-reviewed grouping produces 51 SOC-anchored workflow subdomains. Four frontier subdomains and seven extensions address emerging work that older occupational classifications under-specify.
+
+Four landscape examples illustrate the intended unit of work: manufacturing and industrial operations; biomolecular structure and design; 3D, animation, and interactive media; and robotics and autonomous systems. Each is described through coupled handoffs, realistic tools, inputs, and final artifacts, not through isolated actions.
+
+**中文对照**
+
+附录 B 把范围定义为：主要输出可以通过数字界面、软件、文件与 API 产生，需要领域知识，并形成客观可评估 artifact 的有价值专业工作。SOC 2018 提供职业骨架，O*NET 提供 task、work activity 与 technology 记录。团队以 temperature 0 的固定 classifier 初筛 1,016 条 O*NET 30.2 记录，合并后得到 117 个 SOC base code，再经专家复核的 workflow grouping 形成 51 个 SOC-anchored subdomain。传统职业分类不足以描述的新兴工作，则通过 4 个 frontier subdomain 和对 7 个既有 subdomain 的 extension 补入。
+
+附录用四个领域 landscape 解释它想收什么样的任务：制造与工业运营、生物分子结构与设计、3D/动画/交互媒体、机器人与自主系统。每个 landscape 都强调多环节 handoff、真实软件、输入和最后 artifact，而不是孤立动作。
+
+### B.2 Detailed Construction and QC / 生产与 QC 细节
+
+**English faithful paraphrase**
+
+Targeted recruitment begins with advisory committees and practitioners who perform complex software workflows in daily work. The submission portal keeps structural overhead low and asks contributors to upload earlier projects. AI-assisted editing completes the instruction, inputs, software, expected outputs, and evaluation plan. First-pass review returns conference-style decisions. Engineering then provisions the environment, implements the evaluator, dry-runs the instance, and automatically routes gaps back to the expert. Final committee QC examines reproducibility and evaluation integrity, including reference correctness, reasonable tolerances or bounds, and sufficient problem context.
+
+**中文对照**
+
+生产从定向招募开始：顾问委员会按 taxonomy 缺口寻找日常确实执行复杂软件工作流的从业者。提交 portal 尽量降低专家的结构化负担，让其上传过去做过的项目，再用 AI-assisted editing 补齐 instruction、input、software、expected output 和 evaluation plan。first-pass review 给出 conference-style decision。工程阶段配置环境、实现 evaluator、dry-run，并把缺口自动退回专家。最终委员会 QC 同时检查 reproducibility 与 evaluation integrity，包括 reference 是否正确、容差/评分边界是否合理、问题上下文是否充分。
+
+Figure 5 的 frozen-v2 数字是：
+
+| 来源/状态 | Public | Private | Unverified / pending QC | 合计 |
+|---|---:|---:|---:|---:|
+| External-submission variants | 102 | 601 | 257 | 960 |
+| Commissioned-build variants（internally authored） | 48 | 416 | 66 | 530 |
+| **合计** | **150** | **1,017** | **323** | **1,490** |
+
+外部提交还按 first-pass verdict 细分：Strong Accept 128、Accept 369、Borderline Accept 157、Minor Revision 158、Major Revision 148。图中的 `public + private = 1,167` 只表示已进入这两种 release state；`323` 仍待验证，不能把 1,490 全部说成“已经通过最终 QC 的 runnable benchmark”。Figure 5 的 960 是 external-submission **variants**；C.3.7/Conclusion 所称 960 是 **task workflows**。论文复用了数字，却没有证明两个集合一一对应。
+
+### B.3 Task Cards / 任务卡
+
+**English faithful paraphrase**
+
+Representative task cards expose the agent-facing request, inputs, required deliverables, rubric, observed score, and observed outcome. Their purpose is to connect aggregate benchmark claims to concrete instances. The appendix points to an online inventory of the selected public tasks.
+
+**中文对照**
+
+代表性 task card 会展示 agent-facing request、输入、所需交付物、rubric、实测分数和结果，用来把 aggregate benchmark 统计还原到具体 instance。附录同时指向公开任务 inventory。
+
+## Appendix C Evaluation Pipeline Details / 评测细节
+
+### C.1–C.2 Architecture and Lifecycle / 架构与生命周期
+
+**English faithful paraphrase**
+
+Appendix C expands the task–agent–environment separation and the `load()`, `start()`, `evaluate()` protocol. C.1 says paper experiments use GCP VMs; the default has four vCPUs and 16 GB RAM, GPU tasks use an NVIDIA L4 configuration, and unusually heavy simulations can request larger machines. C.4.1, however, calls Azure desktop the Windows GUI backend, so the cloud-environment description is not fully consistent. Reference assets remain outside the agent-accessible workspace throughout execution and are accessible only to the evaluator during scoring.
+
+**中文对照**
+
+Appendix C 细化 task–agent–environment 的解耦，以及 `load()`、`start()`、`evaluate()` 三阶段协议。C.1 称论文实验使用 GCP VM：默认 4 vCPU、16 GB RAM，GPU task 使用 NVIDIA L4，少数重仿真任务可申请更大机器；但 C.4.1 又把 Azure desktop 称为 Windows GUI backend，因此论文的 cloud environment/backend 表述并不完全一致。reference 在整个执行期间始终位于 agent 可访问 workspace 之外，只有 evaluator 在评分时可访问。
+
+### C.3 Evaluation Taxonomy / 评分 taxonomy
+
+**English faithful paraphrase**
+
+Most open-sourced task workflows use host-side scoring after artifacts are copied out of the VM. A minority of these workflows require on-VM professional software, such as CAD/CAM kernels, licensed workbooks, or renderers. The comparison modes are exact or hashed values, structured tabular or numeric values, geometry, visual appearance, behavioral state, semantic text, and executable artifacts. Scores are composed with hard gates, expert weights, binary checklists, or multi-file aggregation.
+
+Static analysis of the open task tree reports 93.2% code-based workflows and 6.8% involving an LLM judge; 88.5% score on the host and 11.5% use an on-VM verifier. Model judges are reserved for artifacts that cannot be reduced to code and use narrow evidence-grounded probes. References are isolated, missing or malformed output receives a defined zero, and judge prompts/models are recorded with model-judged results.
+
+**中文对照**
+
+开放 reference task tree 中，多数 task workflow 把 artifact 移出 VM 后在 host 侧评分；少数 workflow 必须依赖 VM 内的 CAD/CAM kernel、licensed workbook 或 renderer。比较模式包括 exact/hash、结构化表格/数值、geometry、visual appearance、behavioral state、semantic text、executable artifact；组合方式包括 hard gate、expert weight、binary checklist 和多文件聚合。
+
+开放 task tree 的静态分析报告：93.2% workflow 使用 code-based judge，6.8% 涉及 LLM judge；88.5% 在 host 侧评分，11.5% 使用 VM-side verifier。model judge 只用于无法代码化的 artifact，并被限制成窄、证据锚定的问题。reference 与 agent 隔离；缺失或形状错误的 output 得到定义明确的 0，而不是让评测崩溃；model-judged result 会记录 judge prompt/model。
+
+### C.3.7 Workflow vs Instance / Workflow 与 Instance
+
+**English faithful paraphrase**
+
+One workflow can expose several variants that share the same evaluator. The manufacturing G-code workflow, for example, has 18 workpiece instances using the same collision gate and surface-comparison pipeline. Instance scores average into workflow scores, then industry and cluster aggregates. The “960 workflows” reported here cannot be silently identified with Figure 5's “960 external-submission variants,” because the paper changes unit labels without providing a mapping.
+
+**中文对照**
+
+一个 workflow 可以暴露多个共享 evaluator 的 variant。例如 manufacturing/G-code workflow 有 18 个不同工件 instance，共用同一套 collision gate 与 surface comparison。instance score 先聚合为 workflow score，再进入 industry/cluster aggregate。因此 960 workflow 与 1,490 instance 不是同一单位；这里的 960 workflows 也不能静默等同于 Figure 5 的 960 external-submission variants，论文未提供映射。
+
+### C.4 Harness Internals / Harness 内部
+
+**English faithful paraphrase**
+
+The representative harness loop covers initialization, context construction, a model call, action or final-delivery routing, tool-result collection, and overflow checks. Prompt components, file/shell/web/GUI tools, sub-agent dispatch, and multi-level context compaction all affect the measured system. ALE-Claw removes long-lived assistant features from OpenClaw and retains the single-task agent loop, reducing the system prompt substantially.
+
+**中文对照**
+
+代表性 harness loop 包括 initialization、context building、model call、action/交付路由、tool-result collection 和 overflow check。prompt 组件、file/shell/web/GUI tools、sub-agent dispatch 与多层 context compaction 都属于被测系统。ALE-Claw 从 OpenClaw 中移除维持长期个人助理所需的功能，只保留单任务 agent loop，并显著缩短 system prompt。
+
+## Appendix D Extended Results / 扩展实验
+
+### D.1 Public-Subset Representativeness / 公开子集代表性
+
+**English faithful paraphrase**
+
+For Claude Code + Opus 4.7, cluster-level pass rates on the public subset correlate with those on the full pool at Pearson `r = 0.89`, `p < 0.001`. The full pool is easier overall because the public release contains the complete Last-Exam tier whereas the private pool contains more Near-Term tasks.
+
+**中文对照**
+
+对 Claude Code + Opus 4.7，public subset 与 full pool 的 cluster-level pass rate 相关系数为 Pearson `r = 0.89, p < 0.001`。full pool 总体更容易，因为公开集包含完整 Last-Exam，而 private pool 的 Near-Term 比例更高。这支持一个配置下的“领域难度排序相关”，不能证明对所有 model、task 或 metric 都可交换。
+
+### D.2 Timeout / 超时
+
+**English faithful paraphrase**
+
+At the five-hour limit, the agent is stopped and existing artifacts are still graded. Across Table 1 runs, 3.8% hit the cap. On the paper's `0–100` display scale, timed-out runs have a mean score of 20.7, compared with 33.2 for runs that end earlier. Last-Exam has the highest timeout rate at 6.4%.
+
+**中文对照**
+
+到 5 小时上限后，agent 被停止，但已有 artifact 仍会评分。Table 1 的 run 中，3.8% 触顶；按论文 `0–100` 的显示尺度，timeout run 的 Mean Score 是 20.7，其他 run 为 33.2。Last-Exam timeout rate 最高，为 6.4%。timeout 同时受规划效率、harness 行为、应用延迟、算力与任务难度影响，不应简单等同于“模型不会推理”。
+
+### D.3 Failure Classification / 失败分类
+
+**English faithful paraphrase**
+
+Codex first reads the run artifacts for each failed instance and writes an evidence-linked analysis card. GPT-4o at temperature zero then assigns a two-level failure category. The process excludes the full raw transcript for cost reasons and removes timeout/resource cases from the reported distribution.
+
+**中文对照**
+
+第一阶段由 Codex 读取每个失败 instance 的 run artifact，生成带 evidence pointer 的 analysis card；第二阶段由 temperature 0 的 GPT-4o 指派两层 failure category。出于成本考虑，流程不读取完整 raw transcript；timeout/resource case 也不进入报告的 47/31/22 分布。因此该分布是模型辅助、单配置的描述性结果，不是人工审计过的普遍因果真值。
+
+### D.4 Model vs Harness / 模型与 Harness
+
+**English faithful paraphrase**
+
+With OpenClaw fixed, changing among 12 backbone models yields a 16.8-percentage-point range in overall pass rate. With the model fixed, changing the harness yields 4.9 points for GPT-5.5 and 7.2 points for Opus 4.7. The authors describe the model range as roughly three times the harness range among the systems tested.
+
+**中文对照**
+
+固定 OpenClaw、替换 12 个 backbone model，Overall Pass Rate 的跨度为 16.8 个百分点；固定 GPT-5.5 或 Opus 4.7、替换 harness，跨度分别为 4.9 与 7.2 个百分点。作者把它概括为所测成熟系统中 model spread 约为 harness spread 的三倍。range ratio 不是因果方差分解，不能推出“harness 不重要”。
+
+### D.5 Cost, Time, and Tokens / 成本、时间与 Token
+
+**English faithful paraphrase**
+
+More spending, wall-clock time, or token use does not reliably produce better scores. ALE-Claw with GPT-5.5 has the highest overall mean score, 45.8% on the paper's display scale, at a total API cost of USD 326—lower cost and time than several alternatives. Other systems consume far more tokens or time for comparable or worse results. The paper establishes a weak and non-monotonic relationship between resource use and score; it does not experimentally isolate which operational mechanism causes the efficiency differences.
+
+**中文对照**
+
+更多 API 花费、wall-clock time 或 token 并不稳定带来更高分。ALE-Claw + GPT-5.5 的 Overall Mean Score 为 45.8%（论文显示尺度），总 API cost 为 326 美元；一些其他系统消耗更多 token 或时间却只得到相近或更差结果。论文直接支持的是“资源使用与成绩关系较弱且不单调”，并没有通过实验分离究竟是哪种操作机制导致效率差异。
+
+### D.6 Per-Task Heatmaps / 逐题热力图
+
+**English faithful paraphrase**
+
+The final appendix visualizes every available task-instance score for each evaluated configuration across the three tiers. Rows are ordered by average difficulty, columns are grouped by harness, and missing runs are shown separately.
+
+**中文对照**
+
+最后三张 heatmap 展示各配置在 Near-Term、Full-Spectrum、Last-Exam 每个 task instance 上的得分；行按平均难度排序，列按 harness 分组，缺失 run 单独标示。它们强调 aggregate score 背后存在很强的逐题异质性。
+
+---
+
+# 第二部分：六个问题的直接、深入回答
+
+## 问题 1：为什么做 ALE？
+
+### 论文给出的动机链
+
+1. **Benchmark success 与真实效用脱节。**作者观察到，AI 在游戏、数学、编程测试上不断突破，但核心行业的可测量转型没有以同样速度发生。
+2. **作者把其中相当一部分归因于 evaluation gap。**短问答、单一 GUI action、合成环境或窄代码任务，不能持续测量真实专业 workflow。
+3. **Benchmark 会反向塑造研发。**可验证、广泛采用的 metric 会集中工程注意力，让系统更快针对该能力进步。
 4. **专业工作 benchmark 缺三者合一。**真实长程任务收集贵、跨行业专家难组织、异质交付物难自动验收，所以既有工作往往在 realism、breadth、verifiability 中至少牺牲一项。
 5. **ALE 的方案。**用专家既有项目支撑来源真实性，用 SOC/O*NET taxonomy 组织覆盖范围，用 artifact/state grader 提供可执行、可重复的验收代理；这些机制都不能自动保证真实性、劳动市场代表性或完整专业有效性。
 

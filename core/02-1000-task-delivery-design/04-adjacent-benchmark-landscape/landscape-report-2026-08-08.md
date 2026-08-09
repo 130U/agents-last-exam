@@ -176,7 +176,72 @@
 以下均为**[研究员推断]**的替代解释；部分机制有直接incident/audit证据，但不等于相关leaderboard entry已被证明作弊。
 
 - 公开issue/gold/test history的solution reproduction；公开grader/test被读取、修改或针对性优化。
-- final-state evaluator对合法路径false negative…1120 tokens truncated…s和refresh/retirement rule。缺少任一关键部分的是proposal或prompt，不是completed asset。
+- final-state evaluator对合法路径false negative，或测试过宽接受错误artifact。
+- best-of-N、retry/effort、tool schema、parser、browser/OS image、network、resource limits不同。
+- LLM judge自偏好、顺序/风格偏差或prompt/version变化。
+- live leaderboard的best-per-task oracle envelope，不是单一deployable agent。
+
+### 8.4 合理但公开数据不足的建议
+
+以下均为**[项目建议]**需要pilot决定的变量。
+
+- 本项目应有多少public/private、多少repeated trials、多少matched human tasks、每种evaluator占比、rotation周期、各领域配额。
+- 每种专家角色人数、每task工时/成本、一次通过率、rework轮次、总工期。
+- 可接受的evaluator FP/FN、environment failure与run variance阈值。
+
+以上均应先由pilot和intended-use risk定义，不在本报告编造精确值。
+
+## 9. 对 1,000-task 项目的具体决策影响
+
+### 9.1 产品范围
+
+**[项目建议]** 把产品定义为 `living, executable, versioned professional-work benchmark program`。交付单位以runnable instance计数时，合同仍必须同时给出workflow数与variant分布。范围可包含四类portfolio，但比例必须来自客户sampling frame和pilot：
+
+1. professional deliverables（ALE/RLI/GDPval启发）；
+2. GUI/web/OS workflows（OSWorld/WebArena/WorkArena++启发）；
+3. coding/terminal/cross-environment（SWE/TB/CRAB启发）；
+4. structured professional files（SpreadsheetBench2/MBABench启发）。
+
+### 9.2 Task selection
+
+**[项目建议]** 先写 intended use、target user/population、不可声称的结论，再建立 `domain → subdomain → workflow family → instance` sampling frame。每个候选同时打四层realism、business/occupational relevance、workflow dependency、rights、environment feasibility与evaluator feasibility；真实性高但暂不可可靠验证的项目可进入research queue，而非用弱grader强行上线。
+
+### 9.3 专家组织
+
+**[项目建议]** 按职责隔离，不预设精确人数：domain/workflow creator、independent domain solver、evaluator/rubric designer、environment engineer、independent QC reviewer、adversarial evaluator reviewer、rights/security reviewer、incident adjudicator、benchmark scientist和program manager。关键规则是creator不能独自完成final QC；reference、evaluator和release approval至少有独立审查路径。
+
+### 9.4 生产流程与gate
+
+```text
+sampling-frame approval
+  → source/rights intake
+  → workflow spec + construct map
+  → independent solvability review
+  → reference deliverable
+  → environment/evaluator implementation
+  → oracle + alternate-solution + near-miss tests
+  → agent dry runs + failure taxonomy
+  → cross-review + red team + leakage scan
+  → release-state decision
+  → monitored evaluation / incident / rotation / retirement
+```
+
+**[项目建议]** 每个gate记录 accepted/rejected/rework及reason code。公开ALE或其他项目的funnel只能作为流程证据，不能作为本项目yield目标。
+
+### 9.5 Evaluation（以下均为[项目建议]）
+
+- 输出层：硬gate（文件存在/可打开/安全）+ component partial credit +专业quality rubric。
+- evaluator层：deterministic checks优先；LLM/VLM只用于难形式化维度，并固定model/prompt/revision、测agreement与bias；高风险样本human adjudication。
+- protocol层：固定agent manifest、预算、network、retry与failure codes；pilot repeated trials决定正式次数和aggregation。
+- validity层：matched human subset、alternate valid solutions、shortcut tests、environment health与fresh-task generalization。
+
+### 9.6 基础设施
+
+**[项目建议]** 需要immutable asset/evaluator revision、OS/container/image digest、software/license registry、reset与health check、sealed reference/evaluator storage、network policy、run scheduler、trace/artifact/usage capture、incident replay、role-based access、public/private promotion与retirement。单一Docker并不能覆盖ALE-style licensed GUI任务；需按environment archetype管理。
+
+### 9.7 QA 与交付标准
+
+**[项目建议]** 每个accepted runnable instance至少交付：identity/revision、construct map、source/rights、task spec、inputs、reference、environment rebuild、evaluator及测试、oracle success、alternate/near-miss/shortcut cases、run protocol、dry-run traces、review approvals、release state、known limitations和refresh/retirement rule。缺少任一关键部分的是proposal或prompt，不是completed asset。
 
 ### 9.8 成本与排期
 

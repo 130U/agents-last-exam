@@ -227,149 +227,98 @@
 
 ## 建议
 
-1.…4568 tokens truncated…`
-- Evaluator：deterministic；structured artifact / exact-or-tolerant field checks; hard gate plus partial/continuous score
-- 代表性：A PDF-to-chemical-table extraction task using structure-aware InChIKey comparison rather than string equality.
-- 标签：sample_task_candidate
-- 证据定位：Pinned GitHub task_card.json/main.py and aligned HF row at tasks/physical_sciences/lenacapavir_sar_table2_extraction.
+1. 将 `workflow_id` 与 `instance_id` 设为两个强制字段；禁止用 folder path 同时承担两种语义。
+2. 为每个 release 建 immutable manifest，包含 task revision、environment、inputs/reference digests、evaluator revision、judge config 与 QC status。
+3. 将 evaluator-first 作为 task selection gate：在 commissioning 前先写“可自动验证什么、不能验证什么、可能怎样被 gaming”。
+4. 对 semantic/visual tasks 使用 hard validity/structure gates + narrow evidence-anchored questions；不要把开放式整体印象 judge 当唯一得分源。
+5. 对 deterministic evaluator 做 construct-validity 与 mutation review；“代码评分”不是质量保证标签。
+6. Reference、evaluator 与 public gallery 分级发布；public sample 必须与 private rotating evaluation 隔离。
+7. 将 harness、retry、network、timeout 和 software license 状态纳入实验版本，而非只记录 model name。
+8. 分开报告 Full Pass、partial score、run failure、environment failure、judge failure 和 repeated-trial variance。
+9. 用独立 solver 做 blind solve；author 不得独自宣布 task 可解或 evaluator 正确。
+10. Pilot 结束前不承诺人数、周数、美元成本、通过率或 domain 配额；只承诺验证变量、决策门槛和重估日期。
 
-## 15. `transport_safety/abm_hangzhou_metro` — Hangzhou Metro Passenger Simulation
+## 可供样题设计参考的 10 条具体模式
 
-- Domain / subdomain：engineering / Urban & Spatial Planning
-- Tier / OS / snapshot：full-spectrum / Ubuntu Linux / cpu-free-ubuntu
-- Software：Python; uv; geopandas; matplotlib; networkx; numpy; pandas
-- Inputs → outputs：CSV; GeoJSON; JSON; uv Python environment manifest → CSV; text
-- Evaluator：deterministic；structured artifact / exact-or-tolerant field checks; executable / behavioral verifier
-- 代表性：An agent-based simulation with multiple geospatial/table inputs and deterministic output checks.
-- 标签：sample_task_candidate
-- 证据定位：Pinned GitHub task_card.json/main.py and aligned HF row at tasks/transport_safety/abm_hangzhou_metro.
+1. **Schema gate + semantic/numeric checks**：先拒绝坏文件，再验 ID coverage、单位、值域、tolerance 与跨表一致性。
+2. **Editable artifact + rendered output 双交付**：例如 PPTX/Blender/CAD 原文件加 PNG/video，分别验结构可编辑性与视觉结果。
+3. **Application-state evaluator**：ERP/BI/CRM 不只收 screenshot，读取带 run tag 的 database/state，并检查未授权直写。
+4. **Executable/replay artifact**：对 code/infra/EDA/simulation 做 clean build、fixed-input replay、timeout 与 side-effect checks。
+5. **Tiered truthful partial credit**：基础结果解锁部分分，高阶结果增加分；缺证据时不得靠猜测拿高阶分。
+6. **Multiple instances 共享 evaluator**：先定义 invariant schema 与 variant contract，再扩 input/reference；逐 variant 做 fixture 和 runtime QA。
+7. **Held-out views / conditions**：CAD、render、animation 不只验提交时可预知的单一 camera、frame 或 sample。
+8. **Narrow LLM/VLM residual**：只判 deterministic metrics 难覆盖的局部语义，并冻结 model/prompt、记录原始 judge output 与 fallback。
+9. **Anti-shortcut fixtures**：专门构造“格式完美但语义错”“截图像但结构空”“expected value copied”“UI 绕过”的负例。
+10. **Environment-as-spec**：software build、license、fonts/codecs、locale、network、seed、time budget 与 reset behavior 与 task 同版发布。
 
-## 16. `visual_media/skeletal_animation_reproduction` — Skeletal Animation Reproduction
+## 尚需向客户 / 面试官确认的问题
 
-- Domain / subdomain：visual_media / 3D, Animation & Interactive Media
-- Tier / OS / snapshot：last-exam / Windows / gpu-free
-- Software：Blender
-- Inputs → outputs：obj; mtl; mp4 → blend; mp4; task-prompt-section
-- Evaluator：hybrid；structured artifact / exact-or-tolerant field checks; executable / behavioral verifier; render / geometry comparison; hybrid deterministic-plus-LLM/VLM
-- 代表性：A hybrid evaluator combining rig/motion checks, replay similarity, skeleton coverage, and narrow VLM questions.
-- 标签：evaluator_learning
-- 证据定位：Pinned GitHub task_card.json/main.py and aligned HF row at tasks/visual_media/skeletal_animation_reproduction.
+1. “约 1,000 assets”的主计数单位究竟是 workflow、runnable instance，还是 accepted private instance？
+2. 同一 workflow 的 variants 是否都计入 1,000；最低差异度与独立 QC 要求是什么？
+3. Public/private/pending-QC 的目标状态与轮换策略是什么？
+4. 目标 agent system、harness、computer interface、network、time/token budget、retry 与 repeated trials 是什么？
+5. 哪些 domains/software 是客户必须覆盖，哪些只是 benchmark breadth？
+6. 是否允许 licensed Windows desktop、GPU、external web/API；谁负责 license 与数据合规？
+7. Reference、task prompt、evaluator code、gallery output 分别能公开到什么程度？
+8. Full Pass、partial score、environment failure、grader failure 的正式 KPI 与仲裁规则是什么？
+9. LLM/VLM judge 是否允许；judge model 更新、不可用和 prompt injection 的 fallback 是什么？
+10. 专家如何招募、认证、计费和处理利益冲突；是否要求独立 solver 与 reviewer？
+11. Pilot 的 strata、规模、成功门槛和停止/扩产规则是什么？
+12. 交付后谁负责 software/site drift、security patches、reference rotation、task retirement 与版本公告？
 
-## 17. `visual_media/chroma_key_from_reference` — chroma_key_from_reference
+## 可直接复用的 machine-readable schema
 
-- Domain / subdomain：visual_media / 3D, Animation & Interactive Media
-- Tier / OS / snapshot：near-term / Windows / gpu-free
-- Software：DaVinci Resolve
-- Inputs → outputs：`.mp4`; `.png` → `.mp4`
-- Evaluator：hybrid；structured artifact / exact-or-tolerant field checks; continuous metric with thresholds; render / geometry comparison; hybrid deterministic-plus-LLM/VLM; weighted or averaged multi-component rubric
-- 代表性：A hard visual metric plus a VLM edit-authenticity gate; useful, but vulnerable to threshold-specific optimization.
-- 标签：gaming_risk
-- 证据定位：Pinned GitHub task_card.json/main.py and aligned HF row at tasks/visual_media/chroma_key_from_reference.
+```json
+{
+  "benchmark_release_id": "string",
+  "workflow_id": "stable string",
+  "instance_id": "stable string",
+  "domain": "surface-specific label",
+  "subdomain": "surface-specific label",
+  "archetypes": ["overlapping researcher labels"],
+  "difficulty_tier": "defined rubric + calibration evidence",
+  "os_image_digest": "string",
+  "software": [{"name": "string", "version": "string", "license_class": "string"}],
+  "input_manifest": [{"path": "string", "type": "string", "sha256": "string"}],
+  "expected_outputs": [{"path_or_state": "string", "type": "string"}],
+  "reference_manifest_digest": "private digest",
+  "evaluator": {
+    "revision": "git sha",
+    "form": ["gate", "metric", "aggregation"],
+    "judge_class": "deterministic|hybrid|llm-judge",
+    "judge_model_prompt_revision": "nullable string",
+    "fallback_policy": "string"
+  },
+  "harness": {
+    "agent_system_revision": "string",
+    "tool_schema_revision": "string",
+    "network_policy": "string",
+    "timeout_seconds": "integer",
+    "retry_policy": "string"
+  },
+  "qc": {
+    "status": "draft|pending-qc|accepted|retired",
+    "independent_solver_run_ids": ["string"],
+    "fixture_suite_revision": "string",
+    "mutation_suite_revision": "string",
+    "known_limitations": ["string"]
+  }
+}
+```
 
-## 18. `other/mota_exploration` — Game Port Reference Capture: Magic Tower
+## 交付清单
 
-- Domain / subdomain：visual_media / 3D, Animation & Interactive Media
-- Tier / OS / snapshot：near-term / Windows / cpu-free
-- Software：Ruffle (Flash emulator)
-- Inputs → outputs：SWF → 
-- Evaluator：LLM-judge；render / geometry comparison; narrow LLM/VLM rubric; hard gate plus partial/continuous score; weighted or averaged multi-component rubric
-- 代表性：A screenshot-only LLM-vision comparison where semantic judge calibration and visual shortcut risk dominate.
-- 标签：gaming_risk
-- 证据定位：Pinned GitHub task_card.json/main.py and aligned HF row at tasks/other/mota_exploration.
+- **A. Machine-readable task inventory**：`data/task_inventory.jsonl`、`data/task_inventory.csv`、`data/inventory_summary.json`、`data/version_diff.json`。
+- **B. Evaluator archetype library**：`evaluator_archetype_library.md`、`data/evaluator_archetype_library.json`。
+- **C. 公开 corpus 覆盖与缺口分析**：本报告的“证据与版本矩阵”“主要发现”“反方证据与不确定性”。
+- **D. 样题设计 10 条具体模式**：本报告对应章节。
+- **E. 公开信息无法回答的问题清单**：客户确认问题与 `public_information_gaps` 字段。
+- **代表案例**：`mini_case_studies.md`，26 个案例及四组五选。
+- **逐来源记录**：`sources/` 下 18 个 evidence cards 与 `source_index.csv`。
 
-## 19. `visual_media/music_transcription` — Music Transcription
+## 结论边界
 
-- Domain / subdomain：visual_media / Audio, Music & Post-Production Media
-- Tier / OS / snapshot：full-spectrum / Windows / cpu-license
-- Software：Dorico 6
-- Inputs → outputs：`.json`; `.mp3` → `.pdf`; `.mid`; `.png`
-- Evaluator：hybrid；structured artifact / exact-or-tolerant field checks; continuous metric with thresholds; render / geometry comparison; audio / music signal comparison; hybrid deterministic-plus-LLM/VLM; hard gate plus partial/continuous score; weighted or averaged multi-component rubric
-- 代表性：A licensed music-production workflow combining MIDI metrics, dynamic correlation, and a vision judge for score layout.
-- 标签：无专项标签
-- 证据定位：Pinned GitHub task_card.json/main.py and aligned HF row at tasks/visual_media/music_transcription.
-
-## 20. `health_medicine/microdicom_nih_cxr_reader_adjudication` — MicroDicom NIH CXR Reader Adjudication
-
-- Domain / subdomain：health_medicine / Clinical Diagnostics & Imaging
-- Tier / OS / snapshot：near-term / Windows / cpu-free
-- Software：MicroDicom DICOM Viewer
-- Inputs → outputs：markdown; TSV; text directory; DICOM directory → TSV
-- Evaluator：deterministic；structured artifact / exact-or-tolerant field checks; continuous metric with thresholds; hard gate plus partial/continuous score
-- 代表性：A medical-imaging GUI workflow that turns visual review into a structured TSV deliverable.
-- 标签：无专项标签
-- 证据定位：Pinned GitHub task_card.json/main.py and aligned HF row at tasks/health_medicine/microdicom_nih_cxr_reader_adjudication.
-
-## 21. `engineering/humanoid_wbc_policy_evaluation` — [uncertain] missing title in pinned HF row
-
-- Domain / subdomain：engineering / Robotics & Autonomous Systems
-- Tier / OS / snapshot：near-term / Ubuntu Linux / cpu-free-ubuntu
-- Software：mjlab; MuJoCo; PyTorch; wandb
-- Inputs → outputs： → json
-- Evaluator：deterministic；structured artifact / exact-or-tolerant field checks
-- 代表性：A robotics-policy evaluation task whose public metadata is unusually sparse, illustrating schema heterogeneity.
-- 标签：无专项标签
-- 证据定位：Pinned GitHub task_card.json/main.py and aligned HF row at tasks/engineering/humanoid_wbc_policy_evaluation.
-
-## 22. `engineering/2d_drawings_to_3d_building_model` — Betonwerk Katzenberger 3D Model
-
-- Domain / subdomain：engineering / Civil, Architectural & Geospatial Engineering
-- Tier / OS / snapshot：last-exam / Windows / gpu-license
-- Software：Rhino 8
-- Inputs → outputs：Markdown; JSON; PNG; PDF; Wavefront OBJ; Rhino 3DM → JSON; PNG + JSON; OBJ + 3DM + DWG
-- Evaluator：LLM-judge；structured artifact / exact-or-tolerant field checks; render / geometry comparison; narrow LLM/VLM rubric
-- 代表性：A GPU-and-Rhino workflow scored by 14-view rendering and eight binary multimodal questions.
-- 标签：infrastructure_high_cost
-- 证据定位：Pinned GitHub task_card.json/main.py and aligned HF row at tasks/engineering/2d_drawings_to_3d_building_model.
-
-## 23. `engineering/2d_drawings_to_3d_bridge_model` — Bridge The Gap — Bridge + Site 3D Model
-
-- Domain / subdomain：engineering / Civil, Architectural & Geospatial Engineering
-- Tier / OS / snapshot：[uncertain] missing task_split in pinned HF row / Windows / gpu-license
-- Software：Rhino 8
-- Inputs → outputs：Markdown; JSON; PNG; PDF; Wavefront OBJ; Rhino 3DM; DWG → JSON; PNG; OBJ + 3DM + DWG
-- Evaluator：LLM-judge；structured artifact / exact-or-tolerant field checks; render / geometry comparison; narrow LLM/VLM rubric; hard gate plus partial/continuous score
-- 代表性：A second Rhino GPU workflow with large geometry and multi-view judge payloads, exposing render and API cost.
-- 标签：infrastructure_high_cost
-- 证据定位：Pinned GitHub task_card.json/main.py and aligned HF row at tasks/engineering/2d_drawings_to_3d_bridge_model.
-
-## 24. `engineering/gcode` — gcode
-
-- Domain / subdomain：engineering / Manufacturing & Industrial Systems
-- Tier / OS / snapshot：last-exam / Windows / gpu-license
-- Software：Python
-- Inputs → outputs：directory; `.prt`; `.jpg` → directory; `.stl`
-- Evaluator：deterministic；structured artifact / exact-or-tolerant field checks; continuous metric with thresholds; executable / behavioral verifier; render / geometry comparison; hard gate plus partial/continuous score
-- 代表性：A licensed GPU PowerMill workflow with collision gating and geometric/toolpath verification.
-- 标签：infrastructure_high_cost
-- 证据定位：Pinned GitHub task_card.json/main.py and aligned HF row at tasks/engineering/gcode.
-
-## 25. `engineering/mold-flow` — mold-flow
-
-- Domain / subdomain：engineering / Manufacturing & Industrial Systems
-- Tier / OS / snapshot：last-exam / Windows / gpu-license
-- Software：Python
-- Inputs → outputs：directory; `.x_t`; `.json` → `.json`; directory
-- Evaluator：deterministic；structured artifact / exact-or-tolerant field checks; continuous metric with thresholds; hard gate plus partial/continuous score
-- 代表性：A licensed GPU Moldex3D simulation workflow with vendor-specific environment requirements.
-- 标签：infrastructure_high_cost
-- 证据定位：Pinned GitHub task_card.json/main.py and aligned HF row at tasks/engineering/mold-flow.
-
-## 26. `engineering/cailian_road_highway_alignment_2` — Cailian Road Highway Alignment
-
-- Domain / subdomain：engineering / Civil, Architectural & Geospatial Engineering
-- Tier / OS / snapshot：full-spectrum / Windows / gpu-license
-- Software：Autodesk Civil 3D 2024
-- Inputs → outputs：Autodesk DWG; Windows batch script → Autodesk DWG; TSV
-- Evaluator：deterministic；structured artifact / exact-or-tolerant field checks; continuous metric with thresholds; render / geometry comparison; hard gate plus partial/continuous score
-- 代表性：A licensed GPU Civil 3D workflow with heavyweight CAD state and output verification.
-- 标签：infrastructure_high_cost
-- 证据定位：Pinned GitHub task_card.json/main.py and aligned HF row at tasks/engineering/cailian_road_highway_alignment_2.
-
-## 四组五选
-
-- 最适合作为项目样题：agriculture_env/crop_rotation_d02; business_finance/basel_operational_risk_bia_cn; computing_math/k8s_migration_1; physical_sciences/lenacapavir_sar_table2_extraction; transport_safety/abm_hangzhou_metro
-- Evaluator 设计最值得学习：agriculture_env/crop_rotation_d02; education_info/homework_grading_numerical_pdes_instance_02; business_finance/american_option_pricing_ls; engineering/openroad_sky130_ibex_pnr_signoff; visual_media/skeletal_animation_reproduction
-- 最易 shortcut / gaming：business_finance/pe_screening_memo_1; business_finance/saas_onepager_brand_refresh_instance_1; computing_math/go_game_reconstruction_1; visual_media/chroma_key_from_reference; other/mota_exploration
-- 基础设施与授权负担最高候选：engineering/2d_drawings_to_3d_building_model; engineering/2d_drawings_to_3d_bridge_model; engineering/gcode; engineering/mold-flow; engineering/cailian_road_highway_alignment_2
-
-Selections are qualitative audit judgments, not measured cost or risk rankings; no public dollar cost data supports precise ordering.
+- **论文/代码明确事实**：只在相应固定版本或 access-dated snapshot 下成立。
+- **作者/机构主张**：如规模、代表性或“fully reproducible”等，保留为 claim，除非有独立验证。
+- **研究员推断**：archetype、gaming risk、high-infrastructure burden、gallery 性质等均明确标记，允许被新的 runtime evidence 推翻。
+- **项目建议**：来自 ALE 实现证据、外部 benchmark validity 研究与生产风险综合，不声称是 ALE 官方做法，也不代替 pilot 数据。

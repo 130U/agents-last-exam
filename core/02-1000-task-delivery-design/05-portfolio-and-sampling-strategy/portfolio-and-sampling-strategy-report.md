@@ -168,7 +168,338 @@ runtime:
   software_versions: []
   network_policy: "..."
   replay_status: "pending"
-p…5957 tokens truncated…条产线的 admission yield、cycle-time 分布、并行 WIP、rework loop 和 bottleneck capacity。
+portfolio:
+  admission_score: null
+  redundancy_cluster: null
+  difficulty_band: null
+  evidence_labels: []           # E/C/I/A/P
+```
+
+## A. 100 分 task admission rubric
+
+### 先做硬门槛
+
+进入计分的 candidate 必须同时满足：[P]
+
+1. **Runnable gate：** 可重建环境、明确 inputs/outputs/termination、可记录和重放；
+2. **Legal gate：** 数据与软件的预定使用场景无 unresolved blocker；
+3. **Minimum Verifiability gate：** 核心质量条件能被 reference/evaluator 覆盖，且有已知正确与已知错误样本；
+4. **Identity gate：** 已判定是 new workflow、legitimate instance 或被拒绝的 pseudo-variant；
+5. **Safety/privacy gate：** 无不可接受的个人、机密、医疗、安全或受控信息风险。
+
+任何 gate 为 `pending`，状态只能是 `hold`，不能用高总分进入 release manifest。
+
+### Rubric 与 anchors
+
+| 维度 | 分值 [P] | 0 分 anchor | 中位 anchor | 满分 anchor |
+|---|---:|---|---|---|
+| Professional representativeness & coverage | 15 | 合成的“看起来像”专业任务，无 target-user 证据 | 单一专家或间接流程证据，工具/输出大体匹配 | 多源 workflow 证据、正确工具/artifact、scope 清楚，并填补已知 coverage hole |
+| Economic value | 10 | 无可说明后果 | 有合理但未量化的时间/风险价值 | 客户/市场证据支持高频、显著成本或高错误后果，且计算口径可审计 |
+| Complexity & long-horizon | 12 | 单步查找/格式转换 | 多步但依赖较弱、可局部解决 | 多阶段强依赖、状态持续、异常恢复与专业判断均有证据 |
+| Frontier discrimination & future training value | 10 | 全部 systems 都稳定成功/失败，或失败来自坏任务 | 有初步 failure diversity，信息量未稳 | 多系统 pilot 显示可解释区分度、轨迹/中间状态有诊断价值且可合法复用 |
+| Verifiability & evaluator quality | 18 | 核心成功不可观察或 evaluator 易被投机 | 核心 criteria 多数覆盖，仍需人工/LLM 复核 | gold/negative/metamorphic tests、低 FP/FN、可审计、抗 exploit、可区分 infra/eval/agent failure |
+| Runnable & software feasibility | 12 | 环境不稳定/依赖不可获得 | 可在一个环境运行但重建、网络或版本风险明显 | fresh-image 重放稳定、依赖固定、日志完整、替代/恢复路径清楚 |
+| Non-redundancy & marginal value | 10 | 与已选 task 仅表面差异 | 有新输入或难度，但 response/failure pattern 高相关 | 新 capability/failure boundary 或可测 item information，SME 与 pilot 均支持 |
+| Legal/commercial usability | 8 | 权利、PII、EULA 或商业使用不可接受 | 能内部评测但再分发/训练/商业范围有限且已披露 | provenance 完整、预定用途权利清楚、限制可执行、客户交付路径清楚 |
+| Production cost & maintainability | 5 | 无 owner、不可估或持续脆弱 | 可交付但有单点依赖/高维护 | 成本驱动项明确、owner/SLA/替代路径/rotation plan 齐全 |
+| **Total** | **100** |  |  |  |
+
+**[P] 决策带：** `≥70 admit candidate pool`、`60–69 revise and re-test`、`<60 reject/archive`。这三个阈值是初始 proposal，不是 ALE 经验阈值；pilot 后应检查通过率、维度间相关性和对最终效度的预测力。即使 ≥70，仍要通过 portfolio constraints；高分不保证被选。
+
+## B. Task rejection rules
+
+以下任一项成立，reject；可修复项进入 `revise` 而不是 release：[P]
+
+1. 无法从 clean environment 稳定启动、完成或评分，且没有可接受的降级/替代路径；
+2. 输入、reference、软件、模型/API、VM image、字体/codec 等权利或自动化/商业条款不清；
+3. 包含未合法处理的 PII、客户机密、医疗/安全敏感数据或受控内容；
+4. 核心产出是纯主观开放生成，且 evaluator 不能覆盖最重要质量标准；
+5. evaluator 只检查 schema/文件存在，却把内容错误算成功；或已知可通过 prompt injection、文件命名、reference leakage、grader crash/timeout 投机；
+6. reference 本身不确定、专家分歧未解决，或 accepted-alternative set 未定义；
+7. 任务本质是单步查找、复制粘贴、格式转换、无专业判断的机械操作，除非它是明确的 calibration item；
+8. 与现有 task 只是人名、数字、seed、文件名、排版或无关背景替换，解题路径、failure mode 和 evaluator decision boundary 不变；
+9. 与已有 benchmark/task 高度重复且没有合法来源、迁移效度或增量信息说明；
+10. 软件/OS/vendor/license concentration 超过冻结 caps，且无战略例外与 substitution plan；
+11. 任务只能依赖实时网络/第三方状态且无法 snapshot、mock、记录或审计；
+12. 环境失败、evaluator failure 与 agent failure 无法区分；
+13. 没有 maintainer、owner、refresh trigger 或 retirement rule；
+14. 为达到 domain quota 而保留明显低效度 task；coverage floor 不能覆盖质量门槛。
+
+## 主要发现 3：Workflow identity、合法 instances 与重复检测
+
+### 四分法
+
+| 判定 | 必要条件 | 例子性质 | 计数 |
+|---|---|---|---|
+| 同一 workflow 的合法 instance | professional goal、core procedure、capability 和 evaluator contract 不变；具体 input/state/reference 改变，并增加难度、失败模式、reliability 或边界覆盖 | 同一分析 pipeline 在不同且有意义的数据 regime 上运行，reference 随输入重新生成 | workflow +0；instance +1 |
+| pseudo-variant | 仅换值/名称/seed，过程图、solution path、evaluator criteria 与模型 response pattern 几乎不变 | 把 2025 改 2026、100 改 120，而没有新约束或决策边界 | workflow +0；instance +0（不进入 portfolio） |
+| distinct workflow 的复杂变体 | goal、关键 stages、工具/软件 contract、artifact、decision rights、异常处理或 evaluator contract 有实质变化 | 从“生成分析”变为“复核并在约束冲突时修复”，且评分对象/流程不同 | workflow +1；至少 instance +1 |
+| 已有 benchmark overlap | external task 的问题结构、资产、reference/evaluator 或 capability graph 高重合 | 改写 prompt 但复用公开 benchmark 的同一 input/reference | 默认 reject/hold；只有 rights 与增量目的清楚才例外 |
+
+### Multi-view 检测管线 [P]
+
+1. **Exact layer：** prompt、input、reference、code、artifact 的 cryptographic hash 与 normalized hash；
+2. **Text/code near-duplicate layer：** n-gram/MinHash、AST/CFG、文件结构、evaluator assertions；
+3. **Semantic retrieval layer：** prompt、workflow description、artifact/evaluator embeddings；只召回 pair，不自动裁决；
+4. **Workflow graph layer：** 比较 trigger、stage dependencies、tools、state transitions、outputs、criteria、failure modes；
+5. **External registry layer：** 对公开 benchmark、客户历史资产、训练语料清单做 source lineage 与 overlap search；
+6. **Empirical layer：** 对 candidate pair 比较多 agent-system 的 pass/failure vectors、score correlation 与 error taxonomy；
+7. **Blinded adjudication：** SME + evaluator engineer 不看提交者身份，判定 `new_workflow / valid_instance / pseudo / uncertain`，记录理由。
+
+**[I] 关键原则：** semantic similarity 高不一定重复（同一主题可测不同 workflow），低也不一定新（表面改写可隐藏同一 evaluator boundary）。最终单位身份由 workflow/evaluator contract 与 empirical response pattern 联合决定。
+
+### 多实例生成与验收规则 [P]
+
+- 每个 workflow 先建 `instance family spec`：允许变化的 parameters、禁止变化的 workflow identity、reference generator、validity constraints、difficulty levers、expected failure modes。
+- 每个生成 instance 必须拥有新的 `instance_id`、input/reference hashes 与 lineage；不得共享会泄漏答案的公开 seed。
+- 先运行 generator invariants、reference re-computation、known-good/known-bad agents，再抽样双专家 review。
+- 只有当 `Δcoverage > 0`、`Δfailure-mode > 0`、`Δitem-information > pilot threshold` 或统计可靠性目标需要时才接纳；阈值为 [A]。
+- family 内设置 `max_instances_per_workflow` [A/P]；达到边际信息衰减点即停止，不能以生成容易为理由填 quota。
+- public/private/rotation seeds 分离；测试数据不得进入训练资产，除非另设权利和 contamination protocol。
+
+## C. 三种 portfolio allocation 方案
+
+下面不是三张静态答案，而是同一 constrained optimizer 的三套 business weights。**表中每个数字均为 [P] 初始 proposal，不是 ALE 的经验分布。**
+
+### C1. 九目标权重（每列合计 100）
+
+| Objective | Coverage-first [P] | Client/commercial-first [P] | Frontier/training-first [P] |
+|---|---:|---:|---:|
+| 广覆盖 | 25 | 10 | 10 |
+| 经济价值 | 10 | 15 | 10 |
+| frontier failure / discrimination | 10 | 5 | 25 |
+| 客户行业相关性 | 10 | 25 | 5 |
+| evaluator 可实现性 | 15 | 10 | 15 |
+| 软件可获得性 | 10 | 10 | 5 |
+| 数据生产成本 | 10 | 5 | 5 |
+| 未来训练价值 | 5 | 5 | 20 |
+| 商业可销售性 | 5 | 15 | 5 |
+| **Total** | **100** | **100** | **100** |
+
+- **Coverage-first：** 适合公共/横向 benchmark 或尚无明确 anchor client 的 portfolio；主要风险是对低价值 cells 过度投资。
+- **Client/commercial-first：** 适合定向产品；必须将 benchmark 命名为 scoped benchmark，不能声称总体职业代表性。
+- **Frontier/training-first：** 适合诊断和 post-training；主要风险是挑到 evaluator-broken impossible tasks，或过快随模型进步失效。
+
+### C2. 示例性 1,000-task domain allocation
+
+域名称来自 2026-08-08 live taxonomy surface [E]；**三套 counts 全部为 [P]，仅用于展示 optimizer 输出格式。它们既不复制 ALE 分布，也不等分 55 subdomains。**
+
+| Live domain [E label] | Coverage-first [P] | Client/commercial-first [P] | Frontier/training-first [P] |
+|---|---:|---:|---:|
+| Engineering & Architecture | 160 | 130 | 180 |
+| Physical Sciences | 70 | 40 | 70 |
+| Life Sciences | 70 | 40 | 70 |
+| Health & Medicine | 90 | 110 | 80 |
+| Psychology & Neuroscience | 35 | 25 | 30 |
+| Business & Finance | 130 | 200 | 100 |
+| Legal | 45 | 100 | 40 |
+| Visual & Media Arts | 80 | 60 | 110 |
+| Computing, Data & Mathematical Sciences | 140 | 170 | 190 |
+| Transportation & Safety Operations | 55 | 40 | 45 |
+| Education & Information Services | 50 | 30 | 30 |
+| Agriculture & Environment | 45 | 25 | 30 |
+| Social Sciences | 30 | 30 | 25 |
+| **Total** | **1,000** | **1,000** | **1,000** |
+
+这些 proposal count 只能在下列步骤后变成 release target：[A] 客户需求矩阵、候选供给、admission yield、rights/software feasibility、pilot difficulty、evaluator defect、cost budget、domain/subdomain coverage claims 均已冻结。若某 cell 没有合格 candidates，**不能用低质量 task 硬填数字**；应先记录 coverage gap，扩大 sourcing 或收窄 scope claim。
+
+### C3. 覆盖、难度、evaluator 和软件约束
+
+以下均为 optimizer 的**初始 [P] constraints**，不是 ALE 配额：
+
+| Constraint family | `1,000 runnable instances` scenario | `1,000 distinct workflows` scenario | 为什么 |
+|---|---|---|---|
+| subdomain floor | 若声称覆盖全部 55 subdomains：每个至少 **5 instances [P]**，且来自至少 **3 workflows [P]** | 每个至少 **4 workflows [P]** | 阻止一个 workflow 的大量 variants 伪造 coverage；不做全面 claim 时改为 scope-specific floors |
+| domain floor | `max(20 instances, 5 × covered_subdomains) [P]` | `max(20 workflows, 4 × covered_subdomains) [P]` | 给小域最低可分析规模，同时避免按 55 平均 |
+| workflow multiplicity | family cap 由 pilot 的 marginal information curve 决定 [A]；任何固定 cap 仅为 [P] | core delivery 每 workflow ≥1 instance；额外 instances 单列，不计 1,000 workflows | 防止 variant inflation |
+| difficulty | **20% calibration / 55% informative middle / 25% frontier [P]** | 同左 [P] | 兼顾 floor/ceiling、排名稳定与 frontier failure；band cutoffs 由 pilot [A] |
+| evaluator mode | **600 deterministic-structured / 220 deterministic-simulator / 150 hybrid / 30 judge-dominant [P]** | 同左，按 workflow 计 [P] | 保持可审计性又容纳复杂 artifact；不是 ALE 93.2/6.8 快照的复制 |
+| OS family | 任一 OS family ≤**60% [P]** | 同左 [P] | 降低单平台 outage 与 harness 偏差 |
+| single application | 任一 application ≤**8% [P]** | 同左 [P] | 限制单工具 overfitting 和维护爆炸 |
+| single vendor | 任一 vendor ≤**15% [P]** | 同左 [P] | 降低商业条款/供应商单点风险 |
+| high license single-point risk | 任一不可替代高风险 dependency ≤**5% [P]**；权利不清仍为 hard reject | 同左 [P] | cap 不能治愈 rights defect；只控制已批准但脆弱的依赖 |
+
+#### Difficulty 不能只靠专家贴标签
+
+**[P] release bands** 应由多个冻结 agent-system、独立 repeated trials 的 empirical pass probability 与 discrimination 共同定义。跨项目研究表明中间历史 pass-rate tasks 往往更能保留系统排序，[E] 但具体 pass-rate cutoffs 不能直接搬到 ALE-style 新资产。需要 pilot 测：[A]
+
+- `p_i = successes / valid_runs`，valid run 明确排除 infra/evaluator failure；
+- item discrimination（IRT、point-biserial 或相邻系统能力组的差）；
+- run variance 与置信区间；
+- harness sensitivity：同模型不同 agent scaffold 的相对变化；
+- difficulty drift：模型、软件或 reference 更新后的 band 迁移。
+
+#### Concentration 的补充指标
+
+仅看 max share 不够；同时报告 Herfindahl–Hirschman Index：[P]
+
+\[
+HHI_{software}=\sum_s share_s^2,\qquad N_{effective}=1/HHI
+\]
+
+阈值由 pilot/采购策略决定 [A]。客户明确需要某 vendor 时可批准例外，但要披露 scope、维护 owner、license trigger 和 substitute pool，不能把有意集中描述为广覆盖。
+
+## 两种 scope 的产品与交付差异
+
+### Scenario 1：1,000 runnable instances
+
+**Contract equation [P]：**
+
+\[
+\sum_{w=1}^{W}m_w=1000,\quad m_w\ge1
+\]
+
+其中 `W` 是通过 identity review 的 distinct workflows，`m_w` 是 workflow `w` 的 accepted instances。**公开资料不足以预先给 W 的精确值**；它取决于 candidate supply、family generator、边际信息阈值和成本，必须通过 pilot [A]。
+
+交付重点：
+
+- 每个 instance 都可独立 start/evaluate/replay，并有 input/reference/evaluator lineage；
+- release manifest 合计恰为 1,000 accepted runnable instances；
+- 同时报告 `W`、每个 workflow 的 multiplicity、family concentration 与 marginal-information evidence；
+- repeated trials 是实验预算，不能计入 1,000；
+- task-card metadata 未带完整 runnable assets 的，不计验收。
+
+### Scenario 2：1,000 distinct workflows
+
+**Contract equation [P]：**
+
+\[
+|\{workflow\_id\}|=1000,\qquad N_{instances}=1000+M
+\]
+
+`M` 是为 reliability、rotation 或难度覆盖增加的合法 instances，其规模为 [A]，另行报价与验收。每个 workflow 必须拥有独立且可辩护的 goal/process/capability/evaluator contract；共享 evaluator library 可以，但不能共享同一 workflow identity。
+
+交付重点：
+
+- evaluator engineering 和专家设计面更大，通常不能用 instance 生成器来替代；
+- 每个 workflow 至少有一个 accepted runnable instance；
+- additional `M` 不增加 workflow count；
+- 需要更强的跨 workflow ontology、identity adjudication 与 evaluator component library；
+- 成本与排期不可从 ALE 的 `1,490/960 ≈ 1.55` 推导。[E] 该比值只是 v2 的观察平均，不是公开的生产规律或本项目配额。
+
+## D. Allocation algorithm / pseudocode
+
+```text
+INPUT:
+  candidates C
+  scope_unit in {INSTANCE, WORKFLOW}
+  target_N = 1000
+  business_profile weights w
+  client inputs, budget, coverage claims
+  frozen caps/floors and pilot calibration
+
+FOR each candidate c:
+  validate unit identity and lineage
+  IF runnable/legal/min_verifiable/safety gate fails:
+      reject(c) or hold(c); continue
+  score 9 admission dimensions with evidence links
+  IF score < frozen threshold:
+      reject/revise(c); continue
+  compute vectors:
+      taxonomy, capability, workflow graph, software/OS/vendor,
+      artifact/evaluator mode, cost/risk, difficulty, provenance
+
+BUILD duplicate graph:
+  retrieve exact + near + semantic + structural + external overlaps
+  adjudicate candidate pairs as new_workflow / valid_instance / pseudo / uncertain
+  remove pseudo; constrain uncertain to hold
+
+PILOT stratified candidate sample:
+  run multiple frozen agent-system configurations and repetitions
+  label agent_failure / evaluator_failure / infrastructure_failure / invalid_run
+  estimate pass probability, discrimination, variance, harness sensitivity,
+           evaluator FP/FN, cost, maintenance, marginal instance information
+  recalibrate normalized values, thresholds, floors/caps and family limits
+
+OPTIMIZE binary selection x:
+  maximize weighted value + coverage/information
+           - cost - legal/software/maintenance risk - pairwise redundancy
+  subject to:
+      sum(x) = 1000 in the contracted scope unit
+      domain/subdomain floors only for claimed coverage
+      difficulty and evaluator-mode bands
+      OS/application/vendor/license-risk caps
+      budget/runtime constraints
+      parent workflow and instance-family multiplicity constraints
+      public/private/rotation separation
+
+SOLVE each of three profiles and sensitivity variants:
+  compare utility, gaps, concentration, cost and robustness
+  send boundary cases to blinded SME + evaluator-engineer adjudication
+  rerun optimizer after decisions
+
+FREEZE:
+  manifest SHA, task/evaluator/input/reference hashes, images, software terms,
+  taxonomy revision, agent/harness configs, budgets, retry policy, run protocol
+
+RELEASE only after:
+  replay tests, evaluator mutation suite, rights ledger, leakage scan,
+  distribution audit, signed exceptions and rollback/retirement plan
+```
+
+### MILP / constrained-greedy implementation notes
+
+- Candidate pool 较小时用 MILP：`x_i∈{0,1}`；domain/difficulty/evaluator/cap 是线性约束。pairwise redundancy 可用 `y_ij ≥ x_i+x_j−1` 线性化，但 pair 数可能爆炸，只保留检索出的 high-similarity edges。
+- Candidate pool 很大时用 diversity-aware constrained greedy 或 submodular selection，再用 local swap/repair 满足 caps/floors；最终对 top boundary 做 MILP 或人工 adjudication。
+- 先运行三种权重，再做 ±权重敏感性分析。若少量权重改变就大幅换出任务，结论是 portfolio 不稳定，而不是强行给唯一排名。
+- 每个 constraint 记录 shadow price/短缺原因：是 candidate supply、rights、software、evaluator、成本还是 difficulty 不足，以指导下一轮 commissioning。
+
+## E. 需要通过 pilot 校准的参数
+
+公开资料不足时，以下全部保持 [A]，不填伪精确值。
+
+| 参数组 | Pilot 要测什么 | 如何影响 1,000 portfolio |
+|---|---|---|
+| sourcing/admission | 每来源 submission→workflow→instance 的转化率；reject/revise 原因；专家一致性 | 决定需要征集/commission 的 candidate 数与 coverage gaps |
+| expert effort | workflow scoping、reference、edge cases、review、rework 的时间分布 | 决定人力、并行度和排期，不用平均数掩盖长尾 |
+| evaluator engineering | evaluator 开发/测试/修复时间；gold/negative case 数；FP/FN；exploit discovery | 决定 evaluator-mode mix、QA depth 与成本 |
+| infrastructure | image build success、cold start、replay、timeout、network failure、artifact transfer、OS/vendor 差异 | 决定 runnable gate、platform caps、capacity 与重试策略 |
+| legal/procurement | provenance completeness、license approval lead time、seat/region/API/redistribution restrictions、替代软件成功率 | 决定 hold/reject、single-point caps 与商业交付边界 |
+| difficulty | 多个冻结 agent-system 的 `p_i`、discrimination、ceiling/floor、failure taxonomy | 形成 empirical bands 与 selection value |
+| randomness | valid-run variance、重复 trials 的置信区间/功效、非独立错误 | 决定每个 config×instance 的 repetitions 与 leaderboard precision |
+| harness sensitivity | 同一模型在不同 scaffold、tool permission、budget、retry 下的差异 | 防止把 system/harness 效果误称为 model 能力 |
+| multi-instance value | family 内 response correlation、failure-mode gain、item information 与边际成本 | 决定 `m_w`、family cap 与 1,000-instance scenario 的 W |
+| redundancy | exact/MinHash/embedding/graph thresholds 的 precision/recall；SME adjudication agreement | 决定 pseudo-variant rejection 和 external-overlap policy |
+| client value | workflow frequency、severity、spend、buyer priority、roadmap、commercial rights | 决定 client/commercial weights；数据缺失就标 assumption |
+| maintenance/drift | 软件/API/OS/evaluator/reference 变更频率；task retirement/repair time | 决定 reserve capacity、refresh cadence、SLA 与价格 |
+| public/private | contamination risk、公开调试价值、private rotation supply、security/access control | 决定 split；不能复制 ALE 的特定快照 |
+
+### Pilot 设计原则 [P]
+
+- 分层抽取不同 domain、software、evaluator mode、rights risk、预估难度和 candidate source，不能只测最容易生产的一类。
+- 同时跑 known-good reference、known-bad mutations、至少多个 agent-system；模型名、harness、budget、工具、retry 均固定。
+- 每次失败强制归因 `agent / evaluator / infrastructure / invalid_reference / policy / unknown`；`unknown` 超阈值时不准放大生产。
+- 先估分布与长尾，再决定 headcount/schedule。没有 admission yield 和 cycle-time 分布，不给 1,000 的确定日期。
+- 把 pilot 中发现的失败模式变成 regression tests、schema 字段和 source/commissioning brief，而不只修当前样本。
+
+## 成本、排期与运行量：只给可审计公式
+
+### 成本 [P formula]
+
+\[
+C_{total}=C_{platform}+\sum_{w=1}^{W}(C_{scope,w}+C_{eval,w}+C_{env,w}+C_{QA,w})
++\sum_{i=1}^{N}(C_{input,i}+C_{reference,i}+C_{instanceQA,i})
++C_{runs}+C_{license}+C_{legal}+C_{maintenance}+C_{rotation}+C_{contingency}
+\]
+
+必须把 workflow-level fixed cost 与 instance-level marginal cost分开。`1,000 workflows` 通常会产生更多独立 scope/evaluator contracts，[I] 但公开 ALE 资料不足以量化倍数。
+
+### 运行量 [P formula]
+
+\[
+Runs=\sum_i\sum_a\sum_h Repetitions_{i,a,h}
+\]
+
+其中 `a` 是 model/agent configuration，`h` 是 harness/environment configuration。Repetitions 根据目标置信区间或 statistical power [A] 设定；重复 trial 不计 task assets。
+
+### 排期 [P formula]
+
+\[
+T_{release}=T_{pilot}+\max(T_{expert\ sourcing},T_{evaluator\ engineering},T_{environment/legal})
++T_{integration\ QA}+T_{rework}+T_{freeze}
+\]
+
+公开资料不足以给出精确工期和人数。关键不是线性用 `1,000 × 平均天数`，而是测每条产线的 admission yield、cycle-time 分布、并行 WIP、rework loop 和 bottleneck capacity。
 
 ## Evaluation、基础设施、QA 与交付标准
 

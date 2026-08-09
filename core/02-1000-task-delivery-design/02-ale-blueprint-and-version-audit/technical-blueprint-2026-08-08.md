@@ -238,7 +238,218 @@ example: manufacturing/gcode workflow has 18 workpiece instances
 - **[事实]** `public/private/pending-QC` 是 release/QC state；不是 submission verdict、难度 tier 或专家人数。
 - **[研究员推断]** `1,490/960≈1.55` 可以作为该快照的粗 inventory average，用于提醒 instance multiplicity 存在。
 
-## 6.3 绝不能直接做…4065 tokens truncated…s；不能验证的要求要删、改或单列人工 adjudication。
+## 6.3 绝不能直接做的推断
+
+- 960 external submissions = 960 workflows；
+- 960 workflows = 960 experts；
+- 530 commissioned items 一定是 530 single-instance workflows；
+- 每个 workflow 应生产 1.55 instances；
+- 1,000-asset 项目应做约 644 workflows 或照搬 960 workflows；
+- 150/1,017/323 应成为 client public/private/QC 配额；
+- 323 pending-QC 可计入已验收产能；
+- Figure 5 的来源/状态数字可推出 acceptance rate（分母混合且 crosswalk 缺失）。
+
+**判定：** H3 supported。若未来发布 row-level crosswalk，才可重新审计两个 960 的关系；在此之前保持集合不等价。
+
+---
+
+# 7. 四个官方 task examples：从 prompt 到 evaluator
+
+> 本节将在 pinned GitHub task packages 与 run/trace 证据之间严格区分。没有对应 trace ID 时，只写 **code-mandated / intended execution path**，不伪造 agent 实际点击序列。
+
+## 7.1 Apple FY2024 balance-sheet reconstruction
+
+| Component | Pinned evidence at GitHub `1e615e4…` |
+|---|---|
+| `task_id` | `business_finance/financial_stmt_reconstruction_aapl_fy2024` |
+| Description | 从 Apple FY2024 10-K 重建 Consolidated Balance Sheet（USD millions） |
+| Input | 10-K PDF、SEC HTML、output schema、source notes、metadata |
+| Software / environment | Linux `cpu-free-ubuntu`；Python/pdftotext/grep wrappers；task-card timeout 7,200s |
+| Expected output | `base/output/balance_sheet.json` |
+| Hidden reference | `reference/aapl_fy2024_balance_sheet_reference.json`，由 `main.py` 实际指定 |
+| Evaluator | metadata gates + numeric leaves Decimal exact comparison；score 为正确 numeric fields / expected numeric fields |
+| Code-mandated path | framework stages filings/schema → agent receives prompt and may parse PDF/HTML → leaves JSON → reference stages after exit → scorer runs |
+
+**[事实]** scorer 另算 `accuracy≥0.95` 的 boolean，但 task `evaluate()` 返回 continuous score，不返回该 boolean。task card 的 `referenceFiles` prose 不能代替 `main.py` hidden-reference path。[S11](sources/11_official_task_aapl_balance_sheet.md)
+
+## 7.2 KiCad PCB layout
+
+| Component | Pinned evidence |
+|---|---|
+| `task_id` | `engineering/pcb_layout_kicad_1` |
+| Description | 从 schematic 完成 routed PCB、outline、四孔、GND zones、vias 与 clean DRC |
+| Input | `mini_encabulator.kicad_sch`, `OpenKiCad.bat` |
+| Software / environment | Windows `cpu-free`；KiCad；timeout 7,200s |
+| Expected output | `mini_encabulator.kicad_pcb` |
+| Hidden reference | evaluator 不读取 golden PCB；使用 application-native DRC + structural checks |
+| Evaluator | DRC fail=0；DRC pass + all checks=1；DRC pass + structural failure=0.5 |
+| Code-mandated path | agent 可用 KiCad GUI/CLI生成 `.kicad_pcb` → grader调用 KiCad CLI DRC并解析文件 |
+
+**[反例]** 代码没有显式检查 enclosure fit、complete placement 或 geometrically closed outline；`Edge.Cuts` 是字符串存在检查。DRC 缓解部分电气问题，但不补齐全部 prompt 要求。[S12](sources/12_official_task_kicad_pcb.md)
+
+## 7.3 MicroDicom CXR reader adjudication
+
+| Component | Pinned evidence |
+|---|---|
+| `task_id` | `health_medicine/microdicom_nih_cxr_reader_adjudication` |
+| Description | 对九个 CXR cases 的 reader A/B boxes 做影像 adjudication |
+| Input | rules、case manifest、reader TSVs、clinical notes、DICOMs |
+| Software / environment | Windows `cpu-free`；MicroDicom；timeout 7,200s |
+| Expected output | `adjudicated_boxes.tsv`, `adjudication_log.tsv`, `final_impressions.tsv` |
+| Hidden reference | 三份对应 reference TSV |
+| Evaluator | boxes 检查 case/reader/IoU≥0.50；log 检查部分字段；impressions full-table exact；score=三份 file contracts 的通过比例 |
+| Code-mandated path | prompt 要求逐例看图并写 TSV → evaluator 只读 TSV/reference，不读 GUI trajectory |
+
+**[反例]** card 声称 log exact-match reference，但代码忽略 `resolution_basis`。成功 artifacts 不能证明实际使用了 MicroDicom 或完成了 rationale-quality adjudication。[S13](sources/13_official_task_microdicom.md)
+
+## 7.4 Vintage-animation storyboard / shot log
+
+| Component | Pinned evidence |
+|---|---|
+| `task_id` | `visual_media/video_storyboard_001` |
+| Description | 完整观看 1931 OGV，结合 fact-check brief，产出带 shot/segment、in/out time、事实描述的 DOCX；不得直接回答 brief |
+| Input | source OGV、question DOCX |
+| Software / environment | Windows `cpu-free`；VLC、DOCX editor；timeout 7,200s |
+| Expected output | `storyboard.docx` |
+| Hidden reference | code 定义 `reference_storyboard.docx`，实际 evaluator 不读取 |
+| Evaluator | 从 candidate DOCX抽文本；LLM根据 candidate回答十题；与公开 answer key比；score=correct/10 |
+| Code-mandated path | agent 被要求看视频写 storyboard → grader只判断候选文本能否支持十题答案 |
+
+**[强反例]** 实现没有直接验证 timestamps、temporal order、完整观看、video-groundedness 或“不回答问题”；公开 answer key 允许针对 grader surface 优化。judge 默认为某模型但可被环境覆盖，所以必须 pin judge config。[S14](sources/14_official_task_video_storyboard.md)
+
+## 7.5 “agent 实际执行路径”的证据边界
+
+**[事实]** 公开 repo/site 没有给上述四个实例绑定、并同时固定 `trace_id/run_id + agent config + environment + evaluator revision` 的官方 trajectory。因此：
+
+- 上表只证明 framework lifecycle 与 task prompt/evaluator 规定的 **intended/code-mandated path**；
+- 不能写“agent 实际点击了 X、调用了 Y、完整阅读了 Z”；
+- 要声称 actual execution，最低证据是 pinned `run_id/trace_id`、model+harness config、image/software、budget、raw trajectory、artifacts 和 evaluator revision；
+- outcome-only evaluator 不证明过程。如果客户把“必须使用指定软件/方法”放进 construct，就要显式加入 process/trajectory checks，而不是从最终文件猜。
+
+完整 task trace 审计见 [F2](findings/F2_repo_runtime_and_task_traces.md)。
+
+---
+
+# 8. 主要发现
+
+## 8.1 ALE 的优势是把“专业交付”变成可执行协议
+
+**[事实]** ALE 将 task、agent、environment 解耦：task 绑定 description/input/reference/evaluator，agent 绑定 model+harness，environment 绑定 sandbox/software。input 在 agent 前 staging，reference 在 agent 后 staging；最终 artifact/state 用 task-specific evaluator 评分。[S07](sources/07_official_github_fixed_snapshot.md) [S09](sources/09_official_task_contract_loader.md) [S10](sources/10_official_runtime_lifecycle_and_staging.md)
+
+**[研究员推断]** 这比“prompt + final answer”更接近可审计数字劳动，因为它把软件、文件、状态、长时运行和隐藏验收纳入同一 execution contract；但它仍是经过挑选、可沙箱化、可验证的专业工作样本，不等于全部职业工作。
+
+## 8.2 “一条 task”的身份来自闭环，不来自自然语言长度
+
+**[事实]** description 五项完整，仍只是 task specification 的上游材料；工程团队还需 task package、环境、data、reference/evaluator、dry-run 和 curated manifest admission。[S18](sources/18_official_submit.md) [S37](sources/37_official_task_lifecycle_docs.md) [S41](sources/41_official_add_task_docs.md)
+
+**[项目建议]** 计数 gate 应放在 final QC 后：`accepted runnable instance`，而不是 portal submission、implemented-but-unverified、pending-QC、repo-discovered 或一次 successful run。
+
+## 8.3 Outcome validity 最终由 evaluator 决定
+
+**[事实]** 同一 framework 支持 exact/structured/geometry/visual/behavioral/semantic/executable 等 modes，以及 deterministic、LLM/VLM 或 hybrid evaluator。v2 的 93.2/6.8 是当时 open workflow tree 的静态统计，不是 evaluator 全池质量证明。[S01](sources/01_arxiv_2606_05405v2.md)
+
+**[研究员推断]** “deterministic”保证 scoring repeatability，不保证 specification coverage、alternative-correct acceptance 或专业意义。四例 repo audit 已给出具体反例；独立学术/行业资料则证明相同 failure class 在其他 agent benchmarks 存在，但不能把其他 benchmark 的 incidence rate 外推给 ALE。[F3](findings/F3_adversarial_construct_validity.md)
+
+## 8.4 Full Pass 的严格性与真实性不是同一个维度
+
+- **[事实]** Full Pass 要求 evaluator full credit；Mean Score 捕捉 partial credit。
+- **[事实]** live leaderboard 的 “Best of All Runs” 会为每个 task 选最高 run，这是一种更大 search budget 的 aggregation，不是一条 deployable configuration。
+- **[研究员推断]** Mean–Full gap说明 encoded criteria 未全部满足；它本身不等于真实生产的 failure probability。
+- **[项目建议]** 除 FPR/Mean Score 外按用途报告 single-trial、`pass@k`（至少一次成功）或 `pass^k`（连续全部成功），并用 workflow-cluster bootstrap 估计 CI；重复次数由 pilot/effect size 决定。
+
+## 8.5 Living benchmark 必须把 versioning 当产品功能
+
+**[事实]** audit 前三天 repo 仍在修复 graders；同 commit 的 public manifests 也有 152/153/157 三个 selection surfaces。[S15](sources/15_official_public_manifests_at_commit.md) [S16](sources/16_official_grader_revision_history.md)
+
+**[项目建议]** 任何对外结果至少 pin：paper/repo/HF revision、manifest hash、task/evaluator/reference hash、agent config hash、image/software、budget/retry/trial、metric aggregation 与 access/run date。否则“分数提升”可能只是 task/evaluator/config drift。
+
+## 8.6 public/private/rotation 是产品用途，不只是发布权限
+
+**[事实]** v2 明确用 private pool 与 rotation 缓解 contamination/task-specific optimization。[S01](sources/01_arxiv_2606_05405v2.md)
+
+**[项目建议]** 将资产分为：development/training、validation、public demo、private final holdout、rotation reserve、retired/contaminated。一个已暴露给训练/调参的 instance 不能同时被宣传为“未见 final holdout”；可以保留同 workflow 的 fresh private variants，但要做近重复/exposure audit。
+
+---
+
+# 9. 反方证据与不确定性
+
+## 9.1 当前结论在什么条件下会失效
+
+| 当前结论 | 会使其失效/收窄的新证据 |
+|---|---|
+| ALE 结果是 system-conditioned | 所有非 model 组件被 canonical protocol 完全固定且只允许 model 变化；也只能收窄为 standard-harness-conditioned model result。 |
+| evaluator validity 未充分公开验证 | 新 revision 公布按 evaluator family 分层的 blinded human FPR/FNR、alternative-correct/known-bad/red-team escape、judge agreement，并独立复现。 |
+| private 不等于 zero contamination | 公布完整 provenance、provider data-use、canary/near-duplicate/exposure audit 与独立调查；仍只能针对 audited snapshot。 |
+| 单次榜单不足以估计 reliability | 对完整目标配置/manifest 做预注册 independent repeats、CI、扰动与 `pass^k`，并报告 infra invalid。 |
+| 不能推 human/job/GDP | 同条件 matched-human ALE runs、真实人机 deployment RCT、劳动力 task frequency/经济权重与因果 outcome 被公开并复现。 |
+| 两个 960 不可互换 | canonical row-level crosswalk 证明 external submission 与 workflow 的明确关系。 |
+
+## 9.2 哪些数字只是快照，不能作生产配额
+
+以下全部是 historical/live surface，不是客户 quota：
+
+- `960 external submissions`、`530 commissioned tasks`；
+- `960 workflows`、`1,490 instances`、`18-instance G-code example`；
+- `150/1,017/323 public/private/pending-QC`；
+- `150/152/153` public-release/experiment/card/manifest counts；
+- `67/55/38` v2 tier memberships、HF `67/47/38+blank` single labels；
+- `250+/300+/310` experts/practitioners/authors；
+- `93.2/6.8` grader modes、`88.5/11.5` scoring locale；
+- five-hour paper cap、task-card 7,200s、repo `max_attempts=1..3`；
+- current leaderboard pass/score/cost/time/tokens；
+- paper 中部分配置的三次重复。
+
+它们可用于理解 ALE 的历史设计空间、风险和 capacity drivers；不能直接规定 W/I ratio、domain mix、public/private ratio、staffing、schedule、budget、repeat count 或 acceptance threshold。
+
+## 9.3 哪些成功可能来自 evaluator weakness、泄漏或 harness 差异
+
+| 观察到的“成功” | 替代解释 | 排除证据 |
+|---|---|---|
+| public task Full Pass | 针对公开 prompt/grader/answer key 优化；storyboard 是直接反例 | fresh private workflow/instance、training cutoff、grader exposure ledger、adversarial test |
+| hidden task Full Pass | provider/supplier reuse、near-duplicate 项目、reference side channel | data-use contract、canary、similarity search、filesystem/network trace、独立新作 |
+| model row更高 | harness/effort/prompt/tools/context/budget/retry不同 | fixed non-model components、factorial ablation、matched budget/repeats |
+| evaluator满分 | rubric surface shortcut、missing requirement、alternative-correct rejection | requirement coverage、known-bad/alternative-correct、mutation/metamorphic、human blind audit |
+| best-of-k 高 | 多次搜索预算，而非单次稳定成功 | matched k/total cost；同时报告 single-trial 和 pass^k |
+| cost/time 更低 | task coverage、runtime exclusion、cache/provider reporting不同 | same manifest，统一成本口径；报告 setup/eval/output-sync 是否排除 |
+
+## 9.4 哪些建议合理但没有公开数据支持
+
+以下必须标成 **[项目建议 / 公开资料不足]**：
+
+- 1,000 中 workflow/instance、domain、public/private 的具体比例；
+- 每个 workflow 应有几个 instances；
+- 专家人数、角色配比、throughput、acceptance/rework rate；
+- evaluator FPR/FNR、judge-human agreement、anti-gaming 的验收阈值；
+- 每实例重复次数、最小 detectable effect、CI width；
+- 单项/总体工期、API/VM/license/storage/人力成本；
+- matched-human 样本量和“human-level”门槛；
+- contamination scan 的召回率或“零污染概率”。
+
+做法不是编造精确数，而是由 stratified pilot 测量，并在 pilot exit review 冻结 production SOW。
+
+---
+
+# 10. 对约 1,000-task 项目的具体决策影响
+
+## 10.1 产品范围
+
+| 可选产品 | 实际交付单位 | 能否做 final benchmark | 主要缺口/代价 |
+|---|---|---|---|
+| Candidate-spec dataset | descriptions + input/reference proposal | **不能直接** | 缺 environment/evaluator/runnable QA；应称 submissions/specs |
+| Public runnable benchmark | accepted public instances + open framework | 可用于透明复现/开发 | 污染和定向优化风险高；不宜作长期 final holdout |
+| Private holdout benchmark | accepted private instances + managed runner/evaluator | **可以，条件化** | access/provider logging/reference security/rotation 成为核心产品 |
+| Training/RL environment set | executable tasks/evaluators可多次暴露 | 不是未见 holdout | 需要 reward hacking controls；必须与 final holdout 分离 |
+| Managed evaluation service | private assets + controlled runs + reports | **可以** | 运营/安全/审计/版本/成本是持续服务，不是一次性数据包 |
+
+**[项目建议] Default scope：** “约 1,000 accepted runnable instances across an approved workflow portfolio”，同时交 public demo、development/validation、private holdout、rotation/retirement 机制；具体 split 由用途与 pilot 决定，不预填比例。[E](E_one_thousand_tasks_interpretation.md)
+
+## 10.2 Task selection
+
+### Hard admission requirements
+
+1. **Representative**：来自目标用户的真实/高保真数字 workflow，使用正确专业工具；记录 provenance 与 use rights。
+2. **Complex**：端到端 deliverable，而非可由少量局部 UI action 完成；复杂度证据由专家说明并在 pilot 中观察。
+3. **Verifiable**：success criteria 能映射到 observable artifact/state/process；不能验证的要求要删、改或单列人工 adjudication。
 4. **Runnable**：环境、input、start state、output contract、reference/evaluator 闭环。
 5. **Non-redundant**：相对于同 workflow/instance pool 的新增信息明确；近重复不能冒充 coverage。
 6. **Legally/operationally deliverable**：数据、软件、license、API、PII、安全与 provider 条款可用。

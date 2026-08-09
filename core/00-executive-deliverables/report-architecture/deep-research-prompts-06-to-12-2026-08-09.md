@@ -196,161 +196,227 @@ E. 怎样设计 adversarial validation：由谁攻击、可以看到什么、如
 
 F. 什么情况触发人工仲裁：evaluator 与 expert disagreement、多个合理解、低 confidence judge、parser failure、environment defect、novel shortcut 或客户 dispute？定义仲裁材料、blind review、tie-break、版本修改、历史 score 处理和 reviewer conflict rules。
 
-G. 设计 scorer release policy。比较 fully public scorer、public wrapper + hidden tests、delayed release、private scorer、tiered feedback 和 evaluation-as-a-service。分析透明度、可复现性、debuggability、contamination、gaming、客户可接受性和研究开放…20131 tokens truncated…，我越来越在意一个很具体的问题：一个模型怎么真正进入现实工作？任务谁来定义，什么算做对，专家的判断怎么留下来，做错以后又怎么改。
->
-> 回国看机会以后，我接触到两个场景很不一样、但问的是同一件事的方向。通过 Manifold 的研究题，我看到世界模型和机器人怎样在物理环境里学习和行动；看 UniPat 的 ExpertEval 和 SaaS-Bench，我看到的是 Agent 怎样在专业任务和真实软件环境里工作。这让我更确定，我长期感兴趣的不是押某一个模型架构，而是参与 AI 从真实任务中学习、被检验、再继续改进的过程。
->
-> 我接触到的这类国内早期团队，研究、数据、产品和实际需求离得比较近，这正是我现在想进入的工作方式。我希望加入核心团队，长期接住一块问题，而不是回国短期试一试。UniPat 是我觉得和已有经验有具体连接、也值得认真判断长期匹配度的机会。
+G. 设计 scorer release policy。比较 fully public scorer、public wrapper + hidden tests、delayed release、private scorer、tiered feedback 和 evaluation-as-a-service。分析透明度、可复现性、debuggability、contamination、gaming、客户可接受性和研究开放性的取舍。
 
-如果需要更短：
+H. 建立 evaluation-integrity threat model，至少覆盖：grader code tampering、reference leakage、test modification、prompt/evaluator mismatch、metadata shortcut、artifact spoofing、judge prompt injection、LLM-judge bias、environment escape、feedback-channel leakage 和 repeated-query hill climbing。
 
-> 我回国不是某一份 offer 推动的，而是过去两年慢慢确定的职业选择。我在美国做 LLM 评测和专家数据时，越来越感兴趣的是模型怎样进入真实专业任务：问题怎么定义、谁判断好坏、反馈怎样变成下一次改进。Manifold 让我从物理世界看到这个问题，UniPat 的 ExpertEval 和 SaaS-Bench 则让我从专业任务和软件环境看到同一个问题。我希望长期进入一个研究、数据和产品靠得很近的团队，把这件事做深，而不是回国短期试一试。
+I. 研究 evaluator quality 应怎样持续监控：defect discovery rate、expert-evaluator disagreement、alternate-correct rejection、gaming success、test mutation survival、score changes after repair 和 regrade impact。不要先指定通用阈值。
 
-## “已经接受 Manifold offer，为什么还愿意聊 UniPat？”
+来源要求：
 
-> HR 应该跟您提过，我确实已经接受了 Manifold 的 offer。后来我专门去现场，和创始人及团队把日常工作和角色边界聊得更细，发现实际角色主要是 CEO Office 的战略支持和专项工作。我理解这类岗位的价值，长期也不排斥做战略；不过在现阶段，我更希望先扎进一条具体的产品或业务线，通过实际执行建立对产品、客户和市场的第一手认识，并且对一个明确结果负责。有了这些基础以后，我再参与更宽的战略判断会更扎实。因为这个职业顺序上的差异，我选择在正式开始前重新确认匹配度，也因此回来认真聊 UniPat。
->
-> 我知道这也会让您关心我的承诺是否稳定。所以这一次我会把真实职责、双方预期和前几个月的结果先聊清楚，再做承诺；我认为这比信息不充分地入职、再很快发现不合适更负责。
+- 以 ALE paper、固定 GitHub scorer implementation 和本地 153-task evaluator audit 为一手案例。
+- 必查 RewardHackingAgents、Reward Hacking Benchmark、Search-Time Contamination、NIST/CAISI 关于 agent evaluation cheating 或 transcript analysis 的研究，以及 BetterBench 等 benchmark validity 方法。
+- 对论文中的攻击成功率或开销数字保留其任务、模型、环境和版本，禁止直接迁移成 ALE 项目参数。
+- 每个关键结论至少三类独立来源，并主动搜索“自动 evaluator 不应成为唯一裁判”“private scorer 损害可复现性”等反方论证。
 
-不要说：
+最终输出：
 
-- “我一定要参与公司决策。”这会让人听成尚未创造结果便索取权力。
-- “那边只是让我给 CEO 打杂。”这既贬低对方，也忽略 founder's-office 工作的合理价值。
-- “我已经有独角兽 offer，所以你们要说服我。”这会损伤动机信号。
+1. Evaluator mode/risk/mitigation matrix；
+2. requirement-to-evaluator traceability template；
+3. evaluator unit/adversarial test protocol；
+4. human arbitration SOP；
+5. scorer release decision matrix 和推荐的分层政策；
+6. integrity threat model 与 control mapping；
+7. evaluator defect、agent failure、environment failure 的判定和 regrade policy；
+8. final-QC evaluator acceptance checklist；
+9. 仍需由 pilot 或客户风险偏好决定的阈值。
+```
 
-更成熟的表达是：
+---
 
-> 我不期待因为 title 获得决策权；我希望通过拥有一个 workstream、获得必要上下文并对结果负责，逐步赢得决策空间。
+## 问题 10：怎样设计重复运行、统计推断和 matched human baseline？
 
-## “你想做什么岗位？”
+### 我有什么样的问题？
 
-> 我不急于先锁死 title，但现阶段的方向比较明确。结合我看到的岗位，产品经理和市场拓展都是我比较感兴趣的切入点：产品侧可以把 AI 数据策略、模型评测和 Agent 原型的经验带进产品定义与迭代；市场侧可以发挥研究与沟通能力，把技术能力转成客户能够理解和使用的场景。我也可以从 founder's office / special projects 切入，但希望项目最终落到一个具体产品、市场目标或业务结果上，并逐步由我完整负责。评测是我能够使用的方法，但不是我希望长期停留的工作终点。
+Agent 的单次运行具有随机性，而且结果受 model、harness、预算、retry 和环境影响。应该运行多少次、怎样定义 seed/attempt/retry、怎样报告置信区间和排名稳定性？同时，如何让专业人类在尽可能匹配的 affordances 下完成同一任务，测得质量、时间、成本和 agreement，而不把不公平的人机比较写成“human-level”？
 
-### 可以主动提出的 90 天 charter 样例
+### Prompt
 
-1. **ExpertEval 金融域扩展**：完成子领域/专家供给地图、scenario taxonomy、rubric calibration SOP、critical-negative QA、专家一致性与吞吐指标，并跑通一轮 badcase → 数据修订 → 复评闭环。
-2. **Echo 金融/决策产品验证**：访谈明确 ICP，定义一项可重复用例和验收指标，形成 pilot、反馈和包装方案。
-3. **Professional Agent workflow**：为一个真实专业流程设计任务、checkpoint、基线和失败分析，并把结果连接到产品或训练团队。
+```text
+请开展一项深度研究，为 ALE-style professional agent benchmark 制定预注册式 statistical evaluation protocol 和 matched human baseline protocol。目标不是寻找一个适用于所有任务的固定重复次数，而是明确 estimand、随机性来源、sample-size/power 决策和人机可比条件。
 
-这些是提案，不是你替公司决定优先级。先问对方目前最急的结果是什么。
+请研究并回答：
 
-## 面试里最值得问的 8 个问题
+A. 明确不同层级的 estimand：单个 instance 的成功概率、workflow family 表现、domain 平均、全 benchmark aggregate、Full Pass Rate、Mean Score、成本约束下成功率和 reliability target。说明这些估计量分别能支持什么决策。
 
-不需要全问。优先问前四个。
+B. 区分 run、trial、attempt、retry、resume、seed 和 evaluator rerun。Infrastructure retry 不应自动被当作新的 agent trial；agent 自主重试可能是系统能力的一部分。提出清晰记录和计数规则。
 
-1. **“我的简历通过红杉学者渠道到您这里后，您最初看到哪一点，觉得值得先聊一次？”** 直接让对方暴露真实角色假设。
-2. **“如果不先套岗位名称，公司现在最希望这个人解决的前三个问题是什么？哪一个最急？”**
-3. **“Across ExpertEval、SaaS-Bench、UniScientist 和 UniMath，你们认为最可复用的核心资产是模型本身，还是任务、环境、rubric 和 feedback loop 的生产系统？”**
-4. **“如果我加入，前 90 天我独立拥有的结果会是什么？哪些决定由我做，哪些是我为 CEO 准备？”**
-5. **“你们未来 6–12 个月最优先的商业 wedge 是 Echo、评测、专家数据、RL 环境，还是定制合作？现在的经济买方是谁？”**
-6. **“对一个通才型成员，六个月后理想状态是继续做 special projects，还是沉淀成某条产品/运营/评测线的 owner？”**
-7. **“哪些工作目前由 CEO 反复亲自做？您希望我只是接走它，还是把它机制化以后拥有这条流程？”**
-8. **“过去类似高潜 generalist 最容易成功和最容易失败的原因分别是什么？”**
+C. 识别随机性和变异来源：model sampling、provider nondeterminism、harness scheduling、tool/environment state、network、judge model、task-instance heterogeneity、software race condition 和 evaluator noise。哪些可以固定，哪些必须纳入不确定性？
 
-不建议第一轮就审问融资金额、持股或 runway。若气氛合适，可用业务问题替代：
+D. 比较适用的统计方法：per-item repeated Bernoulli trials、bootstrap、hierarchical/mixed-effects model、item-response model、paired comparison、clustered confidence interval 和 Bayesian interval。说明假设、适用场景和失败条件，而不是只推荐一种方法。
 
-> “目前哪一类产品已经进入外部用户的重复使用，而不只是一次性研究或 pilot？”
+E. 怎样确定重复运行数和 sample size？从目标置信区间宽度、minimum detectable difference、ranking stability、任务成本、预期成功率和 domain clustering 反推。给出公式、模拟方案或计算流程，但不要在没有 pilot variance 的情况下给固定数字。
 
-## 你必须纠正的世界模型表述
+F. 怎样测试 ranking stability 和 configuration sensitivity：不同 task subset、seed、model provider、harness、prompt/context、tool权限、budget、retry policy 和 evaluator version 是否会改变排序？什么时候只能报告“在该配置下”的结果，不能推广到模型本身？
 
-你原来的讲法里有三处风险：
+G. 怎样处理 timeout、crash、missing artifact、infrastructure failure、evaluator failure、quarantined task 和 post-hoc repaired scorer？定义 denominator、exclusion、sensitivity analysis 和 regrade policy。
 
-1. 公司叫 **Physical Intelligence**，不是 “Fiducial Intelligence”。模型家族写作 **π0、π0.7**。
-2. VLA 与 WM/WAM 的根本区别不能简化成“文字作为媒介”对“视频/latent 作为媒介”。VLA 同样直接处理图像并可输出连续动作；关键差别更接近：VLA 学习从观测/指令到动作的策略，而 WM/WAM 显式预测动作条件下未来状态/观测，用于模拟、规划或训练。
-3. π0.7 更稳妥的定位是 **world-model-assisted VLA**，不能把它说成已经完整实现双中心 causal WAM。其动作核心仍是连续 action chunk，而不是离散 action token。
+H. Matched human baseline 应招募什么人：practicing expert、general skilled worker、task author、independent professional？怎样记录 expertise、software familiarity、training/familiarization 和 conflicts？
 
-如果被问，20 秒回答：
+I. 人类与 agent 应匹配哪些 affordances：task instruction、input、software、hardware、internet、documentation、time limit、attempts、help/communication、prior context 和 output format？哪些差异不可避免，必须披露？
 
-> 我最后形成的判断不是“VLA 用文字、WAM 用视频”，而是 VLA 更偏直接学习 observation-to-action policy，WM/WAM 则显式建模 action-conditioned future，用于预测、规划或训练。两者不是二选一，可以融合；π0.7 更稳妥地说是 world-model-assisted VLA。对我更重要的收获其实是如何把技术资格、产品可用性和商业采用证据分开验证。
+J. 人类 baseline 应记录质量、成功、partial score、completion time、active work time、monetary cost、confidence、error type 和 reviewer agreement。如何处理人类失败，只统计成功者会产生什么选择偏差？
 
-### 更强的 fast-learner 故事
+K. 怎样建立 reference、human output 和 evaluator 之间的 agreement/adjudication：inter-rater reliability、expert-evaluator disagreement、multiple acceptable outputs 和 blind arbitration。不要把 agreement 指标机械当作 validity。
 
-不要用“我一天读了很多篇论文”作为主体。用下面这条证据链：
+来源要求：
 
-> 我进入世界模型领域时没有现成框架，所以先把问题拆成公开锚点、候选发现和大厂替代三条互相制衡的研究线；再用资格门、来源卡、原子主张、反证查询和 red team 限制结论。最后公开仓库沉淀了 141 个来源、111 条原子主张和 58 次支持/反证查询，把候选从广泛线索收敛到可解释的重点对象。这个项目证明的不是我记住了多少模型名，而是我能在陌生领域迅速建立一套可复核的判断系统。
+- 必读 NIST AI 800-3 或其官方说明、AI Agents That Matter、METR Time Horizons 的公开方法、NIST repeated-attempt agent evaluation，以及报告不确定性的 benchmark/eval 方法。
+- 对 METR 等 human baseline 研究，明确其任务领域、专家来源、affordance 差异和已披露局限；不得直接推广到所有 ALE 专业领域。
+- 将 ALE 的 Mean Score/Full Pass 和 configured system 边界纳入 protocol。
+- 重要结论至少三类独立来源；保存方法假设、反例和适用边界。
 
-公开证据：[Manifold 海外世界模型竞争格局研究仓库](https://github.com/Madarame87/manifold-world-model-research)。
+最终输出：
 
-## 常见追问与短答
+1. Statistical analysis plan；
+2. run/trial/retry/seed 的计数规则；
+3. sample-size、repetition、CI 和 MDE 的公式或模拟流程；
+4. ranking stability 与 configuration-sensitivity test plan；
+5. missing/failure/exclusion/regrade policy；
+6. matched human baseline recruitment 和 affordance protocol；
+7. human quality/time/cost/agreement 的数据表结构；
+8. 推荐的 leaderboard/reporting table，必须呈现 uncertainty 与配置；
+9. 哪些结论仍不能被该 benchmark 支持，例如 job replacement、生产率或 human-level professional ability。
+```
 
-### 面试前必须统一的一处履历口径
+---
 
-Master Resume 把同一时期的部分 AI 工作写为 **Alignerr / Domain Expert / Present**，而提交版写为 **Micro1 / AI 模型评估与策略工程师 / 至 2026.06**。这很可能被追问。请在进面试前准备一句完全真实、可核实的说明：两者究竟是平台、项目、合同主体还是品牌之间的什么关系，以及为什么结束日期不同。不要临场猜，也不要为了让故事更顺而合并主体。
+## 问题 11：怎样设计 public/private/rotation 与 living benchmark 生命周期？
 
-### “你的经历会不会太散？”
+### 我有什么样的问题？
 
-> 领域看起来分散，但我做的任务很稳定：把不完整数据、专家判断和复杂约束变成可重复的决策系统。金融、AI 评测和产品只是不同场景。我的复合背景只有在接口岗位上才有价值，所以我也不会把自己包装成任何方向都能做的万能通才。
+一个面向模型厂商的 benchmark 如何同时支持开发、客户验证、private final evaluation 和持续更新，又不让同一实例成为训练、调参和最终考试的共同攻击面？如何检测污染和搜索时泄漏，怎样决定轮换、修复、退休和替换，并在 benchmark 版本变化后维持可解释的历史比较？
 
-### “你到底有多 technical？”
+### Prompt
 
-> 我能读技术材料、写 Python/SQL、搭 ETL、做原型和测试，也理解 Agent、RAG、tool use 和 evaluation workflow。但我不会把自己包装成基础模型研究员。我的比较优势是把模型能力、专家判断、数据质量、产品需求和商业约束连接成闭环，并能和研究及工程团队说同一种可执行语言。
+```text
+请开展一项关于 ALE-style living benchmark release architecture、contamination control 和 lifecycle governance 的深度研究。目标是为 1,000 个 accepted runnable instances 设计可运营多年的发布、访问、轮换、修复和版本比较机制，而不是只做一次 public/private split。
 
-### “AI-native 不就是会用工具吗？”
+请研究并回答：
 
-> 工具熟练度只是最低层。我更看重三件事：任务怎么拆给人与 Agent，证据和授权边界怎么固定，输出怎么通过测试、red team 和反馈继续迭代。Context Agent 的测试闭环和公开研究仓库都能证明这一点。
+A. 区分 development/demo、restricted validation、private final holdout、rotation reserve、training/SFT/RL assets 和 retired archive。说明同一 workflow family 是否可以跨池，但为什么 concrete inputs、reference、evaluator attack surface、IDs 和访问权限不能简单复用。
 
-### “你为什么适合 Expert Community？”
+B. 建立 contamination taxonomy：pretraining exposure、post-training/test-specific optimization、public solution leakage、near-duplicate leakage、search-time contamination、reference/evaluator leakage、customer/internal operational leak 和 repeated-query hill climbing。每类怎样检测，什么证据只能说明风险而不能证明污染？
 
-> 我的强项不是传统猎头式专家资源，而是专家被找到之后，怎样把 tacit judgment 变成高质量 scenario、rubric、critical negative、preference signal 和可校准生产流程。我也会坦诚确认，你们现在更缺专家 sourcing、研究方法、数据 QA，还是产品 owner，因为这几种角色并不相同。
+C. 研究访问控制：least privilege、gated access、evaluation-as-a-service、query limits、submission logging、reference custody、staff separation、canary/watermark、delayed feedback 和 audit trails。分析它们对客户可用性、debuggability 和研究开放性的影响。
 
-### “你能接受 dirty work 吗？”
+D. Public subset 应承担什么功能：示例、开发、harness integration、方法透明度或代表性检查？Private final set 应承担什么功能？不要假设 public subset 必须按领域严格同比例抽样。
 
-> 能。我区分的是 high-leverage dirty work 和 non-compounding chores。前者虽然杂，但围绕一个重要结果，能逐渐被机制化并形成 ownership；后者长期是随机 one-off、缺少上下文也不对结果负责。我愿意从前者开始，而且我的习惯正是把重复脏活变成系统。
+E. Public/private/rotation 比例应该由哪些变量决定：客户用途、威胁模型、workflow diversity、instance multiplicity、refresh capacity、benchmark half-life、成本、反馈需求和合规要求？不要从 ALE 当前 release counts 直接推导本项目比例。
 
-### “你如何证明 teamwork？”
+F. 定义生命周期状态：proposed、authored、implemented、validated、accepted、active-public、active-private、rotation-reserve、quarantined、repaired、retired、replaced。列出进入/离开每一状态的 owner、证据和 change log。
 
-不要说“我很好相处”。用 Micro1 的例子：
+G. 定义 refresh triggers：模型饱和、discrimination loss、污染证据、search exposure、environment/software drift、license/policy change、evaluator defect、task obsolescence、客户需求变化和 safety incident。区分 task repair、new instance、new workflow 和 full benchmark version。
 
-> 多位领域专家对模糊业务问题容易给出不同标准。我做的不是要求大家服从一个答案，而是把分歧拆成可观察变量、scenario variants、rubric 和 evidence re-check，再通过校准和 badcase 回溯让团队形成共同判断标准。我的团队价值通常是降低跨背景协作的翻译成本。
+H. 怎样处理 retirement 和 replacement：旧分数是否保留、是否回溯 regrade、何时冻结 leaderboard、如何披露 broken task、怎样避免静默改题？
 
-## 如何判断这个机会是否值得改变现有选择
+I. 怎样维持跨版本可比性：anchor set、overlap/bridge runs、equating、版本化指标、common-agent reruns、frozen historical leaderboard、live leaderboard 和 uncertainty。说明 private holdout 与长期可比性之间的张力。
 
-### 绿灯
+J. 制定 contamination 或 grader-leak incident response：发现、隔离、影响分析、客户通知、重跑、版本 bump、替换和 postmortem。明确哪些情况必须宣布 score invalid。
 
-- 能明确说出 90 天结果、内部客户、指标和直接负责人；
-- 任务虽然跨职能，但围绕一个连续 workstream；
-- 你能获得完成结果所需的上下文和定期反馈；
-- 六个月后职责会沉淀为某条产品/评测/专家系统的 ownership；
-- 公司能讲清未来 6–12 个月的技术主线与商业优先级；
-- 对方看中的是你已被证明的能力，而不是“聪明所以什么杂事都能接”。
+来源要求：
 
-### 红灯
+- 以 ALE v2 的 public/private/pending/rolling design 为主要案例，但严格保持各 count 的原始 unit 和 snapshot。
+- 必查 Search-Time Contamination、公开 benchmark 饱和/plateau 研究、NIST/CAISI integrity 研究，以及具有 rolling/private/held-out 机制的官方 benchmark 文档。
+- 主动搜索反方观点：private benchmark 损害透明度、固定 anchor 本身会污染、频繁轮换破坏可比性、evaluation-as-a-service 造成信任集中。
+- 重要结论至少三类独立来源，所有比例和刷新周期若无证据必须保留为变量。
 
-- 成功仍只能定义为“CEO 随叫随到”或节约小时数，没有业务结果；
-- 无法说清汇报线、预算/headcount、工作重心和反馈机制；
-- “离 CEO 近”被当成主要成长机制，却没有上下文或授权；
-- 任务是长期随机 one-off，没有可机制化和升级的路径；
-- 研究发布很多，但无法说清哪一条是未来一年的核心业务；
-- 要你放弃已接受的机会，却不愿形成书面 role charter。
+最终输出：
 
-### 最低决策门槛
+1. 多池 release architecture 和 access matrix；
+2. contamination taxonomy、detection 与 mitigation mapping；
+3. lifecycle state machine 和 ownership；
+4. refresh/repair/quarantine/retirement decision tree；
+5. versioning、leaderboard 和 cross-version comparability policy；
+6. contamination/grader-leak incident response；
+7. 三种 release-policy options 及其取舍，不预设比例；
+8. 需要客户回答才能确定 public/private/rotation 配置的问题。
+```
 
-不要因为一次聊得投机就推翻现有 offer。至少拿到下面五件事的明确答案：
+---
 
-1. 直接负责人和反馈频率；
-2. 前 90 天具体 deliverable；
-3. 决策权/建议权/执行权边界；
-4. 六个月后的职责归宿；
-5. 薪酬、期权、工作强度和加入时间。
+## 问题 12：哪一道原创 task 最适合证明这套方法？
 
-## 对 UniPat 的事实边界
+### 我有什么样的问题？
 
-- **官方确认**：使命聚焦真实场景中的 AI 能力；官网公开一系列评测、Agent、模型与预测项目；招聘页列出 research、agent systems、infra、expert community、design、PR、legal、tax 等角色。[官网](https://www.unipat.ai/)；[招聘页](https://www.unipat.ai/joinus)。
-- **公司自报**：LinkedIn 写 2025 年成立、11–50 人。这不是工商登记。[LinkedIn](https://www.linkedin.com/company/unipat)。
-- **合理分析**：底层可能是 task/environment/rubric/data/post-training 的经验生产系统。
-- **公开未知**：法定主体、融资轮次/金额/估值、付费客户、收入、定价、留存、runway 和哪项业务是近期主线。
-- **红杉关系边界**：红杉官方页面能确认 xbench 与 UniPat 联合发布 BabyVision；招聘文案声称有顶级美元 VC 支持，但公开来源未给出投资方与轮次。你可以陈述自己通过红杉学者渠道被推荐，但不要因此推断“红杉已公开投资 UniPat”。
-- **UniFuncs 页面边界**：用户提供的 `s.unifuncs.com` 链接是一份 2026-06-08 保存的 AI 搜索会话，不是 UniPat 官方页面；它对融资的表述前后矛盾，也遗漏七月项目，只能作为线索表。
+为了同时回答面试官“请出一道 ALE-style 题”和“如何领导 1,000 道题的项目”，应该选择什么 domain 和 workflow，既能体现真实专业工作、长程执行、软件/文件操作和可验证交付，又能在面试作业范围内设计出可信的 input、environment、reference、evaluator 和 red-team cases？
 
-## 面试前最后 45 分钟
+### Prompt
 
-1. 读三遍 90 秒介绍，删掉任何你说不顺的词；不要背得像演讲稿。
-2. 各准备一个 60 秒 STAR：Micro1 专家校准、Jiritsu 18,000→800→30、世界模型研究治理。
-3. 练两遍“为什么还聊 UniPat”和“想做什么角色”。
-4. 只记四个公司关键词：`experience production loop / ExpertEval / Echo / role ownership`。
-5. 从八个问题里圈出四个，优先问“为什么找我、90 天结果、核心资产、商业优先级”。
-6. 最后十分钟停止补资料，检查设备、网络、纸笔和摄像头，降低语速。
+```text
+请开展一项“原创 ALE-style worked task 选择与完整设计”的深度研究。最终目标不是写一道知识问答或竞赛题，而是交付一个 implementation-ready 的专业 workflow benchmark asset blueprint，用来证明前述专家生产、环境、evaluator、统计和治理方法能够落到具体任务。
 
-## 结尾一句
+请首先生成并比较 4—6 个候选 workflow families，再选择一个最适合 UniPat 面试报告的方案。候选方向可以来自但不限于：
 
-> 我今天最希望确认的不是一个 title，而是有没有一块重要问题，既能用上我把专家判断和复杂信息系统化的能力，也能让我在明确反馈和责任边界下逐渐对结果负责。如果有，我愿意从最具体、最难、甚至最脏的一段开始。
+- 消费/marketing 或业务分析工作流，可借鉴我在 Micro1 中对业务材料、raw data、关键变量、误判场景和 Golden case 的真实理解，但不得使用或暴露前雇主/客户的机密数据与专有规则；
+- 数学、物理或科学工作流，但必须产生真实专业 artifact 或软件状态，不能退化成单题推理问答；
+- 文档、表格、可视化、研究或其他跨文件/跨工具 workflow；
+- 问题 4 的 landscape 与问题 5 的 portfolio 研究发现尚未被现有 benchmark 充分覆盖的窄能力。
+
+对候选任务进行严格筛选：
+
+A. 是否来自真实、合理的专业工作，而不是为了难住模型而拼装的怪题？目标用户、职业角色和现实决策是什么？
+
+B. 是否满足 Complex、Representative、Verifiable？“长程”是否来自跨阶段依赖、持久状态、错误恢复和最终 artifact，而不是简单增加点击、token 或软件数量？
+
+C. 输入、软件和运行环境能否合法获得、稳定复现并在面试原型范围内解释清楚？优先 rights-clean 的公开、许可或重新构造数据；若使用 synthetic data，说明保持真实逻辑与避免明显 fake placeholders 的方法。
+
+D. 成功是否可以通过 artifact/state 被观察？是否存在多个合理正确输出？怎样建立 hidden reference、invariants、rubric 或 functional tests，而不只做 exact matching 或视觉相似？
+
+E. 任务是否对当前 agent system 有辨别力，但难度不是由坏环境、缺少信息、任意格式或 evaluator bug 人为制造？
+
+F. 是否能展示至少一种重要的 evaluator 设计难点和 adversarial shortcut，同时可以通过合理控制缓解？
+
+G. 是否与 ALE public tasks 和其他知名 benchmarks 高度重复？进行外部 overlap 检查，并解释创新点是新的 workflow、instance structure、evaluator mode 还是 capability combination。
+
+H. 是否适合作为面试交付：非该领域面试官能理解业务价值，技术评审可以检查设计，且它能自然连接“如何扩展到 1,000 assets”的生产框架？
+
+为最终选中的任务，完整设计：
+
+1. task title、domain/subdomain、target practitioner 和 intended decision；
+2. stable workflow_id 与一个具体 instance_id；
+3. agent-facing task description，明确但不泄漏 scoring implementation；
+4. input files、来源、license/provenance、敏感性与 hashes；
+5. OS、软件、版本、资源、network、credentials、start/reset 和 environment manifest；
+6. expected output artifact/state，以及 alternate-correct outputs；
+7. hidden reference 的内容、custody 和 staging 时点；
+8. evaluator 设计、分项 criteria、gates、tolerances、partial score 和 pseudocode；
+9. requirement-to-evaluator coverage matrix；
+10. gold、known-bad、near-miss、alternate-correct、mutation、shortcut、tampering 和 environment-failure test cases；
+11. independent-solver 和 domain-review protocol；
+12. failure taxonomy、human arbitration trigger 和 scorer release policy；
+13. repeated-run 和 matched-human pilot 方案；
+14. public/private/rotation 归属和未来 variant strategy；
+15. 从本任务扩展成 workflow family 时，哪些变量构成合法 instance，哪些只是 pseudo-variant。
+
+来源要求：
+
+- 使用 ALE v2、固定 GitHub task protocol、固定 public corpus 和 evaluator audit 作为格式与风险参考，但任务必须原创，不复制其 prompt、input、reference 或 evaluator。
+- 使用问题 4 的相邻 benchmark landscape 检查重合与创新点。
+- 对 domain-specific 事实、标准、软件和数据使用一手/官方来源；重要设计结论至少三类独立来源。
+- 清楚标注哪些内容是 source fact、benchmark precedent、research inference 和 proposed design。
+
+最终输出：
+
+1. 4—6 个候选 workflow 的比较矩阵；
+2. 选择一个任务的决策与未选择其他候选的理由；
+3. 完整 implementation-ready task asset blueprint；
+4. evaluator pseudocode、coverage matrix 和 adversarial test suite；
+5. 一份可以直接放进最终面试报告正文的 worked example；
+6. 一份列明仍需真实 SME、工程实现或 pilot 验证的 open-items 清单。
+```
+
+---
+
+## 推荐执行顺序
+
+建议先运行问题 6、8、9、10 和 11；它们彼此相对独立。问题 7 应在问题 6、8、9 的初步结论出来后整合角色、环境和 evaluator 工序。问题 12 最后运行，并显式引用问题 6—11 的结论，把完整方法压缩到一个 worked example 中。
+
+若时间只够运行四份研究，优先级为：
+
+1. 问题 6：专家生产与治理；
+2. 问题 9：evaluator validity 与 integrity；
+3. 问题 7：pilot、产能与扩产；
+4. 问题 12：原创 worked task。
+
+问题 8、10、11 仍然重要，但可以先以较短的技术附录形式处理，再按时间加深。
