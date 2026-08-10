@@ -11,21 +11,13 @@ from pathlib import Path
 from urllib.parse import unquote
 
 ROOT = Path(__file__).resolve().parents[1]
-MANIFEST_PATH = ROOT / "repository-manifest.json"
+MANIFEST_PATH = ROOT / "docs" / "repository" / "repository-manifest.json"
 
 ALLOWED_TOP_LEVEL = {
-    ".editorconfig",
-    ".gitattributes",
     ".github",
-    ".gitignore",
-    "CHANGELOG.md",
-    "CONTRIBUTING.md",
-    "LICENSE_POLICY.md",
     "README.md",
-    "SECURITY.md",
     "core",
     "docs",
-    "repository-manifest.json",
     "scripts",
     "supporting-evidence",
 }
@@ -71,19 +63,20 @@ MARKDOWN_LINK = re.compile(r"!?\[[^\]]*\]\(([^)]+)\)")
 
 
 def load_manifest(errors: list[str]) -> dict:
+    display_path = MANIFEST_PATH.relative_to(ROOT).as_posix()
     try:
         data = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
     except FileNotFoundError:
-        errors.append("Missing repository-manifest.json")
+        errors.append(f"Missing {display_path}")
         return {}
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
-        errors.append(f"Invalid repository-manifest.json: {exc}")
+        errors.append(f"Invalid {display_path}: {exc}")
         return {}
 
     if data.get("schema_version") != 1:
-        errors.append("repository-manifest.json must declare schema_version 1")
+        errors.append(f"{display_path} must declare schema_version 1")
     if data.get("repository") != "130U/agents-last-exam":
-        errors.append("repository-manifest.json has an unexpected repository identity")
+        errors.append(f"{display_path} has an unexpected repository identity")
     return data
 
 

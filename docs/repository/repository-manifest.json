@@ -11,19 +11,23 @@
     "supporting_evidence": {
       "path": "supporting-evidence",
       "purpose": "Traceable sources, audit trails, research packages, and auxiliary material."
+    },
+    "repository_metadata": {
+      "path": "docs/repository",
+      "purpose": "Repository history, machine-readable metadata, and reference-only configuration."
     }
   },
   "required_paths": [
     "README.md",
-    "CONTRIBUTING.md",
-    "SECURITY.md",
-    "LICENSE_POLICY.md",
     "core/00-executive-deliverables",
     "core/01-ale-foundations",
     "core/02-1000-task-delivery-design",
     "supporting-evidence/UPLOAD_MANIFEST.md",
     "docs/REPOSITORY_ARCHITECTURE.md",
-    "scripts/validate_repository.py"
+    "docs/repository/CHANGELOG.md",
+    "docs/repository/repository-manifest.json",
+    "scripts/validate_repository.py",
+    ".github/workflows/repository-quality.yml"
   ],
   "source_pins": {
     "paper": {
@@ -45,10 +49,12 @@
     "large_file_warning_mib": 10
   },
   "policies": {
-    "contribution": "CONTRIBUTING.md",
-    "security": "SECURITY.md",
-    "license": "LICENSE_POLICY.md",
     "content_lifecycle": "docs/CONTENT_LIFECYCLE.md",
     "release": "docs/RELEASE_CHECKLIST.md"
+  },
+  "reference_configuration": {
+    "path": "docs/repository/config",
+    "status": "reference-only",
+    "note": "These files are grouped for storage and do not apply repository-wide from this location."
   }
 }

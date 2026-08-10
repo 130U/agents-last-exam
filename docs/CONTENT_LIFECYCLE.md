@@ -27,7 +27,7 @@
 
 ### Editorial
 
-不改变含义的错别字、格式和链接修复。可直接修改原文件，但 PR 应说明不影响结论。
+不改变含义的错别字、格式和链接修复。可直接修改原文件，但变更记录应说明不影响结论。
 
 ### Evidence update
 
@@ -39,7 +39,7 @@
 
 ### Source-surface migration
 
-论文、代码、数据集或 evaluator 版本发生变化。更新 `repository-manifest.json`、CHANGELOG、受影响报告及跨版本可比性说明。
+论文、代码、数据集或 evaluator 版本发生变化。更新 `docs/repository/repository-manifest.json`、`docs/repository/CHANGELOG.md`、受影响报告及跨版本可比性说明。
 
 ## Retirement
 
@@ -48,4 +48,4 @@
 - 在文件顶部标记 superseded；
 - 链接替代材料与生效日期；
 - 说明旧版本不能继续使用的原因；
-- 在确认不存在活跃引用后，再通过单独 PR 移除。
+- 在确认不存在活跃引用后，再移除。

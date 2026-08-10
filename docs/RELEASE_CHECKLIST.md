@@ -8,7 +8,7 @@
 
 ## Evidence and versions
 
-- [ ] `repository-manifest.json` 中的论文、代码与数据 revision 正确。
+- [ ] `docs/repository/repository-manifest.json` 中的论文、代码与数据 revision 正确。
 - [ ] 关键外部链接可访问，引用指向 canonical source。
 - [ ] workflow、instance、submission、release 和 run 的单位未混用。
 - [ ] 事实、作者主张、研究推断、假设和建议可以区分。

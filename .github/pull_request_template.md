@@ -21,7 +21,7 @@
 
 - [ ] `python scripts/validate_repository.py`
 - [ ] Local links and generated artifacts were spot-checked.
-- [ ] `repository-manifest.json` was updated if the canonical source surface changed.
+- [ ] `docs/repository/repository-manifest.json` was updated if the canonical source surface changed.
 
 ## Notes for reviewer
 
