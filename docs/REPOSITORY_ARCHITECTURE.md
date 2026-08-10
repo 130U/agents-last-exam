@@ -44,12 +44,13 @@ supporting-evidence/ ──► synthesis and review ──► core/
 这是治理与自动化层：
 
 - `docs/` 解释规则以及为何这样设计；
+- `docs/repository/` 集中保存变更记录、机器可读清单和仅供参考的历史根级配置；
 - `scripts/` 提供本地可重复检查；
-- `.github/` 将相同规则嵌入协作流程。
+- `.github/` 将相同规则嵌入自动化流程。
 
 ## Source-of-truth rules
 
-- 仓库级 source pins：`repository-manifest.json`。
+- 仓库级 source pins：`docs/repository/repository-manifest.json`。
 - 本地来源到 GitHub 路径映射：`supporting-evidence/UPLOAD_MANIFEST.md`。
 - 某个报告的具体证据：报告内引用、source index 或 claim-to-source map。
 - 二进制可编辑交付件：对应 Markdown 内容或生成脚本优先作为审阅面。
