@@ -10,10 +10,12 @@ All notable repository-level changes are documented here. Research claim revisio
 - Machine-readable repository manifest with pinned ALE source surfaces.
 - Repository architecture, content lifecycle, release checklist, and initial architecture decision record.
 - Standard-library repository validator and GitHub Actions quality gate.
+- `projects/agents-last-exam/README.md` as the complete ALE project hub for deliverables, research modules, foundations, evidence, and governance.
 
 ### Changed
 
-- The root README is now a link-only entry point for deliverables and supporting material.
+- The root README is now a concise multi-project index modeled after the research portfolio.
+- Repository identity, architecture, and validation now use `130U/agent-evaluation-methodology` and recognize the `projects/` presentation layer.
 - Repository metadata and reference-only root configuration are grouped under `docs/repository/`.
 - Validation and governance references now use the grouped repository metadata paths.
 - The repository is maintained as a single-owner research store rather than a contributor-facing project.

@@ -5,18 +5,20 @@
 把高密度最终结论与完整研究证据分开，同时让每个进入交付层的结论可以追溯、复核和更新。
 
 ```text
-external sources
-      │
-      ▼
-supporting-evidence/ ──► synthesis and review ──► core/
-      │                                            │
-      └──────── provenance and audit trail ────────┘
+README.md ──► projects/<project>/README.md ──► delivery and core reports
                          │
                          ▼
-            final report / interview delivery
+                       core/
+                         ▲
+                         │ synthesis and review
+external sources ──► supporting-evidence/
 ```
 
 ## Content zones
+
+### `projects/`
+
+这是项目展示与导航层。根 README 只列出研究项目；每个 `projects/<project>/README.md` 集中展示该项目的交付入口、核心研究模块、基础研究和证据索引。该层不复制完整报告，也不成为新结论的唯一 source of truth。
 
 ### `core/`
 
@@ -50,6 +52,7 @@ supporting-evidence/ ──► synthesis and review ──► core/
 
 ## Source-of-truth rules
 
+- 项目入口：根 `README.md` 与 `projects/<project>/README.md`。
 - 仓库级 source pins：`docs/repository/repository-manifest.json`。
 - 本地来源到 GitHub 路径映射：`supporting-evidence/UPLOAD_MANIFEST.md`。
 - 某个报告的具体证据：报告内引用、source index 或 claim-to-source map。

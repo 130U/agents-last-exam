@@ -2,10 +2,10 @@
 
 ## Two-repository model
 
-- **Full research repository (`130U/agents-last-exam`)**: version-pinned reports, technical derivations, QA, schemas, source manifests and reproducible builders.
+- **Full research repository (`130U/agent-evaluation-methodology`)**: project hubs, version-pinned reports, technical derivations, QA, schemas, source manifests and reproducible builders.
 - **Showcase repository**: external-facing README, concise Markdown, downloadable Word report and links into the full research repository. It must not mirror raw evidence packages.
 
-The showcase repository is the default link sent to an interviewer. The full repository is an optional evidence layer for readers who want to inspect a claim or implementation decision.
+The showcase repository is the default link sent to an interviewer. The full repository is an optional evidence layer for readers who want to inspect a claim or implementation decision. Within the full repository, the root README routes readers to concise project hubs under `projects/`; those hubs link to reviewed delivery and evidence layers without copying raw research packages.
 
 ## Red-line exclusions
 

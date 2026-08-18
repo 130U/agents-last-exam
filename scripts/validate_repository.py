@@ -18,6 +18,7 @@ ALLOWED_TOP_LEVEL = {
     "README.md",
     "core",
     "docs",
+    "projects",
     "scripts",
     "supporting-evidence",
 }
@@ -75,7 +76,7 @@ def load_manifest(errors: list[str]) -> dict:
 
     if data.get("schema_version") != 1:
         errors.append(f"{display_path} must declare schema_version 1")
-    if data.get("repository") != "130U/agents-last-exam":
+    if data.get("repository") != "130U/agent-evaluation-methodology":
         errors.append(f"{display_path} has an unexpected repository identity")
     return data
 
@@ -182,7 +183,7 @@ def check_markdown_links(files: list[Path], errors: list[str]) -> None:
         relative = path.relative_to(ROOT)
         managed = (
             len(relative.parts) == 1
-            or relative.parts[0] in {".github", "docs"}
+            or relative.parts[0] in {".github", "docs", "projects"}
             or relative.as_posix()
             in {
                 "supporting-evidence/README.md",
