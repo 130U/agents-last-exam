@@ -7,10 +7,3 @@
 | 项目 | 内容概括 |
 | --- | --- |
 | [Agents' Last Exam (ALE)](projects/agents-last-exam/README.md) | 以 ALE 为案例，整理从研究基础、公开语料审计到私有 benchmark 生产、评分、执行与治理的完整研究和交付设计。 |
-
-每个项目入口集中展示交付件、核心研究模块与证据索引；根目录只保留项目导航。
-
-## 仓库说明
-
-- [仓库架构](docs/REPOSITORY_ARCHITECTURE.md)
-- [发布与隐私边界](docs/PUBLICATION_AND_PRIVACY_BOUNDARY.md)
