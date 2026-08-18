@@ -1,9 +1,13 @@
 {
   "schema_version": 1,
-  "repository": "130U/agents-last-exam",
+  "repository": "130U/agent-evaluation-methodology",
   "status": "full-research-repository",
   "primary_language": "zh-CN",
   "content_zones": {
+    "projects": {
+      "path": "projects",
+      "purpose": "Concise project hubs that route readers to reviewed deliverables, research modules, evidence, and governance."
+    },
     "core": {
       "path": "core",
       "purpose": "Reviewed conclusions and delivery-ready artifacts."
@@ -19,6 +23,7 @@
   },
   "required_paths": [
     "README.md",
+    "projects/agents-last-exam/README.md",
     "core/00-executive-deliverables",
     "core/01-ale-foundations",
     "core/02-1000-task-delivery-design",
